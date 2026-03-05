@@ -5,128 +5,149 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Controladora {
-    //controladora modelo
-    
-    //modelo.agregarCliente()
-    private List<Cliente> clientes = new ArrayList<>();
-    private List<Articulo> articulos = new ArrayList<>();
-    private List<Pedido> pedidos = new ArrayList<>();
+    private Tienda tienda;
+
+    public Controladora() {
+        tienda = new Tienda("OnlineStore");
+    }
 
     // ================= CLIENTES =================
 
-    public boolean crearCliente(Cliente c) {
-        if (buscarCliente(c.getEmail()) != null)
+    public boolean crearClienteEstandar(String nombre, String email, String domicilio, String nif) {
+
+        if (buscarCliente(email) != null)
             return false;
 
-        clientes.add(c);
+        Cliente c = new ClienteEstandar(nombre, email, domicilio, nif);
+
+        tienda.getClientes().add(c);
+
+        return true;
+    }
+
+    public boolean crearClientePremium(String nombre, String email, String domicilio, String nif) {
+
+        if (buscarCliente(email) != null)
+            return false;
+
+        Cliente c = new ClientePremium(nombre, email, domicilio, nif);
+
+        tienda.getClientes().add(c);
+
         return true;
     }
 
     public Cliente buscarCliente(String email) {
-        for (Cliente c : clientes) {
+
+        for (Cliente c : tienda.getClientes()) {
+
             if (c.getEmail().equalsIgnoreCase(email))
                 return c;
         }
+
         return null;
     }
 
-    public boolean modificarCliente(String email, String nombre,
-                                    String domicilio, String nif) {
-
-        Cliente c = buscarCliente(email);
-
-        if (c != null) {
-            c.setNombre(nombre);
-            c.setDomicilio(domicilio);
-            c.setNif(nif);
-            return true;
-        }
-        return false;
-    }
-
     public boolean eliminarCliente(String email) {
+
         Cliente c = buscarCliente(email);
+
         if (c != null) {
-            clientes.remove(c);
+            tienda.getClientes().remove(c);
             return true;
         }
+
         return false;
     }
 
-    public List<Cliente> getClientes() { return clientes; }
+    public List<Cliente> listarClientes() {
+        return tienda.getClientes();
+    }
 
     // ================= ARTICULOS =================
 
-    public boolean crearArticulo(Articulo a) {
-        if (buscarArticulo(a.getCodigo()) != null)
+    public boolean crearArticulo(String codigo, String descripcion,
+                                 double precioVenta, double gastosEnvio,
+                                 int tiempoPreparacion) {
+
+        if (buscarArticulo(codigo) != null)
             return false;
 
-        articulos.add(a);
+        Articulo a = new Articulo(
+                codigo,
+                descripcion,
+                precioVenta,
+                gastosEnvio,
+                tiempoPreparacion
+        );
+
+        tienda.getArticulos().add(a);
+
         return true;
     }
 
     public Articulo buscarArticulo(String codigo) {
-        for (Articulo a : articulos) {
+
+        for (Articulo a : tienda.getArticulos()) {
+
             if (a.getCodigo().equalsIgnoreCase(codigo))
                 return a;
         }
+
         return null;
-    }
-
-    public boolean modificarArticulo(String codigo, String descripcion,
-                                     double precioVenta,
-                                     double gastosEnvio,
-                                     int tiempoPreparacion) {
-
-        Articulo a = buscarArticulo(codigo);
-
-        if (a != null) {
-            a.setDescripcion(descripcion);
-            a.setPrecioVenta(precioVenta);
-            a.setGastosEnvio(gastosEnvio);
-            a.setTiempoPreparacion(tiempoPreparacion);
-            return true;
-        }
-        return false;
     }
 
     public boolean eliminarArticulo(String codigo) {
+
         Articulo a = buscarArticulo(codigo);
+
         if (a != null) {
-            articulos.remove(a);
+            tienda.getArticulos().remove(a);
             return true;
         }
+
         return false;
     }
 
-    public List<Articulo> getArticulos() { return articulos; }
+    public List<Articulo> listarArticulos() {
+        return tienda.getArticulos();
+    }
 
     // ================= PEDIDOS =================
 
-    public boolean crearPedido(Pedido p) {
-        if (buscarPedido(p.getNumeroPedido()) != null)
+    public boolean crearPedido(int numeroPedido,
+                               String emailCliente,
+                               String codigoArticulo,
+                               int cantidad) {
+
+        Cliente cliente = buscarCliente(emailCliente);
+        Articulo articulo = buscarArticulo(codigoArticulo);
+
+        if (cliente == null || articulo == null)
             return false;
 
-        pedidos.add(p);
+        Pedido p = new Pedido(numeroPedido, cliente, articulo, cantidad);
+
+        tienda.getPedidos().add(p);
+
         return true;
     }
 
-    public Pedido buscarPedido(int numero) {
-        for (Pedido p : pedidos) {
-            if (p.getNumeroPedido() == numero)
-                return p;
-        }
-        return null;
-    }
+    public boolean eliminarPedido(int numeroPedido) {
 
-    public boolean eliminarPedido(int numero) {
-        Pedido p = buscarPedido(numero);
-        if (p != null) {
-            pedidos.remove(p);
-            return true;
+        for (Pedido p : tienda.getPedidos()) {
+
+            if (p.getNumeroPedido() == numeroPedido) {
+                tienda.getPedidos().remove(p);
+                return true;
+            }
         }
+
         return false;
     }
 
-    public List<Pedido> getPedidos() { return pedidos; }
+    public List<Pedido> listarPedidos() {
+        return tienda.getPedidos();
+    }
+
 }

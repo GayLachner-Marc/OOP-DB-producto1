@@ -3,8 +3,8 @@ package com.compilers.onlinestore.model;
 import java.time.Duration;
 import java.time.LocalDateTime;
 
-
 public class Pedido {
+
     private int numeroPedido;
     private LocalDateTime fechaHora;
     private int cantidad;
@@ -45,7 +45,14 @@ public class Pedido {
 
     @Override
     public String toString() {
-        return "Pedido{" + "numeroPedido=" + numeroPedido + ", fechaHora=" + fechaHora + ", cantidad=" + cantidad + ", cliente=" + cliente + ", articulo=" + articulo + '}';
+        return "Pedido{"
+                + "numeroPedido=" + numeroPedido
+                + ", fechaHora=" + fechaHora
+                + ", cantidad=" + cantidad
+                + ", cliente=" + cliente
+                + ", articulo=" + articulo
+                + ", total=" + calcularTotal()
+                + '}';
     }
 
     public Pedido() {
@@ -83,6 +90,4 @@ public class Pedido {
         return cliente;
     }
 
-   
-    
 }

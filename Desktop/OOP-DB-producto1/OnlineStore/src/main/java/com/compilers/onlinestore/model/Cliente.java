@@ -7,7 +7,7 @@ public abstract class Cliente {
     protected String nif;
     protected String email; // identificador
 
-    public Cliente(String nombre, String email, String domicilio , String nif ) {
+    public Cliente(String nombre, String email, String domicilio, String nif) {
         this.nombre = nombre;
         this.domicilio = domicilio;
         this.nif = nif;
@@ -22,7 +22,11 @@ public abstract class Cliente {
 
     @Override
     public String toString() {
-        return "Cliente{" + "nombre=" + nombre + ", domicilio=" + domicilio + ", nif=" + nif + ", email=" + email + '}';
+        return getClass().getSimpleName()
+                + "{nombre=" + nombre
+                + ", domicilio=" + domicilio
+                + ", nif=" + nif
+                + ", email=" + email + "}";
     }
 
     public String getNombre() {

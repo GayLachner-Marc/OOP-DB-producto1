@@ -7,27 +7,30 @@ import com.compilers.onlinestore.model.Articulo;
 import com.compilers.onlinestore.model.Cliente;
 import com.compilers.onlinestore.model.ClienteEstandar;
 import com.compilers.onlinestore.model.Pedido;
+import java.util.List;
 import java.util.Scanner;
 public class ConsolaView {
     private Controladora controladora;
-    private Scanner sc = new Scanner(System.in);
+    private Scanner sc;
 
     public ConsolaView(Controladora controladora) {
         this.controladora = controladora;
+        sc = new Scanner(System.in);
     }
-   
+
     public void iniciar() {
 
         int opcion;
 
-        do {            
-            System.out.println("\n--- MENU PRINCIPAL ---");
-            System.out.println("\n1.Cliente");
-            System.out.println("2.Articulo");
-            System.out.println("3.Pedido");
-            System.out.println("0.Salir");
+        do {
 
-            opcion = Integer.parseInt(sc.nextLine());
+            System.out.println("\n==== MENU PRINCIPAL ====");
+            System.out.println("1. Cliente");
+            System.out.println("2. Articulo");
+            System.out.println("3. Pedido");
+            System.out.println("0. Salir");
+
+            opcion = leerEntero("Opcion: ");
 
             switch (opcion) {
                 case 1 -> menuClientes();
@@ -45,68 +48,69 @@ public class ConsolaView {
         int opcion;
 
         do {
+
             System.out.println("\n--- GESTION CLIENTES ---");
             System.out.println("1. Crear");
             System.out.println("2. Listar");
-            System.out.println("3. Modificar");
-            System.out.println("4. Eliminar");
+            System.out.println("3. Eliminar");
             System.out.println("0. Volver");
 
-            opcion = Integer.parseInt(sc.nextLine());
+            opcion = leerEntero("Opcion: ");
 
             switch (opcion) {
                 case 1 -> crearCliente();
-                case 2 -> controladora.getClientes().forEach(System.out::println);
-                case 3 -> modificarCliente();
-                case 4 -> eliminarCliente();
+                case 2 -> listarClientes();
+                case 3 -> eliminarCliente();
             }
 
         } while (opcion != 0);
     }
 
     private void crearCliente() {
-        System.out.print("Nombre: ");
-        String nombre = sc.nextLine();
 
-        System.out.print("Email: ");
-        String email = sc.nextLine();
+        System.out.println("\n1. Cliente Estandar");
+        System.out.println("2. Cliente Premium");
 
-        System.out.print("Domicilio: ");
-        String domicilio = sc.nextLine();
+        int tipo = leerEntero("Tipo cliente: ");
 
-        System.out.print("NIF: ");
-        String nif = sc.nextLine();
+        String nombre = leerTexto("Nombre: ");
+        String email = leerTexto("Email: ");
+        String domicilio = leerTexto("Domicilio: ");
+        String nif = leerTexto("NIF: ");
 
-        Cliente c = new ClienteEstandar(nombre, email, domicilio, nif);
+        boolean creado = false;
 
-        if (controladora.crearCliente(c))
+        if (tipo == 1) {
+            creado = controladora.crearClienteEstandar(nombre, email, domicilio, nif);
+        }
+
+        if (tipo == 2) {
+            creado = controladora.crearClientePremium(nombre, email, domicilio, nif);
+        }
+
+        if (creado)
             System.out.println("Cliente creado.");
         else
-            System.out.println("Ya existe ese cliente.");
+            System.out.println("Error: cliente ya existe.");
     }
 
-    private void modificarCliente() {
-        System.out.print("Email del cliente: ");
-        String email = sc.nextLine();
+    private void listarClientes() {
 
-        System.out.print("Nuevo nombre: ");
-        String nombre = sc.nextLine();
+        List<Cliente> lista = controladora.listarClientes();
 
-        System.out.print("Nuevo domicilio: ");
-        String domicilio = sc.nextLine();
+        if (lista.isEmpty()) {
+            System.out.println("No hay clientes.");
+            return;
+        }
 
-        System.out.print("Nuevo NIF: ");
-        String nif = sc.nextLine();
-
-        if (controladora.modificarCliente(email, nombre, domicilio, nif))
-            System.out.println("Cliente modificado.");
-        else
-            System.out.println("Cliente no encontrado.");
+        for (Cliente c : lista) {
+            System.out.println(c);
+        }
     }
 
     private void eliminarCliente() {
-        System.out.print("Email del cliente: ");
-        String email = sc.nextLine();
+
+        String email = leerTexto("Email cliente: ");
 
         if (controladora.eliminarCliente(email))
             System.out.println("Cliente eliminado.");
@@ -121,17 +125,18 @@ public class ConsolaView {
         int opcion;
 
         do {
+
             System.out.println("\n--- GESTION ARTICULOS ---");
             System.out.println("1. Crear");
             System.out.println("2. Listar");
             System.out.println("3. Eliminar");
             System.out.println("0. Volver");
 
-            opcion = Integer.parseInt(sc.nextLine());
+            opcion = leerEntero("Opcion: ");
 
             switch (opcion) {
                 case 1 -> crearArticulo();
-                case 2 -> controladora.getArticulos().forEach(System.out::println);
+                case 2 -> listarArticulos();
                 case 3 -> eliminarArticulo();
             }
 
@@ -140,36 +145,45 @@ public class ConsolaView {
 
     private void crearArticulo() {
 
-        System.out.print("Codigo: ");
-        String codigo = sc.nextLine();
+        String codigo = leerTexto("Codigo: ");
+        String descripcion = leerTexto("Descripcion: ");
 
-        System.out.print("Descripcion: ");
-        String descripcion = sc.nextLine();
+        double precioVenta = leerDouble("Precio venta: ");
+        double gastosEnvio = leerDouble("Gastos envio: ");
 
-        System.out.print("Precio venta: ");
-        double precioVenta = Double.parseDouble(sc.nextLine());
+        int tiempoPreparacion = leerEntero("Tiempo preparacion (minutos): ");
 
-        System.out.print("Gastos envio: ");
-        double gastosEnvio = Double.parseDouble(sc.nextLine());
-
-        System.out.print("Tiempo preparacion: ");
-        int tiempoPreparacion = Integer.parseInt(sc.nextLine());
-
-        Articulo a = new Articulo(
-                codigo, descripcion,
-                precioVenta, gastosEnvio,
+        boolean creado = controladora.crearArticulo(
+                codigo,
+                descripcion,
+                precioVenta,
+                gastosEnvio,
                 tiempoPreparacion
         );
 
-        if (controladora.crearArticulo(a))
+        if (creado)
             System.out.println("Articulo creado.");
         else
-            System.out.println("Ya existe ese articulo.");
+            System.out.println("Articulo ya existe.");
+    }
+
+    private void listarArticulos() {
+
+        List<Articulo> lista = controladora.listarArticulos();
+
+        if (lista.isEmpty()) {
+            System.out.println("No hay articulos.");
+            return;
+        }
+
+        for (Articulo a : lista) {
+            System.out.println(a);
+        }
     }
 
     private void eliminarArticulo() {
-        System.out.print("Codigo del articulo: ");
-        String codigo = sc.nextLine();
+
+        String codigo = leerTexto("Codigo articulo: ");
 
         if (controladora.eliminarArticulo(codigo))
             System.out.println("Articulo eliminado.");
@@ -184,17 +198,18 @@ public class ConsolaView {
         int opcion;
 
         do {
+
             System.out.println("\n--- GESTION PEDIDOS ---");
             System.out.println("1. Crear");
             System.out.println("2. Listar");
             System.out.println("3. Eliminar");
             System.out.println("0. Volver");
 
-            opcion = Integer.parseInt(sc.nextLine());
+            opcion = leerEntero("Opcion: ");
 
             switch (opcion) {
                 case 1 -> crearPedido();
-                case 2 -> controladora.getPedidos().forEach(System.out::println);
+                case 2 -> listarPedidos();
                 case 3 -> eliminarPedido();
             }
 
@@ -203,49 +218,105 @@ public class ConsolaView {
 
     private void crearPedido() {
 
-        System.out.print("Numero pedido: ");
-        int numero = Integer.parseInt(sc.nextLine());
+        int numero = leerEntero("Numero pedido: ");
 
-        System.out.print("Email cliente: ");
-        String email = sc.nextLine();
+        String email = leerTexto("Email cliente: ");
 
-        Cliente cliente = controladora.buscarCliente(email);
+        String codigoArticulo = leerTexto("Codigo articulo: ");
 
-        if (cliente == null) {
-            System.out.println("Cliente no existe.");
-            return;
-        }
+        int cantidad = leerEntero("Cantidad: ");
 
-        System.out.print("Codigo articulo: ");
-        String codigo = sc.nextLine();
+        boolean creado = controladora.crearPedido(
+                numero,
+                email,
+                codigoArticulo,
+                cantidad
+        );
 
-        Articulo articulo = controladora.buscarArticulo(codigo);
-
-        if (articulo == null) {
-            System.out.println("Articulo no existe.");
-            return;
-        }
-
-        System.out.print("Cantidad: ");
-        int cantidad = Integer.parseInt(sc.nextLine());
-
-        Pedido p = new Pedido(numero, cliente, articulo, cantidad);
-
-        if (controladora.crearPedido(p))
+        if (creado)
             System.out.println("Pedido creado.");
         else
-            System.out.println("Ya existe ese pedido.");
+            System.out.println("Error: cliente o articulo no existe.");
+    }
+
+    private void listarPedidos() {
+
+        List<Pedido> lista = controladora.listarPedidos();
+
+        if (lista.isEmpty()) {
+            System.out.println("No hay pedidos.");
+            return;
+        }
+
+        for (Pedido p : lista) {
+            System.out.println(p);
+        }
     }
 
     private void eliminarPedido() {
-        System.out.print("Numero pedido: ");
-        int numero = Integer.parseInt(sc.nextLine());
+
+        int numero = leerEntero("Numero pedido: ");
 
         if (controladora.eliminarPedido(numero))
             System.out.println("Pedido eliminado.");
         else
             System.out.println("Pedido no encontrado.");
     }
+
+    // ================= LECTURA SEGURA =================
+
+    private String leerTexto(String mensaje) {
+
+        String texto;
+
+        do {
+            System.out.print(mensaje);
+            texto = sc.nextLine().trim();
+
+            if (texto.isEmpty())
+                System.out.println("Campo obligatorio.");
+
+        } while (texto.isEmpty());
+
+        return texto;
+    }
+
+    private int leerEntero(String mensaje) {
+
+        while (true) {
+
+            try {
+
+                System.out.print(mensaje);
+
+                return Integer.parseInt(sc.nextLine());
+
+            } catch (NumberFormatException e) {
+
+                System.out.println("Debe introducir un numero.");
+
+            }
+        }
+    }
+
+    private double leerDouble(String mensaje) {
+
+        while (true) {
+
+            try {
+
+                System.out.print(mensaje);
+
+                return Double.parseDouble(sc.nextLine());
+
+            } catch (NumberFormatException e) {
+
+                System.out.println("Debe introducir un numero valido.");
+
+            }
+        }
+    }
+
 }
     
     
