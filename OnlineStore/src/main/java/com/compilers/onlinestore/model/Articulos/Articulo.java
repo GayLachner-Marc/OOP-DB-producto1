@@ -1,4 +1,4 @@
-package com.compilers.onlinestore.model;
+package com.compilers.onlinestore.model.Articulos;
 
 public class Articulo {
     private String codigo;
@@ -43,7 +43,15 @@ public class Articulo {
     public void setDescripcion(String descripcion) {
         this.descripcion = descripcion;
     }
-
+    public void setPrecioVenta(double precioVenta) {
+        this.precioVenta = precioVenta;
+    }
+    public void setGastosEnvio(double gastosEnvio) {
+        this.gastosEnvio = gastosEnvio;
+    }
+    public void setTiempoPreparacion(int tiempoPreparacion) {
+        this.tiempoPreparacion = tiempoPreparacion;
+    }
     public Articulo() {
     }
 

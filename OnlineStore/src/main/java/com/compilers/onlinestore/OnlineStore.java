@@ -1,12 +1,12 @@
 package com.compilers.onlinestore;
 
-import com.compilers.onlinestore.model.Articulo;
-import com.compilers.onlinestore.model.Cliente;
-import com.compilers.onlinestore.model.ClienteEstandar;
-import com.compilers.onlinestore.model.ClientePremium;
 import com.compilers.onlinestore.model.ControladoraLogicaTiendaOnline;
-import com.compilers.onlinestore.model.Pedido;
 import com.compilers.onlinestore.model.Tienda;
+import com.compilers.onlinestore.model.Articulos.Articulo;
+import com.compilers.onlinestore.model.Clientes.Cliente;
+import com.compilers.onlinestore.model.Clientes.ClienteEstandar;
+import com.compilers.onlinestore.model.Clientes.ClientePremium;
+import com.compilers.onlinestore.model.Pedidos.Pedido;
 
 public class OnlineStore {
 

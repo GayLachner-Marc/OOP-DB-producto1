@@ -1,5 +1,5 @@
 package com.compilers.onlinestore.view;
 
-public class vista (main) {
-    
+public class vista {
+	
 }

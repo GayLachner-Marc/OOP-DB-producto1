@@ -1,4 +1,4 @@
-package com.compilers.onlinestore.model;
+package com.compilers.onlinestore.model.Clientes;
 
 public abstract class Cliente {
 

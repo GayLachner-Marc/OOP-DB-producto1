@@ -1,6 +1,11 @@
 package com.compilers.onlinestore.model;
 
 import java.util.List;
+
+import com.compilers.onlinestore.model.Articulos.Articulo;
+import com.compilers.onlinestore.model.Clientes.Cliente;
+import com.compilers.onlinestore.model.Pedidos.Pedido;
+
 import java.util.ArrayList;
 
 public class Tienda {

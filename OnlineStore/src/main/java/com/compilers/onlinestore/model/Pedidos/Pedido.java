@@ -1,7 +1,10 @@
-package com.compilers.onlinestore.model;
+package com.compilers.onlinestore.model.Pedidos;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
+
+import com.compilers.onlinestore.model.Articulos.Articulo;
+import com.compilers.onlinestore.model.Clientes.Cliente;
 
 
 public class Pedido {

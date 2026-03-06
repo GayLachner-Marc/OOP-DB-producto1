@@ -1,6 +1,17 @@
 package com.compilers.onlinestore.model;
-
 import com.compilers.onlinestore.controller.ControladoraPersistenciaTiendaOnline;
+import com.compilers.onlinestore.exceptions.ArticuloNoExisteException;
+import com.compilers.onlinestore.exceptions.ClienteNoExisteException;
+import com.compilers.onlinestore.exceptions.PedidoYaEnviadoException;
+import com.compilers.onlinestore.model.Articulos.Articulo;
+import com.compilers.onlinestore.model.Clientes.Cliente;
+import com.compilers.onlinestore.model.Clientes.ClienteEstandar;
+import com.compilers.onlinestore.model.Clientes.ClientePremium;
+import com.compilers.onlinestore.model.Pedidos.Pedido;
+
+import java.time.LocalDateTime;
+import java.time.Duration;
+import java.util.ArrayList;
 import java.util.List;
 
 public class ControladoraLogicaTiendaOnline {
@@ -35,6 +46,24 @@ public class ControladoraLogicaTiendaOnline {
         return tienda.getClientes();
     }
 
+
+  public void modificarCliente(String email, String nombre,
+                             String domicilio, String nif)
+        throws ClienteNoExisteException {
+
+    for (Cliente c : tienda.getClientes()) {
+
+        if (c.getEmail().equals(email)) {
+
+            c.setNombre(nombre);
+            c.setDomicilio(domicilio);
+            c.setNif(nif);
+            return;
+        }
+    }
+
+    throw new ClienteNoExisteException("Cliente no encontrado");
+}
     // ========================
     // ARTICULOS
     // ========================
@@ -48,6 +77,26 @@ public class ControladoraLogicaTiendaOnline {
     public List<Articulo> obtenerArticulos() {
         return tienda.getArticulos();
     }
+
+    public boolean modificarArticulo(String codigo, String nuevaDescripcion,
+                                 double nuevoPvp, double nuevosGastosEnvio,
+                                 int nuevoTiempoPreparacion) {
+
+    for (Articulo art : tienda.getArticulos()) {
+
+        if (art.getCodigo().equals(codigo)) {
+
+            art.setDescripcion(nuevaDescripcion);
+            art.setPrecioVenta(nuevoPvp);
+            art.setGastosEnvio(nuevosGastosEnvio);
+            art.setTiempoPreparacion(nuevoTiempoPreparacion);
+
+            return true;
+        }
+    }
+
+    return false;
+}
 
     // ========================
     // PEDIDOS
@@ -89,4 +138,20 @@ public class ControladoraLogicaTiendaOnline {
         return tienda.mostrarPedidosEnviados();
     }
 
+   public void modificarPedido(int numeroPedido, int nuevaCantidad)
+        throws PedidoYaEnviadoException {
+
+    Pedido pedido = tienda.buscarPedidoPorNumero(numeroPedido);
+
+    if (pedido == null) {
+        throw new IllegalArgumentException("Pedido no encontrado");
+    }
+    if (pedido.estaEnviado()) {
+        throw new PedidoYaEnviadoException("No se puede modificar el pedido porque ya fue enviado");
+    }
+
+    pedido.setCantidad(nuevaCantidad);
+
+    System.out.println("Pedido modificado correctamente.");
+}
 }
