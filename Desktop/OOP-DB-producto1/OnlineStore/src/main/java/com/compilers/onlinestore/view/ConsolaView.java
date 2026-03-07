@@ -343,16 +343,20 @@ public class ConsolaView {
         }
     }
 
-    private void eliminarPedido() throws PedidoYaEnviadoException {
+    private void eliminarPedido() {
 
-        int numero = leerEntero("Numero pedido: ");
+    int numero = leerEntero("Numero pedido: ");
 
+    try {
         if (controladora.eliminarPedido(numero)) {
             System.out.println("Pedido eliminado.");
         } else {
             System.out.println("Pedido no encontrado.");
         }
+    } catch (PedidoYaEnviadoException e) {
+        System.out.println("No se puede eliminar el pedido: " + e.getMessage());
     }
+}
 
     // ================= LECTURA SEGURA =================
     private String leerTexto(String mensaje) {
