@@ -1,15 +1,18 @@
-
 package com.compilers.onlinestore.view;
 
-
 import com.compilers.onlinestore.controller.Controladora;
+import com.compilers.onlinestore.exceptions.ArticuloNoExisteException;
+import com.compilers.onlinestore.exceptions.PedidoYaEnviadoException;
+import com.compilers.onlinestore.exceptions.ClienteNoExisteException;
+import com.compilers.onlinestore.exceptions.PedidoNoExisteException;
 import com.compilers.onlinestore.model.Articulo;
 import com.compilers.onlinestore.model.Cliente;
-import com.compilers.onlinestore.model.ClienteEstandar;
 import com.compilers.onlinestore.model.Pedido;
 import java.util.List;
 import java.util.Scanner;
+
 public class ConsolaView {
+
     private Controladora controladora;
     private Scanner sc;
 
@@ -18,7 +21,7 @@ public class ConsolaView {
         sc = new Scanner(System.in);
     }
 
-    public void iniciar() {
+    public void iniciar() throws PedidoNoExisteException, ArticuloNoExisteException, PedidoYaEnviadoException {
 
         int opcion;
 
@@ -42,7 +45,6 @@ public class ConsolaView {
     }
 
     // ================= CLIENTES =================
-
     private void menuClientes() {
 
         int opcion;
@@ -52,7 +54,8 @@ public class ConsolaView {
             System.out.println("\n--- GESTION CLIENTES ---");
             System.out.println("1. Crear");
             System.out.println("2. Listar");
-            System.out.println("3. Eliminar");
+            System.out.println("3. Modificar");
+            System.out.println("4. Eliminar");
             System.out.println("0. Volver");
 
             opcion = leerEntero("Opcion: ");
@@ -60,7 +63,8 @@ public class ConsolaView {
             switch (opcion) {
                 case 1 -> crearCliente();
                 case 2 -> listarClientes();
-                case 3 -> eliminarCliente();
+                case 3 -> modificarCliente();
+                case 4 -> eliminarCliente();
             }
 
         } while (opcion != 0);
@@ -88,10 +92,11 @@ public class ConsolaView {
             creado = controladora.crearClientePremium(nombre, email, domicilio, nif);
         }
 
-        if (creado)
+        if (creado) {
             System.out.println("Cliente creado.");
-        else
+        } else {
             System.out.println("Error: cliente ya existe.");
+        }
     }
 
     private void listarClientes() {
@@ -108,19 +113,45 @@ public class ConsolaView {
         }
     }
 
+    private void modificarCliente() {
+
+        try {
+
+            String email = leerTexto("Email del cliente a modificar: ");
+
+            Cliente c = controladora.buscarCliente(email);
+
+            if (c == null) {
+                System.out.println("Cliente no encontrado.");
+                return;
+            }
+
+            String nombre = leerTexto("Nuevo nombre: ");
+            String domicilio = leerTexto("Nuevo domicilio: ");
+            String nif = leerTexto("Nuevo NIF: ");
+
+            controladora.modificarCliente(email, nombre, domicilio, nif);
+
+            System.out.println("Cliente modificado.");
+
+        } catch (ClienteNoExisteException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
     private void eliminarCliente() {
 
         String email = leerTexto("Email cliente: ");
 
-        if (controladora.eliminarCliente(email))
+        if (controladora.eliminarCliente(email)) {
             System.out.println("Cliente eliminado.");
-        else
+        } else {
             System.out.println("Cliente no encontrado.");
+        }
     }
 
     // ================= ARTICULOS =================
-
-    private void menuArticulos() {
+    private void menuArticulos() throws ArticuloNoExisteException {
 
         int opcion;
 
@@ -129,7 +160,8 @@ public class ConsolaView {
             System.out.println("\n--- GESTION ARTICULOS ---");
             System.out.println("1. Crear");
             System.out.println("2. Listar");
-            System.out.println("3. Eliminar");
+            System.out.println("3. Modificar");
+            System.out.println("4. Eliminar");
             System.out.println("0. Volver");
 
             opcion = leerEntero("Opcion: ");
@@ -137,7 +169,8 @@ public class ConsolaView {
             switch (opcion) {
                 case 1 -> crearArticulo();
                 case 2 -> listarArticulos();
-                case 3 -> eliminarArticulo();
+                case 3 -> modificarArticulo();
+                case 4 -> eliminarArticulo();
             }
 
         } while (opcion != 0);
@@ -147,10 +180,8 @@ public class ConsolaView {
 
         String codigo = leerTexto("Codigo: ");
         String descripcion = leerTexto("Descripcion: ");
-
         double precioVenta = leerDouble("Precio venta: ");
         double gastosEnvio = leerDouble("Gastos envio: ");
-
         int tiempoPreparacion = leerEntero("Tiempo preparacion (minutos): ");
 
         boolean creado = controladora.crearArticulo(
@@ -161,10 +192,44 @@ public class ConsolaView {
                 tiempoPreparacion
         );
 
-        if (creado)
+        if (creado) {
             System.out.println("Articulo creado.");
-        else
+        } else {
             System.out.println("Articulo ya existe.");
+        }
+    }
+
+    private void modificarArticulo() {
+
+        try {
+
+            String codigo = leerTexto("Codigo articulo a modificar: ");
+            Articulo a = controladora.buscarArticulo(codigo);
+            if (a == null) {
+                System.out.println("Articulo no encontrado.");
+                return;
+            }
+
+            String descripcion = leerTexto("Nueva descripcion: ");
+            double precio = leerDouble("Nuevo precio venta: ");
+            double envio = leerDouble("Nuevos gastos envio: ");
+            int tiempo = leerEntero("Nuevo tiempo preparacion: ");
+
+            controladora.modificarArticulo(
+                    codigo,
+                    descripcion,
+                    precio,
+                    envio,
+                    tiempo
+            );
+
+            System.out.println("Articulo modificado.");
+
+        } catch (ArticuloNoExisteException e) {
+
+            System.out.println(e.getMessage());
+
+        }
     }
 
     private void listarArticulos() {
@@ -181,19 +246,19 @@ public class ConsolaView {
         }
     }
 
-    private void eliminarArticulo() {
+    private void eliminarArticulo() throws ArticuloNoExisteException {
 
         String codigo = leerTexto("Codigo articulo: ");
 
-        if (controladora.eliminarArticulo(codigo))
+        if (controladora.eliminarArticulo(codigo)) {
             System.out.println("Articulo eliminado.");
-        else
+        } else {
             System.out.println("Articulo no encontrado.");
+        }
     }
 
     // ================= PEDIDOS =================
-
-    private void menuPedidos() {
+    private void menuPedidos() throws PedidoNoExisteException, PedidoYaEnviadoException {
 
         int opcion;
 
@@ -202,7 +267,8 @@ public class ConsolaView {
             System.out.println("\n--- GESTION PEDIDOS ---");
             System.out.println("1. Crear");
             System.out.println("2. Listar");
-            System.out.println("3. Eliminar");
+            System.out.println("3. Modificar");
+            System.out.println("4. Eliminar");
             System.out.println("0. Volver");
 
             opcion = leerEntero("Opcion: ");
@@ -210,7 +276,8 @@ public class ConsolaView {
             switch (opcion) {
                 case 1 -> crearPedido();
                 case 2 -> listarPedidos();
-                case 3 -> eliminarPedido();
+                case 3 -> modificarPedido();
+                case 4 -> eliminarPedido();
             }
 
         } while (opcion != 0);
@@ -219,11 +286,8 @@ public class ConsolaView {
     private void crearPedido() {
 
         int numero = leerEntero("Numero pedido: ");
-
         String email = leerTexto("Email cliente: ");
-
         String codigoArticulo = leerTexto("Codigo articulo: ");
-
         int cantidad = leerEntero("Cantidad: ");
 
         boolean creado = controladora.crearPedido(
@@ -233,10 +297,36 @@ public class ConsolaView {
                 cantidad
         );
 
-        if (creado)
+        if (creado) {
             System.out.println("Pedido creado.");
-        else
+        } else {
             System.out.println("Error: cliente o articulo no existe.");
+        }
+    }
+
+    private void modificarPedido() throws PedidoNoExisteException {
+
+        try {
+
+            int numero = leerEntero("Numero pedido a modificar: ");
+            Pedido p = controladora.buscarPedido(numero);
+
+            if (p == null) {
+                System.out.println("Pedido no encontrado.");
+                return;
+            }
+            
+            int cantidad = leerEntero("Nueva cantidad: ");
+
+            controladora.modificarPedido(numero, cantidad);
+
+            System.out.println("Pedido modificado.");
+
+        } catch (PedidoYaEnviadoException e) {
+
+            System.out.println(e.getMessage());
+
+        }
     }
 
     private void listarPedidos() {
@@ -253,28 +343,30 @@ public class ConsolaView {
         }
     }
 
-    private void eliminarPedido() {
+    private void eliminarPedido() throws PedidoYaEnviadoException {
 
         int numero = leerEntero("Numero pedido: ");
 
-        if (controladora.eliminarPedido(numero))
+        if (controladora.eliminarPedido(numero)) {
             System.out.println("Pedido eliminado.");
-        else
+        } else {
             System.out.println("Pedido no encontrado.");
+        }
     }
 
     // ================= LECTURA SEGURA =================
-
     private String leerTexto(String mensaje) {
 
         String texto;
 
         do {
+
             System.out.print(mensaje);
             texto = sc.nextLine().trim();
 
-            if (texto.isEmpty())
+            if (texto.isEmpty()) {
                 System.out.println("Campo obligatorio.");
+            }
 
         } while (texto.isEmpty());
 
@@ -288,7 +380,6 @@ public class ConsolaView {
             try {
 
                 System.out.print(mensaje);
-
                 return Integer.parseInt(sc.nextLine());
 
             } catch (NumberFormatException e) {
@@ -306,7 +397,6 @@ public class ConsolaView {
             try {
 
                 System.out.print(mensaje);
-
                 return Double.parseDouble(sc.nextLine());
 
             } catch (NumberFormatException e) {
@@ -316,14 +406,4 @@ public class ConsolaView {
             }
         }
     }
-
 }
-    
-    
-    
-    
-    
-    
-    
-    
-
