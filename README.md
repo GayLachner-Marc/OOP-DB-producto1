@@ -1,1 +1,2 @@
 
+Para ejecutar el programa abre el CMD en la ubicación donde se encuentra **OnlineStore-1.0-SNAPSHOT.jar** y pon en el cmd **java -jar OnlineStore-1.0-SNAPSHOT.jar**. Así pues, se ejecutará el progrma en el cmd
