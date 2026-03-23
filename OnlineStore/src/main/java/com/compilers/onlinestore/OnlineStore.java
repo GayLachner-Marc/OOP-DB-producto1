@@ -1,6 +1,6 @@
 package com.compilers.onlinestore;
 
-import com.compilers.onlinestore.model.ControladoraLogicaTiendaOnline;
+
 import com.compilers.onlinestore.model.Tienda;
 import com.compilers.onlinestore.model.Articulos.Articulo;
 import com.compilers.onlinestore.model.Clientes.Cliente;
