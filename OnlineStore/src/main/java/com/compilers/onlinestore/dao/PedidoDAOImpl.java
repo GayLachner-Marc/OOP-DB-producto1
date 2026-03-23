@@ -39,6 +39,21 @@ public class PedidoDAOImpl implements PedidoDAO {
     }
 
     @Override
+public void eliminar(int numero) {
+
+    String sql = "DELETE FROM pedidos WHERE numero_pedido = ?";
+
+    try (PreparedStatement ps = conn.prepareStatement(sql)) {
+
+        ps.setInt(1, numero);
+        ps.executeUpdate();
+
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+}
+
+    @Override
     public Pedido obtenerPorNumero(int numero) {
         String sql = "SELECT * FROM pedidos WHERE numero_pedido = ?";
 

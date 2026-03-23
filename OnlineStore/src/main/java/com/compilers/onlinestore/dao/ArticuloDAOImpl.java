@@ -32,6 +32,20 @@ public class ArticuloDAOImpl implements ArticuloDAO {
             e.printStackTrace();
         }
     }
+    @Override
+public void eliminar(String codigo) {
+
+    String sql = "DELETE FROM articulos WHERE codigo = ?";
+
+    try (PreparedStatement ps = conn.prepareStatement(sql)) {
+
+        ps.setString(1, codigo);
+        ps.executeUpdate();
+
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+}
 
     @Override
     public Articulo obtenerPorCodigo(String codigo) {

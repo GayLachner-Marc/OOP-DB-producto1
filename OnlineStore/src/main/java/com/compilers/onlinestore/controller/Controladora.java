@@ -1,115 +1,126 @@
 package com.compilers.onlinestore.controller;
-import com.compilers.onlinestore.exceptions.ArticuloNoExisteException;
-import com.compilers.onlinestore.exceptions.ClienteNoExisteException;
-import com.compilers.onlinestore.exceptions.PedidoNoExisteException;
-import com.compilers.onlinestore.exceptions.PedidoYaEnviadoException;
+import com.compilers.onlinestore.dao.*;
+import com.compilers.onlinestore.factory.DAOFactory;
 import com.compilers.onlinestore.model.Articulos.Articulo;
 import com.compilers.onlinestore.model.Clientes.Cliente;
-import com.compilers.onlinestore.model.Clientes.ClienteEstandar;
-import com.compilers.onlinestore.model.Clientes.ClientePremium;
 import com.compilers.onlinestore.model.Pedidos.Pedido;
-import com.compilers.onlinestore.model.Tienda;
-import com.compilers.onlinestore.model.Datos;
+import com.compilers.onlinestore.exceptions.*;
 
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.List;
+
+import com.compilers.onlinestore.util.ConexionBD;
 
 public class Controladora {
 
-    private Datos datos;
+    private Connection conn;
+    private ClienteDAO clienteDAO;
+    private ArticuloDAO articuloDAO;
+    private PedidoDAO pedidoDAO;
 
     public Controladora() {
-        datos = new Datos();
+        try {
+            conn = ConexionBD.getConnection();
+
+            clienteDAO = DAOFactory.getClienteDAO(conn);
+            articuloDAO = DAOFactory.getArticuloDAO(conn);
+            pedidoDAO = DAOFactory.getPedidoDAO(conn);
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     // ================= CLIENTES =================
 
-    public boolean crearClienteEstandar(String nombre, String email, String domicilio, String nif) {
-        return datos.crearClienteEstandar(nombre, email, domicilio, nif);
-    }
-
-    public boolean crearClientePremium(String nombre, String email, String domicilio, String nif) {
-        return datos.crearClientePremium(nombre, email, domicilio, nif);
-    }
-
-    public boolean eliminarCliente(String email) {
-        return datos.eliminarCliente(email);
-    }
-
-    public List<Cliente> listarClientes() {
-        return datos.listarClientes();
+    public void crearCliente(Cliente cliente) {
+        clienteDAO.crear(cliente);
     }
 
     public Cliente buscarCliente(String email) {
-        return datos.buscarCliente(email);
+        return clienteDAO.obtenerPorEmail(email);
     }
 
-    public Cliente modificarCliente(String email, String nombre,
-                                    String domicilio, String nif)
-            throws ClienteNoExisteException {
+    public List<Cliente> listarClientes() {
+        return clienteDAO.obtenerTodos();
+    }
 
-        return datos.modificarCliente(email, nombre, domicilio, nif);
+    public void modificarCliente(Cliente cliente) {
+        clienteDAO.actualizar(cliente);
+    }
+
+    public void eliminarCliente(String email) {
+        clienteDAO.eliminar(email);
     }
 
     // ================= ARTICULOS =================
 
-    public boolean crearArticulo(String codigo, String descripcion,
-                                 double precioVenta, double gastosEnvio,
-                                 int tiempoPreparacion) {
-
-        return datos.crearArticulo(codigo, descripcion, precioVenta, gastosEnvio, tiempoPreparacion);
+    public void crearArticulo(Articulo a) {
+        articuloDAO.crear(a);
     }
-    
+
     public Articulo buscarArticulo(String codigo) {
-        return datos.buscarArticulo(codigo);
-    }
-
-    public Articulo modificarArticulo(String codigo,
-                                  String descripcion,
-                                  double precioVenta,
-                                  double gastosEnvio,
-                                  int tiempoPreparacion)
-            throws ArticuloNoExisteException {
-
-        return datos.modificarArticulo(codigo, descripcion, precioVenta, gastosEnvio, tiempoPreparacion);
-    }
-
-    public boolean eliminarArticulo(String codigo)
-            throws ArticuloNoExisteException {
-
-        return datos.eliminarArticulo(codigo);
+        return articuloDAO.obtenerPorCodigo(codigo);
     }
 
     public List<Articulo> listarArticulos() {
-        return datos.listarArticulos();
+        return articuloDAO.obtenerTodos();
     }
+
+    public boolean eliminarArticulo(String codigo)
+        throws ArticuloNoExisteException {
+
+    Articulo a = articuloDAO.obtenerPorCodigo(codigo);
+
+    if (a == null) {
+        throw new ArticuloNoExisteException("Articulo no encontrado");
+    }
+
+    articuloDAO.eliminar(codigo);
+
+    return true;
+}
 
     // ================= PEDIDOS =================
 
-    public boolean crearPedido(int numeroPedido,
-                               String emailCliente,
-                               String codigoArticulo,
-                               int cantidad) {
-
-        return datos.crearPedido(numeroPedido, emailCliente, codigoArticulo, cantidad);
+    public void crearPedido(Pedido p) {
+        pedidoDAO.crear(p);
     }
 
-    public boolean eliminarPedido(int numeroPedido)
-            throws PedidoYaEnviadoException {
-
-        return datos.eliminarPedido(numeroPedido);
+    public Pedido buscarPedido(int numero) {
+        return pedidoDAO.obtenerPorNumero(numero);
     }
 
     public List<Pedido> listarPedidos() {
-        return datos.listarPedidos();
+        return pedidoDAO.obtenerTodos();
     }
-    
-    public Pedido buscarPedido(int numeroPedido) {
-        return datos.buscarPedido(numeroPedido);
-    }
-    public Pedido modificarPedido(int numeroPedido, int nuevaCantidad)
-            throws PedidoYaEnviadoException, PedidoNoExisteException {
 
-        
-        return datos.modificarPedido(numeroPedido, nuevaCantidad);
+    public void modificarPedido(Pedido p)
+            throws PedidoYaEnviadoException {
+
+        if (p.estaEnviado()) {
+            throw new PedidoYaEnviadoException("El pedido ya fue enviado");
+        }
+
+        pedidoDAO.actualizar(p);
     }
+    public boolean eliminarPedido(int numero)
+        throws PedidoYaEnviadoException {
+
+    Pedido p = pedidoDAO.obtenerPorNumero(numero);
+
+    if (p == null) {
+        return false;
+    }
+
+    if (p.estaEnviado()) {
+        throw new PedidoYaEnviadoException("El pedido ya fue enviado");
+    }
+
+    pedidoDAO.eliminar(numero);
+
+    return true;
+}
+    
 }

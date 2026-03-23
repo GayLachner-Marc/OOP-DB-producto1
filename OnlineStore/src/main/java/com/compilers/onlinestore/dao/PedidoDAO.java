@@ -12,4 +12,5 @@ public interface PedidoDAO {
     List<Pedido> obtenerTodos();
 
     void actualizar(Pedido pedido);
+    void eliminar(int numero);
 }

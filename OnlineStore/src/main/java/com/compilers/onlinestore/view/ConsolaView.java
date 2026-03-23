@@ -74,32 +74,28 @@ public class ConsolaView {
 
     private void crearCliente() {
 
-        System.out.println("\n1. Cliente Estandar");
-        System.out.println("2. Cliente Premium");
+    System.out.println("\n1. Cliente Estandar");
+    System.out.println("2. Cliente Premium");
 
-        int tipo = leerEntero("Tipo cliente: ");
+    int tipo = leerEntero("Tipo cliente: ");
 
-        String nombre = leerTexto("Nombre: ");
-        String email = leerTexto("Email: ");
-        String domicilio = leerTexto("Domicilio: ");
-        String nif = leerTexto("NIF: ");
+    String nombre = leerTexto("Nombre: ");
+    String email = leerTexto("Email: ");
+    String domicilio = leerTexto("Domicilio: ");
+    String nif = leerTexto("NIF: ");
 
-        boolean creado = false;
+    Cliente cliente;
 
-        if (tipo == 1) {
-            creado = controladora.crearClienteEstandar(nombre, email, domicilio, nif);
-        }
-
-        if (tipo == 2) {
-            creado = controladora.crearClientePremium(nombre, email, domicilio, nif);
-        }
-
-        if (creado) {
-            System.out.println("Cliente creado.");
-        } else {
-            System.out.println("Error: cliente ya existe.");
-        }
+    if (tipo == 2) {
+        cliente = new ClientePremium(nombre, domicilio, nif, email);
+    } else {
+        cliente = new ClienteEstandar(nombre, domicilio, nif, email);
     }
+
+    controladora.crearCliente(cliente);
+
+    System.out.println("Cliente creado.");
+}
 
     private void listarClientes() {
 
@@ -117,40 +113,36 @@ public class ConsolaView {
 
     private void modificarCliente() {
 
-        try {
+    String email = leerTexto("Email del cliente a modificar: ");
 
-            String email = leerTexto("Email del cliente a modificar: ");
+    Cliente c = controladora.buscarCliente(email);
 
-            Cliente c = controladora.buscarCliente(email);
-
-            if (c == null) {
-                System.out.println("Cliente no encontrado.");
-                return;
-            }
-
-            String nombre = leerTexto("Nuevo nombre: ");
-            String domicilio = leerTexto("Nuevo domicilio: ");
-            String nif = leerTexto("Nuevo NIF: ");
-
-            controladora.modificarCliente(email, nombre, domicilio, nif);
-
-            System.out.println("Cliente modificado.");
-
-        } catch (ClienteNoExisteException e) {
-            System.out.println(e.getMessage());
-        }
+    if (c == null) {
+        System.out.println("Cliente no encontrado.");
+        return;
     }
 
-    private void eliminarCliente() {
+    String nombre = leerTexto("Nuevo nombre: ");
+    String domicilio = leerTexto("Nuevo domicilio: ");
+    String nif = leerTexto("Nuevo NIF: ");
 
-        String email = leerTexto("Email cliente: ");
+    c.setNombre(nombre);
+    c.setDomicilio(domicilio);
+    c.setNif(nif);
 
-        if (controladora.eliminarCliente(email)) {
-            System.out.println("Cliente eliminado.");
-        } else {
-            System.out.println("Cliente no encontrado.");
-        }
-    }
+    controladora.modificarCliente(c);
+
+    System.out.println("Cliente modificado.");
+}
+
+   private void eliminarCliente() {
+
+    String email = leerTexto("Email cliente: ");
+
+    controladora.eliminarCliente(email);
+
+    System.out.println("Cliente eliminado (si existía).");
+}
 
     // ================= ARTICULOS =================
     private void menuArticulos() throws ArticuloNoExisteException {
@@ -178,61 +170,49 @@ public class ConsolaView {
         } while (opcion != 0);
     }
 
-    private void crearArticulo() {
+   private void crearArticulo() {
 
-        String codigo = leerTexto("Codigo: ");
-        String descripcion = leerTexto("Descripcion: ");
-        double precioVenta = leerDouble("Precio venta: ");
-        double gastosEnvio = leerDouble("Gastos envio: ");
-        int tiempoPreparacion = leerEntero("Tiempo preparacion (minutos): ");
+    String codigo = leerTexto("Codigo: ");
+    String descripcion = leerTexto("Descripcion: ");
+    double precioVenta = leerDouble("Precio venta: ");
+    double gastosEnvio = leerDouble("Gastos envio: ");
+    int tiempoPreparacion = leerEntero("Tiempo preparacion: ");
 
-        boolean creado = controladora.crearArticulo(
-                codigo,
-                descripcion,
-                precioVenta,
-                gastosEnvio,
-                tiempoPreparacion
-        );
+    Articulo a = new Articulo(
+            codigo,
+            descripcion,
+            precioVenta,
+            gastosEnvio,
+            tiempoPreparacion
+    );
 
-        if (creado) {
-            System.out.println("Articulo creado.");
-        } else {
-            System.out.println("Articulo ya existe.");
-        }
-    }
+    controladora.crearArticulo(a);
+
+    System.out.println("Articulo creado.");
+}
 
     private void modificarArticulo() {
 
-        try {
+    String codigo = leerTexto("Codigo articulo: ");
+    Articulo a = controladora.buscarArticulo(codigo);
 
-            String codigo = leerTexto("Codigo articulo a modificar: ");
-            Articulo a = controladora.buscarArticulo(codigo);
-            if (a == null) {
-                System.out.println("Articulo no encontrado.");
-                return;
-            }
-
-            String descripcion = leerTexto("Nueva descripcion: ");
-            double precio = leerDouble("Nuevo precio venta: ");
-            double envio = leerDouble("Nuevos gastos envio: ");
-            int tiempo = leerEntero("Nuevo tiempo preparacion: ");
-
-            controladora.modificarArticulo(
-                    codigo,
-                    descripcion,
-                    precio,
-                    envio,
-                    tiempo
-            );
-
-            System.out.println("Articulo modificado.");
-
-        } catch (ArticuloNoExisteException e) {
-
-            System.out.println(e.getMessage());
-
-        }
+    if (a == null) {
+        System.out.println("Articulo no encontrado.");
+        return;
     }
+
+    String descripcion = leerTexto("Nueva descripcion: ");
+    double precio = leerDouble("Nuevo precio: ");
+    double envio = leerDouble("Nuevo envio: ");
+    int tiempo = leerEntero("Nuevo tiempo: ");
+
+    a.setDescripcion(descripcion);
+    a.setPrecioVenta(precio);
+    a.setGastosEnvio(envio);
+    a.setTiempoPreparacion(tiempo);
+
+    System.out.println("Articulo modificado.");
+}
 
     private void listarArticulos() {
 
@@ -248,17 +228,22 @@ public class ConsolaView {
         }
     }
 
-    private void eliminarArticulo() throws ArticuloNoExisteException {
+   private void eliminarArticulo() {
 
-        String codigo = leerTexto("Codigo articulo: ");
+    String codigo = leerTexto("Codigo articulo: ");
+
+    try {
 
         if (controladora.eliminarArticulo(codigo)) {
             System.out.println("Articulo eliminado.");
         } else {
             System.out.println("Articulo no encontrado.");
         }
-    }
 
+    } catch (ArticuloNoExisteException e) {
+        System.out.println("Error: " + e.getMessage());
+    }
+}
     // ================= PEDIDOS =================
     private void menuPedidos() throws PedidoNoExisteException, PedidoYaEnviadoException {
 
@@ -287,50 +272,49 @@ public class ConsolaView {
 
     private void crearPedido() {
 
+    int numero = leerEntero("Numero pedido: ");
+    String email = leerTexto("Email cliente: ");
+    String codigo = leerTexto("Codigo articulo: ");
+    int cantidad = leerEntero("Cantidad: ");
+
+    Cliente cliente = controladora.buscarCliente(email);
+    Articulo articulo = controladora.buscarArticulo(codigo);
+
+    if (cliente == null || articulo == null) {
+        System.out.println("Error: cliente o articulo no existe.");
+        return;
+    }
+
+    Pedido p = new Pedido(numero, cliente, articulo, cantidad);
+
+    controladora.crearPedido(p);
+
+    System.out.println("Pedido creado.");
+}
+
+    private void modificarPedido() {
+
+    try {
+
         int numero = leerEntero("Numero pedido: ");
-        String email = leerTexto("Email cliente: ");
-        String codigoArticulo = leerTexto("Codigo articulo: ");
-        int cantidad = leerEntero("Cantidad: ");
+        Pedido p = controladora.buscarPedido(numero);
 
-        boolean creado = controladora.crearPedido(
-                numero,
-                email,
-                codigoArticulo,
-                cantidad
-        );
-
-        if (creado) {
-            System.out.println("Pedido creado.");
-        } else {
-            System.out.println("Error: cliente o articulo no existe.");
+        if (p == null) {
+            System.out.println("Pedido no encontrado.");
+            return;
         }
+
+        int cantidad = leerEntero("Nueva cantidad: ");
+        p.setCantidad(cantidad);
+
+        controladora.modificarPedido(p);
+
+        System.out.println("Pedido modificado.");
+
+    } catch (PedidoYaEnviadoException e) {
+        System.out.println(e.getMessage());
     }
-
-    private void modificarPedido() throws PedidoNoExisteException {
-
-        try {
-
-            int numero = leerEntero("Numero pedido a modificar: ");
-            Pedido p = controladora.buscarPedido(numero);
-
-            if (p == null) {
-                System.out.println("Pedido no encontrado.");
-                return;
-            }
-            
-            int cantidad = leerEntero("Nueva cantidad: ");
-
-            controladora.modificarPedido(numero, cantidad);
-
-            System.out.println("Pedido modificado.");
-
-        } catch (PedidoYaEnviadoException e) {
-
-            System.out.println(e.getMessage());
-
-        }
-    }
-
+}
     private void listarPedidos() {
 
         List<Pedido> lista = controladora.listarPedidos();
@@ -345,18 +329,16 @@ public class ConsolaView {
         }
     }
 
-    private void eliminarPedido() {
+   private void eliminarPedido() {
 
     int numero = leerEntero("Numero pedido: ");
 
     try {
-        if (controladora.eliminarPedido(numero)) {
-            System.out.println("Pedido eliminado.");
-        } else {
-            System.out.println("Pedido no encontrado.");
-        }
+        controladora.eliminarPedido(numero);
+        System.out.println("Pedido eliminado (si existía).");
+
     } catch (PedidoYaEnviadoException e) {
-        System.out.println("No se puede eliminar el pedido: " + e.getMessage());
+        System.out.println(e.getMessage());
     }
 }
 
