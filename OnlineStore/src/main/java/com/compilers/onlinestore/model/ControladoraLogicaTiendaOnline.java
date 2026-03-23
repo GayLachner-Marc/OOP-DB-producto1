@@ -1,5 +1,5 @@
 package com.compilers.onlinestore.model;
-import com.compilers.onlinestore.controller.ControladoraPersistenciaTiendaOnline;
+import com.compilers.onlinestore.controller.Controladora;
 import com.compilers.onlinestore.exceptions.ArticuloNoExisteException;
 import com.compilers.onlinestore.exceptions.ClienteNoExisteException;
 import com.compilers.onlinestore.exceptions.PedidoYaEnviadoException;
@@ -16,7 +16,7 @@ import java.util.List;
 
 public class ControladoraLogicaTiendaOnline {
 
-    ControladoraPersistenciaTiendaOnline controlPersis = new ControladoraPersistenciaTiendaOnline();
+    Controladora controlPersis = new Controladora();
 
     //Aqui debes poner todos los metodos CRUD
     private Tienda tienda;
