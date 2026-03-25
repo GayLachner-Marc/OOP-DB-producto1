@@ -46,7 +46,7 @@ public class Controladora {
         return clienteDAO.obtenerTodos();
     }
 
-    public void modificarCliente(Cliente cliente) {
+    public void actualizarCliente(Cliente cliente) {
         clienteDAO.actualizar(cliente);
     }
 
@@ -66,6 +66,15 @@ public class Controladora {
 
     public List<Articulo> listarArticulos() {
         return articuloDAO.obtenerTodos();
+    }
+    public void actualizarArticulo(Articulo a)
+            throws ArticuloNoExisteException {
+
+        if (articuloDAO.obtenerPorCodigo(a.getCodigo()) == null) {
+            throw new ArticuloNoExisteException("Articulo no encontrado");
+        }
+
+        articuloDAO.actualizar(a);
     }
 
     public boolean eliminarArticulo(String codigo)
@@ -96,7 +105,7 @@ public class Controladora {
         return pedidoDAO.obtenerTodos();
     }
 
-    public void modificarPedido(Pedido p)
+    public void actualizarPedido(Pedido p)
             throws PedidoYaEnviadoException {
 
         if (p.estaEnviado()) {

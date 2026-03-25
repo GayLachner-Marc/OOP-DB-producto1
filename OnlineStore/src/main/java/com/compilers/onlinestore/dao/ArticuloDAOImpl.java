@@ -46,6 +46,29 @@ public void eliminar(String codigo) {
         e.printStackTrace();
     }
 }
+    @Override
+public void actualizar(Articulo a) {
+        String sql = "UPDATE articulos SET descripcion = ?, precio_venta = ?, gastos_envio = ?, tiempo_preparacion = ? WHERE codigo = ?";
+
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setString(1, a.getDescripcion());
+            ps.setDouble(2, a.getPrecioVenta());
+            ps.setDouble(3, a.getGastosEnvio());
+            ps.setInt(4, a.getTiempoPreparacion());
+            ps.setString(5, a.getCodigo());
+
+            int filas =ps.executeUpdate();
+            if (filas == 0) {
+                System.out.println("No se encontró el artículo para actualizar");
+            } else {
+                System.out.println("Artículo actualizado correctamente");
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        }
 
     @Override
     public Articulo obtenerPorCodigo(String codigo) {

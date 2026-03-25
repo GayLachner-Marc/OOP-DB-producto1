@@ -4,6 +4,7 @@ import java.sql.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+
 import com.compilers.onlinestore.model.Pedidos.Pedido;
 import com.compilers.onlinestore.model.Clientes.Cliente;
 import com.compilers.onlinestore.model.Clientes.ClienteEstandar;
@@ -39,23 +40,46 @@ public class PedidoDAOImpl implements PedidoDAO {
     }
 
     @Override
-public void eliminar(int numero) {
+    public void eliminar(int numero) {
+        String sql = "DELETE FROM pedidos WHERE numero_pedido = ?";
 
-    String sql = "DELETE FROM pedidos WHERE numero_pedido = ?";
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
 
-    try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, numero);
+            ps.executeUpdate();
 
-        ps.setInt(1, numero);
-        ps.executeUpdate();
-
-    } catch (SQLException e) {
-        e.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
-}
 
+    // ===================== OBTENER UNO =====================
     @Override
     public Pedido obtenerPorNumero(int numero) {
-        String sql = "SELECT * FROM pedidos WHERE numero_pedido = ?";
+
+        String sql = """
+        SELECT 
+            p.numero_pedido,
+            p.cantidad,
+            p.enviado,
+            
+            c.email,
+            c.nombre,
+            c.domicilio,
+            c.nif,
+            c.tipo_cliente AS tipo,
+
+            a.codigo AS a_codigo,
+            a.descripcion,
+            a.precio_venta,
+            a.gastos_envio,
+            a.tiempo_preparacion
+
+        FROM pedidos p
+        JOIN clientes c ON p.email_cliente = c.email
+        JOIN articulos a ON p.codigo_articulo = a.codigo
+        WHERE p.numero_pedido = ?
+        """;
 
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
 
@@ -63,13 +87,44 @@ public void eliminar(int numero) {
             ResultSet rs = ps.executeQuery();
 
             if (rs.next()) {
-                // ⚠ simplificado: deberías buscar cliente/articulo vía DAO
-                return new Pedido(
+
+                // 🔹 ARTICULO
+                Articulo a = new Articulo(
+                    rs.getString("a_codigo"),
+                    rs.getString("descripcion"),
+                    rs.getDouble("precio_venta"),
+                    rs.getDouble("gastos_envio"),
+                    rs.getInt("tiempo_preparacion")
+                );
+
+                // 🔹 CLIENTE (según tipo)
+                Cliente c;
+                String tipo = rs.getString("tipo");
+
+                if ("premium".equalsIgnoreCase(tipo)) {
+                    c = new ClientePremium(
+                        rs.getString("nombre"),
+                        rs.getString("email"),
+                        rs.getString("domicilio"),
+                        rs.getString("nif")
+                    );
+                } else {
+                    c = new ClienteEstandar(
+                        rs.getString("nombre"),
+                        rs.getString("email"),
+                        rs.getString("domicilio"),
+                        rs.getString("nif")
+                    );
+                }
+
+                Pedido p = new Pedido(
                     rs.getInt("numero_pedido"),
-                    null,
-                    null,
+                    c,
+                    a,
                     rs.getInt("cantidad")
                 );
+
+                return p;
             }
 
         } catch (SQLException e) {
@@ -79,20 +134,78 @@ public void eliminar(int numero) {
         return null;
     }
 
+    // ===================== OBTENER TODOS =====================
     @Override
     public List<Pedido> obtenerTodos() {
+
         List<Pedido> lista = new ArrayList<>();
 
+        String sql = """
+        SELECT 
+            p.numero_pedido,
+            p.cantidad,
+            p.enviado,
+            
+            c.email,
+            c.nombre,
+            c.domicilio,
+            c.nif,
+            c.tipo_cliente AS tipo,
+
+            a.codigo AS a_codigo,
+            a.descripcion,
+            a.precio_venta,
+            a.gastos_envio,
+            a.tiempo_preparacion
+
+        FROM pedidos p
+        JOIN clientes c ON p.email_cliente = c.email
+        JOIN articulos a ON p.codigo_articulo = a.codigo
+        """;
+
         try (Statement st = conn.createStatement()) {
-            ResultSet rs = st.executeQuery("SELECT * FROM pedidos");
+
+            ResultSet rs = st.executeQuery(sql);
 
             while (rs.next()) {
-                lista.add(new Pedido(
+
+                // 🔹 ARTICULO
+                Articulo a = new Articulo(
+                    rs.getString("a_codigo"),
+                    rs.getString("descripcion"),
+                    rs.getDouble("precio_venta"),
+                    rs.getDouble("gastos_envio"),
+                    rs.getInt("tiempo_preparacion")
+                );
+
+                // 🔹 CLIENTE
+                Cliente c;
+                String tipo = rs.getString("tipo");
+
+                if ("premium".equalsIgnoreCase(tipo)) {
+                    c = new ClientePremium(
+                        rs.getString("nombre"),
+                        rs.getString("email"),
+                        rs.getString("domicilio"),
+                        rs.getString("nif")
+                    );
+                } else {
+                    c = new ClienteEstandar(
+                        rs.getString("nombre"),
+                        rs.getString("email"),
+                        rs.getString("domicilio"),
+                        rs.getString("nif")
+                    );
+                }
+
+                Pedido p = new Pedido(
                     rs.getInt("numero_pedido"),
-                    null,
-                    null,
+                    c,
+                    a,
                     rs.getInt("cantidad")
-                ));
+                );
+
+                lista.add(p);
             }
 
         } catch (SQLException e) {
@@ -102,8 +215,10 @@ public void eliminar(int numero) {
         return lista;
     }
 
+    // ===================== ACTUALIZAR =====================
     @Override
     public void actualizar(Pedido p) {
+
         String sql = "UPDATE pedidos SET cantidad=?, enviado=? WHERE numero_pedido=?";
 
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -112,7 +227,8 @@ public void eliminar(int numero) {
             ps.setBoolean(2, p.estaEnviado());
             ps.setInt(3, p.getNumeroPedido());
 
-            ps.executeUpdate();
+            int filas = ps.executeUpdate(); // debug opcional
+            System.out.println("Filas actualizadas: " + filas);
 
         } catch (SQLException e) {
             e.printStackTrace();

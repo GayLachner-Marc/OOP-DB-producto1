@@ -9,7 +9,7 @@ import com.compilers.onlinestore.model.Pedidos.Pedido;
 import java.util.ArrayList;
 
 public class Tienda {
-     private String nombre;
+    private String nombre;
     private List<Cliente> clientes;
     private List<Articulo> articulos;
     private List<Pedido> pedidos;

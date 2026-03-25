@@ -10,6 +10,9 @@ import com.compilers.onlinestore.model.Clientes.Cliente;
 import com.compilers.onlinestore.model.Clientes.ClientePremium;
 import com.compilers.onlinestore.model.Clientes.ClienteEstandar;
 import com.compilers.onlinestore.model.Pedidos.Pedido;
+import com.compilers.onlinestore.dao.ArticuloDAOImpl;
+import com.compilers.onlinestore.dao.ClienteDAOImpl;
+import com.compilers.onlinestore.dao.PedidoDAOImpl;
 import java.util.List;
 import java.util.Scanner;
 
@@ -65,7 +68,7 @@ public class ConsolaView {
             switch (opcion) {
                 case 1 -> crearCliente();
                 case 2 -> listarClientes();
-                case 3 -> modificarCliente();
+                case 3 -> actualizarCliente();
                 case 4 -> eliminarCliente();
             }
 
@@ -111,9 +114,9 @@ public class ConsolaView {
         }
     }
 
-    private void modificarCliente() {
+    private void actualizarCliente() {
 
-    String email = leerTexto("Email del cliente a modificar: ");
+    String email = leerTexto("Email del cliente a actualizar: ");
 
     Cliente c = controladora.buscarCliente(email);
 
@@ -130,9 +133,9 @@ public class ConsolaView {
     c.setDomicilio(domicilio);
     c.setNif(nif);
 
-    controladora.modificarCliente(c);
+    controladora.actualizarCliente(c);
 
-    System.out.println("Cliente modificado.");
+    System.out.println("Cliente actualizado.");
 }
 
    private void eliminarCliente() {
@@ -163,7 +166,7 @@ public class ConsolaView {
             switch (opcion) {
                 case 1 -> crearArticulo();
                 case 2 -> listarArticulos();
-                case 3 -> modificarArticulo();
+                case 3 -> actualizarArticulo();
                 case 4 -> eliminarArticulo();
             }
 
@@ -191,7 +194,7 @@ public class ConsolaView {
     System.out.println("Articulo creado.");
 }
 
-    private void modificarArticulo() {
+    private void actualizarArticulo() {
 
     String codigo = leerTexto("Codigo articulo: ");
     Articulo a = controladora.buscarArticulo(codigo);
@@ -203,8 +206,8 @@ public class ConsolaView {
 
     String descripcion = leerTexto("Nueva descripcion: ");
     double precio = leerDouble("Nuevo precio: ");
-    double envio = leerDouble("Nuevo envio: ");
-    int tiempo = leerEntero("Nuevo tiempo: ");
+    double envio = leerDouble("Nuevos gastos envio: ");
+    int tiempo = leerEntero("Nuevo tiempo de preparacion: ");
 
     a.setDescripcion(descripcion);
     a.setPrecioVenta(precio);
@@ -263,7 +266,7 @@ public class ConsolaView {
             switch (opcion) {
                 case 1 -> crearPedido();
                 case 2 -> listarPedidos();
-                case 3 -> modificarPedido();
+                case 3 -> actualizarPedido();
                 case 4 -> eliminarPedido();
             }
 
@@ -292,7 +295,7 @@ public class ConsolaView {
     System.out.println("Pedido creado.");
 }
 
-    private void modificarPedido() {
+    private void actualizarPedido() {
 
     try {
 
@@ -307,7 +310,7 @@ public class ConsolaView {
         int cantidad = leerEntero("Nueva cantidad: ");
         p.setCantidad(cantidad);
 
-        controladora.modificarPedido(p);
+        controladora.actualizarPedido(p);
 
         System.out.println("Pedido modificado.");
 
