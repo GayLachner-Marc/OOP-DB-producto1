@@ -194,7 +194,7 @@ public class ConsolaView {
     System.out.println("Articulo creado.");
 }
 
-    private void actualizarArticulo() {
+    private void actualizarArticulo() throws ArticuloNoExisteException {
 
     String codigo = leerTexto("Codigo articulo: ");
     Articulo a = controladora.buscarArticulo(codigo);
@@ -213,6 +213,8 @@ public class ConsolaView {
     a.setPrecioVenta(precio);
     a.setGastosEnvio(envio);
     a.setTiempoPreparacion(tiempo);
+
+    controladora.actualizarArticulo(a);
 
     System.out.println("Articulo modificado.");
 }
@@ -247,6 +249,8 @@ public class ConsolaView {
         System.out.println("Error: " + e.getMessage());
     }
 }
+
+
     // ================= PEDIDOS =================
     private void menuPedidos() throws PedidoNoExisteException, PedidoYaEnviadoException {
 
