@@ -194,7 +194,7 @@ public class ConsolaView {
     System.out.println("Articulo creado.");
 }
 
-    private void actualizarArticulo() {
+    private void actualizarArticulo() throws ArticuloNoExisteException {
 
     String codigo = leerTexto("Codigo articulo: ");
     Articulo a = controladora.buscarArticulo(codigo);
@@ -213,6 +213,8 @@ public class ConsolaView {
     a.setPrecioVenta(precio);
     a.setGastosEnvio(envio);
     a.setTiempoPreparacion(tiempo);
+    // ESTA LÍNEA FALTABA
+    controladora.actualizarArticulo(a);
 
     System.out.println("Articulo modificado.");
 }

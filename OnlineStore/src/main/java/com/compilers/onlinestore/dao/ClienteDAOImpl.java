@@ -16,9 +16,10 @@ public class ClienteDAOImpl implements ClienteDAO {
         this.conn = conn;
     }
 
+    //  CREATE (FIX IMPORTANTE)
     @Override
     public void crear(Cliente cliente) {
-        String sql = "INSERT INTO clientes VALUES (?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO clientes (email, nombre, domicilio, nif, tipo) VALUES (?, ?, ?, ?, ?)";
 
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
 
@@ -35,6 +36,7 @@ public class ClienteDAOImpl implements ClienteDAO {
         }
     }
 
+    // GET por email (NO CAMBIA)
     @Override
     public Cliente obtenerPorEmail(String email) {
         String sql = "SELECT * FROM clientes WHERE email = ?";
@@ -55,6 +57,7 @@ public class ClienteDAOImpl implements ClienteDAO {
         return null;
     }
 
+    // 🔥 GET ALL
     @Override
     public List<Cliente> obtenerTodos() {
         List<Cliente> lista = new ArrayList<>();
@@ -75,9 +78,10 @@ public class ClienteDAOImpl implements ClienteDAO {
         return lista;
     }
 
+    // 🔥 UPDATE (FIX IMPORTANTE)
     @Override
     public void actualizar(Cliente cliente) {
-        String sql = "UPDATE clientes SET nombre=?, domicilio=?, nif=?, tipo_cliente=? WHERE email=?";
+        String sql = "UPDATE clientes SET nombre=?, domicilio=?, nif=?, tipo=? WHERE email=?";
 
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
 
@@ -94,6 +98,7 @@ public class ClienteDAOImpl implements ClienteDAO {
         }
     }
 
+    // 🔥 DELETE
     @Override
     public void eliminar(String email) {
         String sql = "DELETE FROM clientes WHERE email = ?";
@@ -108,10 +113,10 @@ public class ClienteDAOImpl implements ClienteDAO {
         }
     }
 
-
+    // 🔥 MAP (FIX IMPORTANTE)
     private Cliente mapCliente(ResultSet rs) throws SQLException {
 
-        String tipo = rs.getString("tipo_cliente");
+        String tipo = rs.getString("tipo");
 
         if (tipo.equals("PREMIUM")) {
             return new ClientePremium(

@@ -7,7 +7,7 @@ public class ConexionBD {
 
     private static final String URL = "jdbc:mysql://localhost:3306/compilers";
     private static final String USER = "root";
-    private static final String PASSWORD = "GayLachner-111"; // cambia según tu MySQL
+    private static final String PASSWORD = "123"; // cambia según tu MySQL
 
     // Método para obtener conexión
     public static Connection getConnection() throws SQLException {

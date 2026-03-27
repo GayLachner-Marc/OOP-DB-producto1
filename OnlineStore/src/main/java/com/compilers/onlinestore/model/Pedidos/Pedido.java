@@ -48,7 +48,24 @@ public class Pedido {
 
     @Override
     public String toString() {
-        return "Pedido{" + "numeroPedido=" + numeroPedido + ", fechaHora=" + fechaHora + ", cantidad=" + cantidad + ", cliente=" + cliente + ", articulo=" + articulo + '}';
+        // Importante: importa java.time.format.DateTimeFormatter
+        java.time.format.DateTimeFormatter formatoFecha
+                = java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        java.time.format.DateTimeFormatter formatoHora
+                = java.time.format.DateTimeFormatter.ofPattern("HH:mm");
+
+        String fecha = fechaHora.format(formatoFecha);
+        String hora = fechaHora.format(formatoHora);
+
+        return "Pedido{"
+                + "numeroPedido=" + numeroPedido
+                + ", fecha=" + fecha
+                + ", hora=" + hora
+                + ", cantidad=" + cantidad
+                + ", cliente=" + cliente
+                + ", articulo=" + articulo
+                + ", total=" + calcularTotal()
+                + '}';
     }
 
     public Pedido() {
