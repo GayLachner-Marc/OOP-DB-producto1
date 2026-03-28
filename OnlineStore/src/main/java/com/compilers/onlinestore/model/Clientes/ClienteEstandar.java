@@ -1,6 +1,7 @@
 package com.compilers.onlinestore.model.Clientes;
 
 public class ClienteEstandar extends Cliente {
+
     public ClienteEstandar(String nombre, String domicilio, String nif, String email) {
         super(nombre, domicilio, nif, email);
     }
@@ -8,5 +9,15 @@ public class ClienteEstandar extends Cliente {
     @Override
     public double calcularDescuentoEnvio() {
         return 0.0;
+    }
+
+    @Override
+    public String toString() {
+        return "ClienteEstandar{"
+                + "nombre=" + nombre
+                + ", domicilio=" + domicilio
+                + ", nif=" + nif
+                + ", email=" + email
+                + '}';
     }
 }

@@ -10,8 +10,9 @@ import com.compilers.onlinestore.view.ConsolaView;
 public class OnlineStore {
 
     public static void main(String[] args) throws ClienteNoExisteException, PedidoNoExisteException, ArticuloNoExisteException, PedidoYaEnviadoException {
-         Controladora controladora = new Controladora();
+        Controladora controladora = new Controladora();
         ConsolaView vista = new ConsolaView(controladora);
 
-        vista.iniciar(); }
+        vista.iniciar();
+    }
 }

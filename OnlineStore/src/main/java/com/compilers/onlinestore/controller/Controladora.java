@@ -23,7 +23,7 @@ public class Controladora {
         try {
             conn = ConexionBD.getConnection();
 
-            clienteDAO = DAOFactory.getClienteDAO(conn);
+            clienteDAO = DAOFactory.getClienteDAO(conn);//retorna clienteDaoimpl
             articuloDAO = DAOFactory.getArticuloDAO(conn);
             pedidoDAO = DAOFactory.getPedidoDAO(conn);
 

@@ -191,16 +191,16 @@ public class PedidoDAOImpl implements PedidoDAO {
                 if ("premium".equalsIgnoreCase(tipo)) {
                     c = new ClientePremium(
                         rs.getString("nombre"),
-                        rs.getString("email"),
                         rs.getString("domicilio"),
-                        rs.getString("nif")
+                        rs.getString("nif"),
+                        rs.getString("email")
                     );
                 } else {
                     c = new ClienteEstandar(
                         rs.getString("nombre"),
-                        rs.getString("email"),
                         rs.getString("domicilio"),
-                        rs.getString("nif")
+                        rs.getString("nif"),
+                        rs.getString("email")
                     );
                 }
 
@@ -211,7 +211,7 @@ public class PedidoDAOImpl implements PedidoDAO {
                     rs.getInt("cantidad")
                 );
 
-                // 🔥 IMPORTANTE
+                // IMPORTANTE
                 p.setFechaHora(rs.getTimestamp("fecha").toLocalDateTime());
 
                 lista.add(p);

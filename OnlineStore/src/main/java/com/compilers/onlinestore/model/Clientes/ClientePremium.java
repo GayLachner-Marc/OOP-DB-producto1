@@ -1,10 +1,9 @@
 package com.compilers.onlinestore.model.Clientes;
 
-public class ClientePremium extends Cliente{
+public class ClientePremium extends Cliente {
 
     private double cuotaAnual = 30.0;
 
-    
     public ClientePremium(String nombre, String domicilio, String nif, String email) {
         super(nombre, domicilio, nif, email);
     }
@@ -47,10 +46,14 @@ public class ClientePremium extends Cliente{
 
     @Override
     public String toString() {
-        return "ClientePremium{" + "cuotaAnual=" + cuotaAnual + '}';
+        return "ClientePremium{"
+                + "nombre=" + getNombre()
+                + ", domicilio=" + getDomicilio()
+                + ", nif=" + getNif()
+                + ", email=" + getEmail()
+                + ", cuotaAnual=" + cuotaAnual
+                + '}';
     }
-    
-    
 
     @Override
     public double calcularDescuentoEnvio() {
