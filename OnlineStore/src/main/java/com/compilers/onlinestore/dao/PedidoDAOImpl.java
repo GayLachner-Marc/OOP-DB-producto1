@@ -127,7 +127,7 @@ public class PedidoDAOImpl implements PedidoDAO {
                     rs.getInt("cantidad")
                 );
 
-                // 🔥 IMPORTANTE: cargar fecha
+                // IMPORTANTE: cargar fecha
                 p.setFechaHora(rs.getTimestamp("fecha").toLocalDateTime());
 
                 return p;

@@ -17,7 +17,7 @@ public class ArticuloDAOImpl implements ArticuloDAO {
     @Override
     public void crear(Articulo a) {
 
-        // 🔥 FIX: especificar columnas (ignorar id)
+        // especifica columnas 
         String sql = "INSERT INTO articulos (codigo, descripcion, precio_venta, gastos_envio, tiempo_preparacion) VALUES (?, ?, ?, ?, ?)";
 
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
