@@ -75,13 +75,57 @@ public class MenuPedidos {
         controladora.eliminarPedido(leerEntero("Numero: "));
     }
 
-    private String leerTexto(String m) {
-        System.out.print(m);
-        return sc.nextLine();
+        // ================= LECTURA SEGURA =================
+    private String leerTexto(String mensaje) {
+
+        String texto;
+
+        do {
+
+            System.out.print(mensaje);
+            texto = sc.nextLine().trim();
+
+            if (texto.isEmpty()) {
+                System.out.println("Campo obligatorio.");
+            }
+
+        } while (texto.isEmpty());
+
+        return texto;
     }
 
-    private int leerEntero(String m) {
-        System.out.print(m);
-        return Integer.parseInt(sc.nextLine());
+    private int leerEntero(String mensaje) {
+
+        while (true) {
+
+            try {
+
+                System.out.print(mensaje);
+                return Integer.parseInt(sc.nextLine());
+
+            } catch (NumberFormatException e) {
+
+                System.out.println("Debe introducir un numero.");
+
+            }
+        }
     }
+
+    private double leerDouble(String mensaje) {
+
+        while (true) {
+
+            try {
+
+                System.out.print(mensaje);
+                return Double.parseDouble(sc.nextLine());
+
+            } catch (NumberFormatException e) {
+
+                System.out.println("Debe introducir un numero valido.");
+
+            }
+        }
+    }
+
 }

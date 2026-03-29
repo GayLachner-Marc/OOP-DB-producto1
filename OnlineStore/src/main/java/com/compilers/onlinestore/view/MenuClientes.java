@@ -70,7 +70,6 @@ public class MenuClientes {
             System.out.println("No existe.");
             return;
         }
-
         c.setNombre(leerTexto("Nombre: "));
         c.setDomicilio(leerTexto("Domicilio: "));
         c.setNif(leerTexto("NIF: "));
@@ -81,18 +80,46 @@ public class MenuClientes {
     private void eliminar() {
         controladora.eliminarCliente(leerTexto("Email: "));
     }
+    
+        // ================= LECTURA SEGURA =================
+    private String leerTexto(String mensaje) {
 
-    private String leerTexto(String m) {
-        System.out.print(m);
-        return sc.nextLine();
+        String texto;
+        do {
+            System.out.print(mensaje);
+            texto = sc.nextLine().trim();
+
+            if (texto.isEmpty()) {
+                System.out.println("Campo obligatorio.");
+            }
+
+        } while (texto.isEmpty());
+        return texto;
     }
 
-    private int leerEntero(String m) {
-        try {
-            System.out.print(m);
-            return Integer.parseInt(sc.nextLine());
-        } catch (Exception e) {
-            return 0;
+    private int leerEntero(String mensaje) {
+
+        while (true) {
+            try {
+                System.out.print(mensaje);
+                return Integer.parseInt(sc.nextLine());
+
+            } catch (NumberFormatException e) {
+                System.out.println("Debe introducir un numero.");
+            }
+        }
+    }
+
+    private double leerDouble(String mensaje) {
+
+        while (true) {
+            try {
+                System.out.print(mensaje);
+                return Double.parseDouble(sc.nextLine());
+
+            } catch (NumberFormatException e) {
+                System.out.println("Debe introducir un numero valido.");
+            }
         }
     }
 }
