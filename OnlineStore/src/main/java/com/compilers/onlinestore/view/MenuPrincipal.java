@@ -34,7 +34,7 @@ public class MenuPrincipal {
             System.out.println("3. Pedido");
             System.out.println("0. Salir");
 
-            opcion = leerEntero("Opcion: ");
+            opcion = leerEnteroOpciones("Opcion: ");
 
             switch (opcion) {
                 case 1 -> menuClientes.iniciar();
@@ -45,11 +45,22 @@ public class MenuPrincipal {
         } while (opcion != 0);
     }
 
-    private int leerEntero(String mensaje) {
+    private int leerEnteroOpciones(String mensaje) {
+
         while (true) {
             try {
+                
                 System.out.print(mensaje);
-                return Integer.parseInt(sc.nextLine());
+                int numeroOpcion = Integer.parseInt(sc.nextLine().trim());
+                if (numeroOpcion >=0 && numeroOpcion <=3) {
+                    return numeroOpcion;
+                    
+                } else {
+                    
+                    System.out.println("Debe introducir una opcion valida.");
+                }
+                
+
             } catch (NumberFormatException e) {
                 System.out.println("Debe introducir un numero.");
             }

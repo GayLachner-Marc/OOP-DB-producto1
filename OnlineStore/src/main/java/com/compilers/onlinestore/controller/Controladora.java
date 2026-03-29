@@ -1,4 +1,5 @@
 package com.compilers.onlinestore.controller;
+
 import com.compilers.onlinestore.dao.*;
 import com.compilers.onlinestore.factory.DAOFactory;
 import com.compilers.onlinestore.model.Articulos.Articulo;
@@ -33,7 +34,6 @@ public class Controladora {
     }
 
     // ================= CLIENTES =================
-
     public void crearCliente(Cliente cliente) {
         clienteDAO.crear(cliente);
     }
@@ -50,12 +50,22 @@ public class Controladora {
         clienteDAO.actualizar(cliente);
     }
 
-    public void eliminarCliente(String email) {
+    /*public void eliminarCliente(String email) {
         clienteDAO.eliminar(email);
+    }*/
+    public boolean eliminarCliente(String email) {
+
+        Cliente c = clienteDAO.obtenerPorEmail(email);
+
+        if (c == null) {
+            return false;
+        }
+
+        clienteDAO.eliminar(email);
+        return true;
     }
 
     // ================= ARTICULOS =================
-
     public void crearArticulo(Articulo a) {
         articuloDAO.crear(a);
     }
@@ -67,6 +77,7 @@ public class Controladora {
     public List<Articulo> listarArticulos() {
         return articuloDAO.obtenerTodos();
     }
+
     public void actualizarArticulo(Articulo a)
             throws ArticuloNoExisteException {
 
@@ -78,21 +89,20 @@ public class Controladora {
     }
 
     public boolean eliminarArticulo(String codigo)
-        throws ArticuloNoExisteException {
+            throws ArticuloNoExisteException {
 
-    Articulo a = articuloDAO.obtenerPorCodigo(codigo);
+        Articulo a = articuloDAO.obtenerPorCodigo(codigo);
 
-    if (a == null) {
-        throw new ArticuloNoExisteException("Articulo no encontrado");
+        if (a == null) {
+            throw new ArticuloNoExisteException("Articulo no encontrado");
+        }
+
+        articuloDAO.eliminar(codigo);
+
+        return true;
     }
 
-    articuloDAO.eliminar(codigo);
-
-    return true;
-}
-
     // ================= PEDIDOS =================
-
     public void crearPedido(Pedido p) {
         pedidoDAO.crear(p);
     }
@@ -109,27 +119,28 @@ public class Controladora {
             throws PedidoYaEnviadoException {
 
         if (p.estaEnviado()) {
-            throw new PedidoYaEnviadoException("El pedido ya fue enviado");
+            throw new PedidoYaEnviadoException("No se puede modificar, el pedido ya fue enviado");
         }
 
         pedidoDAO.actualizar(p);
     }
+
     public boolean eliminarPedido(int numero)
-        throws PedidoYaEnviadoException {
+            throws PedidoYaEnviadoException {
 
-    Pedido p = pedidoDAO.obtenerPorNumero(numero);
+        Pedido p = pedidoDAO.obtenerPorNumero(numero);
 
-    if (p == null) {
-        return false;
+        if (p == null) {
+            return false;
+        }
+
+        if (p.estaEnviado()) {
+            throw new PedidoYaEnviadoException("No se puede eliminar, el pedido ya fue enviado");
+        }
+
+        pedidoDAO.eliminar(numero);
+
+        return true;
     }
 
-    if (p.estaEnviado()) {
-        throw new PedidoYaEnviadoException("El pedido ya fue enviado");
-    }
-
-    pedidoDAO.eliminar(numero);
-
-    return true;
-}
-    
 }

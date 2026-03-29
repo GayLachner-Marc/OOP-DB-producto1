@@ -27,13 +27,17 @@ public class MenuClientes {
             System.out.println("4. Eliminar");
             System.out.println("0. Volver");
 
-            opcion = leerEntero("Opcion: ");
+            opcion = leerEnteroOpciones("Opcion: ");
 
             switch (opcion) {
-                case 1 -> crear();
-                case 2 -> listar();
-                case 3 -> actualizar();
-                case 4 -> eliminar();
+                case 1 ->
+                    crear();
+                case 2 ->
+                    listar();
+                case 3 ->
+                    actualizar();
+                case 4 ->
+                    eliminar();
             }
 
         } while (opcion != 0);
@@ -42,13 +46,14 @@ public class MenuClientes {
     private void crear() {
 
         System.out.println("1. Estandar  2. Premium");
-        int tipo = leerEntero("Tipo: ");
+        int tipo = leerEnteroTipoCliente("Tipo: ");
 
         String nombre = leerTexto("Nombre: ");
         String email = leerTexto("Email: ");
         String domicilio = leerTexto("Domicilio: ");
         String nif = leerTexto("NIF: ");
-
+        
+        //Usamos una ternaria
         Cliente c = (tipo == 2)
                 ? new ClientePremium(nombre, domicilio, nif, email)
                 : new ClienteEstandar(nombre, domicilio, nif, email);
@@ -77,11 +82,24 @@ public class MenuClientes {
         controladora.actualizarCliente(c);
     }
 
+    /*
     private void eliminar() {
         controladora.eliminarCliente(leerTexto("Email: "));
+    }*/
+    private void eliminar() {
+
+        String email = leerTexto("Email: ");
+
+        boolean eliminado = controladora.eliminarCliente(email);
+
+        if (eliminado) {
+            System.out.println("Cliente eliminado correctamente");
+        } else {
+            System.out.println("Cliente no existe");
+        }
     }
-    
-        // ================= LECTURA SEGURA =================
+
+    // ================= LECTURA SEGURA =================
     private String leerTexto(String mensaje) {
 
         String texto;
@@ -96,13 +114,44 @@ public class MenuClientes {
         } while (texto.isEmpty());
         return texto;
     }
-
-    private int leerEntero(String mensaje) {
+    
+    private int leerEnteroTipoCliente(String mensaje) {
 
         while (true) {
             try {
+                
                 System.out.print(mensaje);
-                return Integer.parseInt(sc.nextLine());
+                int numeroOpcion = Integer.parseInt(sc.nextLine().trim());
+                if (numeroOpcion >=1 && numeroOpcion <=2) {
+                    return numeroOpcion;
+                    
+                } else {
+                    
+                    System.out.println("Debe introducir una opcion valida.");
+                }
+                
+
+            } catch (NumberFormatException e) {
+                System.out.println("Debe introducir un numero.");
+            }
+        }
+    }
+
+    private int leerEnteroOpciones(String mensaje) {
+
+        while (true) {
+            try {
+                
+                System.out.print(mensaje);
+                int numeroOpcion = Integer.parseInt(sc.nextLine().trim());
+                if (numeroOpcion >=0 && numeroOpcion <=4) {
+                    return numeroOpcion;
+                    
+                } else {
+                    
+                    System.out.println("Debe introducir una opcion valida.");
+                }
+                
 
             } catch (NumberFormatException e) {
                 System.out.println("Debe introducir un numero.");
