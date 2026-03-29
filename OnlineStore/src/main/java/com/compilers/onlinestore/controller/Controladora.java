@@ -88,13 +88,12 @@ public class Controladora {
         articuloDAO.actualizar(a);
     }
 
-    public boolean eliminarArticulo(String codigo)
-            throws ArticuloNoExisteException {
+    public boolean eliminarArticulo(String codigo){
 
         Articulo a = articuloDAO.obtenerPorCodigo(codigo);
 
         if (a == null) {
-            throw new ArticuloNoExisteException("Articulo no encontrado");
+            return false;
         }
 
         articuloDAO.eliminar(codigo);

@@ -31,10 +31,14 @@ public class MenuArticulos {
             opcion = leerEnteroOpciones("Opcion: ");
 
             switch (opcion) {
-                case 1 -> crear();
-                case 2 -> listar();
-                case 3 -> actualizar();
-                case 4 -> eliminar();
+                case 1 ->
+                    crear();
+                case 2 ->
+                    listar();
+                case 3 ->
+                    actualizar();
+                case 4 ->
+                    eliminar();
             }
 
         } while (opcion != 0);
@@ -59,7 +63,10 @@ public class MenuArticulos {
 
     private void actualizar() throws ArticuloNoExisteException {
         Articulo a = controladora.buscarArticulo(leerTexto("Codigo: "));
-        if (a == null) return;
+        if (a == null) {
+            System.out.println("Articulo no existe");
+            return;
+        }
 
         a.setDescripcion(leerTexto("Descripcion: "));
         a.setPrecioVenta(leerDouble("Precio: "));
@@ -69,11 +76,23 @@ public class MenuArticulos {
         controladora.actualizarArticulo(a);
     }
 
-    private void eliminar() throws ArticuloNoExisteException {
+    /*private void eliminar() throws ArticuloNoExisteException {
         controladora.eliminarArticulo(leerTexto("Codigo: "));
+    }*/
+    private void eliminar() {
+
+        String codigo = leerTexto("Codigo: ");
+
+        boolean eliminado = controladora.eliminarArticulo(codigo);
+
+        if (eliminado) {
+            System.out.println("Articulo eliminado correctamente");
+        } else {
+            System.out.println("Articulo no existe");
+        }
     }
 
-        // ================= LECTURA SEGURA =================
+    // ================= LECTURA SEGURA =================
     private String leerTexto(String mensaje) {
 
         String texto;
@@ -91,7 +110,7 @@ public class MenuArticulos {
 
         return texto;
     }
-    
+
     private int leerEntero(String m) {
         System.out.print(m);
         return Integer.parseInt(sc.nextLine().trim());
@@ -101,17 +120,16 @@ public class MenuArticulos {
 
         while (true) {
             try {
-                
+
                 System.out.print(mensaje);
                 int numeroOpcion = Integer.parseInt(sc.nextLine().trim());
-                if (numeroOpcion >=0 && numeroOpcion <=4) {
+                if (numeroOpcion >= 0 && numeroOpcion <= 4) {
                     return numeroOpcion;
-                    
+
                 } else {
-                    
+
                     System.out.println("Debe introducir una opcion valida.");
                 }
-                
 
             } catch (NumberFormatException e) {
                 System.out.println("Debe introducir un numero.");
