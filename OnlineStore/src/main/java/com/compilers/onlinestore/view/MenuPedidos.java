@@ -44,13 +44,15 @@ public class MenuPedidos {
 
     private void crear() {
 
-        int numero = leerEntero("Numero: ");
-        Cliente c = controladora.buscarCliente(leerTexto("Email: "));
-        Articulo a = controladora.buscarArticulo(leerTexto("Codigo: "));
+        int numero = leerEntero("Numero de pedido: ");
+        Cliente c = controladora.buscarCliente(leerTexto("Email cliente: "));
+        Articulo a = controladora.buscarArticulo(leerTexto("Codigo de artículo: "));
 
         if (c == null || a == null) return;
 
         controladora.crearPedido(new Pedido(numero, c, a, leerEntero("Cantidad: ")));
+        System.out.println("Cliente ID: " + c.getId());
+        System.out.println("Articulo ID: " + a.getId());
     }
 
     private void listar() {

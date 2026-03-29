@@ -21,7 +21,7 @@ public class ClienteDAOImpl implements ClienteDAO {
     public void crear(Cliente cliente) {
         String sql = "INSERT INTO clientes (email, nombre, domicilio, nif, tipo) VALUES (?, ?, ?, ?, ?)";
 
-        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+        try (PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);) {
 
             ps.setString(1, cliente.getEmail());
             ps.setString(2, cliente.getNombre());
@@ -30,6 +30,11 @@ public class ClienteDAOImpl implements ClienteDAO {
             ps.setString(5, cliente instanceof ClientePremium ? "PREMIUM" : "ESTANDAR");
 
             ps.executeUpdate();
+            
+            ResultSet rs = ps.getGeneratedKeys();
+            if (rs.next()) {
+                cliente.setId(rs.getInt(1));
+            }
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -81,7 +86,7 @@ public class ClienteDAOImpl implements ClienteDAO {
     // UPDATE 
     @Override
     public void actualizar(Cliente cliente) {
-        String sql = "UPDATE clientes SET nombre=?, domicilio=?, nif=?, tipo=? WHERE email=?";
+        String sql = "UPDATE clientes SET nombre=?, domicilio=?, nif=?, tipo=? WHERE id=?";
 
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
 
@@ -89,7 +94,7 @@ public class ClienteDAOImpl implements ClienteDAO {
             ps.setString(2, cliente.getDomicilio());
             ps.setString(3, cliente.getNif());
             ps.setString(4, cliente instanceof ClientePremium ? "PREMIUM" : "ESTANDAR");
-            ps.setString(5, cliente.getEmail());
+            ps.setInt(5, cliente.getId());
 
             ps.executeUpdate();
 
@@ -117,20 +122,24 @@ public class ClienteDAOImpl implements ClienteDAO {
     private Cliente mapCliente(ResultSet rs) throws SQLException {
 
         String tipo = rs.getString("tipo");
+         int id = rs.getInt("id");
 
         if (tipo.equals("PREMIUM")) {
             return new ClientePremium(
+                id,
                 rs.getString("nombre"),
+                rs.getString("email"),
                 rs.getString("domicilio"),
-                rs.getString("nif"),
-                rs.getString("email")
+                rs.getString("nif")
+                
             );
         } else {
             return new ClienteEstandar(
+                id,
                 rs.getString("nombre"),
+                rs.getString("email"),
                 rs.getString("domicilio"),
-                rs.getString("nif"),
-                rs.getString("email")
+                rs.getString("nif")              
             );
         }
     }

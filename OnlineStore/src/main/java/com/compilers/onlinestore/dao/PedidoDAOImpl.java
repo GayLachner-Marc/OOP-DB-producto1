@@ -23,13 +23,13 @@ public class PedidoDAOImpl implements PedidoDAO {
     @Override
     public void crear(Pedido p) {
 
-        String sql = "INSERT INTO pedidos (numero_pedido, cliente_email, articulo_codigo, cantidad, fecha) VALUES (?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO pedidos (numero_pedido, cliente_id, articulo_id, cantidad, fecha) VALUES (?, ?, ?, ?, ?)";
 
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
 
             ps.setInt(1, p.getNumeroPedido());
-            ps.setString(2, p.getCliente().getEmail());
-            ps.setString(3, p.getArticulo().getCodigo());
+            ps.setInt(2, p.getCliente().getId());
+            ps.setInt(3, p.getArticulo().getId());
             ps.setInt(4, p.getCantidad());
             ps.setTimestamp(5, Timestamp.valueOf(LocalDateTime.now()));
 
@@ -66,21 +66,23 @@ public class PedidoDAOImpl implements PedidoDAO {
             p.cantidad,
             p.fecha,
             
+            c.id AS c_id,
             c.email,
             c.nombre,
             c.domicilio,
             c.nif,
             c.tipo,
 
-            a.codigo AS a_codigo,
+            a.id AS a_id,
+            a.codigo,
             a.descripcion,
             a.precio_venta,
             a.gastos_envio,
             a.tiempo_preparacion
 
         FROM pedidos p
-        JOIN clientes c ON p.cliente_email = c.email
-        JOIN articulos a ON p.articulo_codigo = a.codigo
+        JOIN clientes c ON p.cliente_id = c.id
+        JOIN articulos a ON p.articulo_id = a.id
         WHERE p.numero_pedido = ?
         """;
 
@@ -93,7 +95,8 @@ public class PedidoDAOImpl implements PedidoDAO {
 
                 // ARTICULO
                 Articulo a = new Articulo(
-                    rs.getString("a_codigo"),
+                    rs.getInt("a_id"),
+                    rs.getString("codigo"),
                     rs.getString("descripcion"),
                     rs.getDouble("precio_venta"),
                     rs.getDouble("gastos_envio"),
@@ -106,6 +109,7 @@ public class PedidoDAOImpl implements PedidoDAO {
 
                 if ("premium".equalsIgnoreCase(tipo)) {
                     c = new ClientePremium(
+                        rs.getInt("c_id"),
                         rs.getString("nombre"),
                         rs.getString("email"),
                         rs.getString("domicilio"),
@@ -113,6 +117,7 @@ public class PedidoDAOImpl implements PedidoDAO {
                     );
                 } else {
                     c = new ClienteEstandar(
+                        rs.getInt("c_id"),
                         rs.getString("nombre"),
                         rs.getString("email"),
                         rs.getString("domicilio"),
@@ -127,7 +132,6 @@ public class PedidoDAOImpl implements PedidoDAO {
                     rs.getInt("cantidad")
                 );
 
-                // IMPORTANTE: cargar fecha
                 p.setFechaHora(rs.getTimestamp("fecha").toLocalDateTime());
 
                 return p;
@@ -152,21 +156,23 @@ public class PedidoDAOImpl implements PedidoDAO {
             p.cantidad,
             p.fecha,
             
+            c.id AS c_id,
             c.email,
             c.nombre,
             c.domicilio,
             c.nif,
             c.tipo,
 
-            a.codigo AS a_codigo,
+            a.id AS a_id,
+            a.codigo,
             a.descripcion,
             a.precio_venta,
             a.gastos_envio,
             a.tiempo_preparacion
 
         FROM pedidos p
-        JOIN clientes c ON p.cliente_email = c.email
-        JOIN articulos a ON p.articulo_codigo = a.codigo
+        JOIN clientes c ON p.cliente_id = c.id
+        JOIN articulos a ON p.articulo_id = a.id
         """;
 
         try (Statement st = conn.createStatement()) {
@@ -177,7 +183,8 @@ public class PedidoDAOImpl implements PedidoDAO {
 
                 // ARTICULO
                 Articulo a = new Articulo(
-                    rs.getString("a_codigo"),
+                    rs.getInt("a_id"),
+                    rs.getString("codigo"),
                     rs.getString("descripcion"),
                     rs.getDouble("precio_venta"),
                     rs.getDouble("gastos_envio"),
@@ -190,14 +197,17 @@ public class PedidoDAOImpl implements PedidoDAO {
 
                 if ("premium".equalsIgnoreCase(tipo)) {
                     c = new ClientePremium(
+                        rs.getInt("c_id"),                       
                         rs.getString("nombre"),
                         rs.getString("domicilio"),
                         rs.getString("nif"),
                         rs.getString("email")
+                        
                     );
                 } else {
                     c = new ClienteEstandar(
-                        rs.getString("nombre"),
+                        rs.getInt("c_id"),
+                        rs.getString("nombre"),                   
                         rs.getString("domicilio"),
                         rs.getString("nif"),
                         rs.getString("email")
@@ -211,7 +221,6 @@ public class PedidoDAOImpl implements PedidoDAO {
                     rs.getInt("cantidad")
                 );
 
-                // IMPORTANTE
                 p.setFechaHora(rs.getTimestamp("fecha").toLocalDateTime());
 
                 lista.add(p);
@@ -235,8 +244,7 @@ public class PedidoDAOImpl implements PedidoDAO {
             ps.setInt(1, p.getCantidad());
             ps.setInt(2, p.getNumeroPedido());
 
-            int filas = ps.executeUpdate();
-            System.out.println("Filas actualizadas: " + filas);
+            ps.executeUpdate();
 
         } catch (SQLException e) {
             e.printStackTrace();

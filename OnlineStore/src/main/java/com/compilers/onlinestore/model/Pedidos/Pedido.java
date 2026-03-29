@@ -8,11 +8,21 @@ import com.compilers.onlinestore.model.Clientes.Cliente;
 
 
 public class Pedido {
+    private int id;
     private int numeroPedido;
     private LocalDateTime fechaHora;
     private int cantidad;
     private Cliente cliente;
     private Articulo articulo;
+    
+     public Pedido(int id, int numeroPedido, Cliente cliente, Articulo articulo, int cantidad) {
+        this.id = id;
+        this.numeroPedido = numeroPedido;
+        this.cliente = cliente;
+        this.articulo = articulo;
+        this.cantidad = cantidad;
+        this.fechaHora = LocalDateTime.now();
+    }
 
     public int getNumeroPedido() {
         return numeroPedido;

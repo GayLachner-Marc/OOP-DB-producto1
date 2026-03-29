@@ -20,7 +20,7 @@ public class ArticuloDAOImpl implements ArticuloDAO {
         // especifica columnas 
         String sql = "INSERT INTO articulos (codigo, descripcion, precio_venta, gastos_envio, tiempo_preparacion) VALUES (?, ?, ?, ?, ?)";
 
-        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+        try (PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 
             ps.setString(1, a.getCodigo());
             ps.setString(2, a.getDescripcion());
@@ -29,6 +29,12 @@ public class ArticuloDAOImpl implements ArticuloDAO {
             ps.setInt(5, a.getTiempoPreparacion());
 
             ps.executeUpdate();
+
+            
+            ResultSet rs = ps.getGeneratedKeys();
+            if (rs.next()) {
+                a.setId(rs.getInt(1));
+            }
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -89,6 +95,7 @@ public class ArticuloDAOImpl implements ArticuloDAO {
 
             if (rs.next()) {
                 return new Articulo(
+                    rs.getInt("id"),
                     rs.getString("codigo"),
                     rs.getString("descripcion"),
                     rs.getDouble("precio_venta"),
@@ -115,6 +122,7 @@ public class ArticuloDAOImpl implements ArticuloDAO {
 
             while (rs.next()) {
                 lista.add(new Articulo(
+                    rs.getInt("id"),
                     rs.getString("codigo"),
                     rs.getString("descripcion"),
                     rs.getDouble("precio_venta"),

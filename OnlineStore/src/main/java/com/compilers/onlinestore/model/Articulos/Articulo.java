@@ -1,11 +1,30 @@
 package com.compilers.onlinestore.model.Articulos;
 
 public class Articulo {
+    private int id;
     private String codigo;
     private String descripcion;
     private double precioVenta;
     private double gastosEnvio;
     private int tiempoPreparacion; // minutos
+    
+     public Articulo(int id, String codigo, String descripcion, double precioVenta,
+                    double gastosEnvio, int tiempoPreparacion) {
+        this.id = id;
+        this.codigo = codigo;
+        this.descripcion = descripcion;
+        this.precioVenta = precioVenta;
+        this.gastosEnvio = gastosEnvio;
+        this.tiempoPreparacion = tiempoPreparacion;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public Articulo(String codigo, String descripcion, double precioVenta,
                     double gastosEnvio, int tiempoPreparacion) {
@@ -57,7 +76,7 @@ public class Articulo {
 
     @Override
     public String toString() {
-        return "Articulo{" + "codigo=" + codigo + ", descripcion=" + descripcion + ", precioVenta=" + precioVenta + ", gastosEnvio=" + gastosEnvio + ", tiempoPreparacion=" + tiempoPreparacion + '}';
+        return "Articulo{" + "id=" + id + ", codigo=" + codigo + ", descripcion=" + descripcion + ", precioVenta=" + precioVenta + ", gastosEnvio=" + gastosEnvio + ", tiempoPreparacion=" + tiempoPreparacion + '}';
     }
     
 }

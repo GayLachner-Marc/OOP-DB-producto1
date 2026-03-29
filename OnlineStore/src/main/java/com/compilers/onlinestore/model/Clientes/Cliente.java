@@ -1,17 +1,33 @@
 package com.compilers.onlinestore.model.Clientes;
 
 public abstract class Cliente {
-
+    protected int id;
     protected String nombre;
     protected String domicilio;
     protected String nif;
     protected String email; // identificador
+    
+    public Cliente(int id, String nombre, String domicilio, String nif, String email) {
+        this.id = id;
+        this.nombre = nombre;
+        this.email = email;
+        this.domicilio = domicilio;
+        this.nif = nif;       
+    }
 
     public Cliente(String nombre, String domicilio, String nif, String email) {
         this.nombre = nombre;
-        this.domicilio = domicilio;
-        this.nif = nif;
         this.email = email;
+        this.domicilio = domicilio;
+        this.nif = nif;       
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getEmail() {
