@@ -7,6 +7,9 @@ public abstract class Cliente {
     protected String nif;
     protected String email; // identificador
     
+    //Este constructor se utiliza cuando leemos los datos del cliente de la DB,
+    //Debido a que tenemos que tener en cuenta que cuando leemos el registro de 
+    //cliente debemos tomar en cuenta el ID generado por la DB
     public Cliente(int id, String nombre, String domicilio, String nif, String email) {
         this.id = id;
         this.nombre = nombre;
@@ -14,7 +17,9 @@ public abstract class Cliente {
         this.domicilio = domicilio;
         this.nif = nif;       
     }
-
+    
+    //Este constructor se utilizar para crear un registro, 
+    //no agregamos ID porque la DB le asigna un id
     public Cliente(String nombre, String domicilio, String nif, String email) {
         this.nombre = nombre;
         this.email = email;

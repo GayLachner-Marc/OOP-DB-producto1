@@ -82,55 +82,55 @@ public class MenuArticulos {
     private void eliminar() {
 
         String codigo = leerTexto("Codigo: ");
+        try {
 
-        boolean eliminado = controladora.eliminarArticulo(codigo);
+            boolean eliminado = controladora.eliminarArticulo(codigo);
 
-        if (eliminado) {
-            System.out.println("Articulo eliminado correctamente");
-        } else {
-            System.out.println("Articulo no existe");
+            if (eliminado) {
+                System.out.println("Articulo eliminado correctamente");
+            } else {
+                System.out.println("Articulo no existe");
+            }
+        } catch (RuntimeException e) {
+            System.out.println("Nota: " + e.getMessage());
         }
     }
 
     // ================= LECTURA SEGURA =================
     private String leerTexto(String mensaje) {
-
         String texto;
 
         do {
-
             System.out.print(mensaje);
             texto = sc.nextLine().trim();
 
             if (texto.isEmpty()) {
                 System.out.println("Campo obligatorio.");
             }
-
         } while (texto.isEmpty());
 
         return texto;
     }
 
+    //Función para leer enteros en general
     private int leerEntero(String m) {
         System.out.print(m);
         return Integer.parseInt(sc.nextLine().trim());
     }
 
+    //Función para realizar un filtro de las opciones del menu
     private int leerEnteroOpciones(String mensaje) {
 
         while (true) {
             try {
-
                 System.out.print(mensaje);
                 int numeroOpcion = Integer.parseInt(sc.nextLine().trim());
                 if (numeroOpcion >= 0 && numeroOpcion <= 4) {
                     return numeroOpcion;
 
                 } else {
-
                     System.out.println("Debe introducir una opcion valida.");
                 }
-
             } catch (NumberFormatException e) {
                 System.out.println("Debe introducir un numero.");
             }
@@ -140,16 +140,12 @@ public class MenuArticulos {
     private double leerDouble(String mensaje) {
 
         while (true) {
-
             try {
-
                 System.out.print(mensaje);
                 return Double.parseDouble(sc.nextLine());
 
             } catch (NumberFormatException e) {
-
                 System.out.println("Debe introducir un numero valido.");
-
             }
         }
     }

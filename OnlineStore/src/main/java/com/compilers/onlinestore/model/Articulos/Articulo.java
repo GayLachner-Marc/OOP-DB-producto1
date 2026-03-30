@@ -8,7 +8,10 @@ public class Articulo {
     private double gastosEnvio;
     private int tiempoPreparacion; // minutos
     
-     public Articulo(int id, String codigo, String descripcion, double precioVenta,
+    //Este constructor se utiliza cuando leemos los datos del articulo de la DB,
+    //Debido a que tenemos que tener en cuenta que cuando leemos el registro de 
+    //articulo debemos tomar en cuenta el ID generado por la DB
+    public Articulo(int id, String codigo, String descripcion, double precioVenta,
                     double gastosEnvio, int tiempoPreparacion) {
         this.id = id;
         this.codigo = codigo;
@@ -25,7 +28,9 @@ public class Articulo {
     public void setId(int id) {
         this.id = id;
     }
-
+    
+    //Este constructor se utilizar para crear un registro, 
+    //no agregamos ID porque la DB le asigna un id
     public Articulo(String codigo, String descripcion, double precioVenta,
                     double gastosEnvio, int tiempoPreparacion) {
         this.codigo = codigo;

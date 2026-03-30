@@ -13,4 +13,12 @@ public interface PedidoDAO {
 
     void actualizar(Pedido pedido);
     void eliminar(int numero);
+
+    public List<Pedido> obtenerPorCliente(int id);
+    
+    //Función para revisar si el cliente tiene pedidos
+    public boolean pedidosPendientesORegistrados(int clienteId); 
+    public boolean articulosEnPedidos(int articuloId);
+    
+    
 }

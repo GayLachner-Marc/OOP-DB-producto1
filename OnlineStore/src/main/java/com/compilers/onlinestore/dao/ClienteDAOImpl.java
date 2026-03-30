@@ -30,10 +30,10 @@ public class ClienteDAOImpl implements ClienteDAO {
             ps.setString(5, cliente instanceof ClientePremium ? "PREMIUM" : "ESTANDAR");
 
             ps.executeUpdate();
-            
-            ResultSet rs = ps.getGeneratedKeys();
-            if (rs.next()) {
-                cliente.setId(rs.getInt(1));
+            //Se obtiene el ID que la base de datos ha generado
+            ResultSet claveGeneradaDB = ps.getGeneratedKeys();
+            if (claveGeneradaDB.next()) {
+                cliente.setId(claveGeneradaDB.getInt(1));
             }
 
         } catch (SQLException e) {
@@ -122,8 +122,10 @@ public class ClienteDAOImpl implements ClienteDAO {
     private Cliente mapCliente(ResultSet rs) throws SQLException {
 
         String tipo = rs.getString("tipo");
-         int id = rs.getInt("id");
-
+        
+        //Se agrega el id para identificar el cliente
+        int id = rs.getInt("id");
+        
         if (tipo.equals("PREMIUM")) {
             return new ClientePremium(
                 id,

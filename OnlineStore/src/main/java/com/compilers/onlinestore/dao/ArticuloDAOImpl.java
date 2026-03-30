@@ -31,9 +31,9 @@ public class ArticuloDAOImpl implements ArticuloDAO {
             ps.executeUpdate();
 
             
-            ResultSet rs = ps.getGeneratedKeys();
-            if (rs.next()) {
-                a.setId(rs.getInt(1));
+            ResultSet claveGeneradaDB = ps.getGeneratedKeys();
+            if (claveGeneradaDB.next()) {
+                a.setId(claveGeneradaDB.getInt(1));
             }
 
         } catch (SQLException e) {

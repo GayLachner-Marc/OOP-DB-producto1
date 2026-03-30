@@ -95,12 +95,12 @@ public class PedidoDAOImpl implements PedidoDAO {
 
                 // ARTICULO
                 Articulo a = new Articulo(
-                    rs.getInt("a_id"),
-                    rs.getString("codigo"),
-                    rs.getString("descripcion"),
-                    rs.getDouble("precio_venta"),
-                    rs.getDouble("gastos_envio"),
-                    rs.getInt("tiempo_preparacion")
+                        rs.getInt("a_id"),
+                        rs.getString("codigo"),
+                        rs.getString("descripcion"),
+                        rs.getDouble("precio_venta"),
+                        rs.getDouble("gastos_envio"),
+                        rs.getInt("tiempo_preparacion")
                 );
 
                 // CLIENTE
@@ -109,27 +109,27 @@ public class PedidoDAOImpl implements PedidoDAO {
 
                 if ("premium".equalsIgnoreCase(tipo)) {
                     c = new ClientePremium(
-                        rs.getInt("c_id"),
-                        rs.getString("nombre"),
-                        rs.getString("email"),
-                        rs.getString("domicilio"),
-                        rs.getString("nif")
+                            rs.getInt("c_id"),
+                            rs.getString("nombre"),
+                            rs.getString("email"),
+                            rs.getString("domicilio"),
+                            rs.getString("nif")
                     );
                 } else {
                     c = new ClienteEstandar(
-                        rs.getInt("c_id"),
-                        rs.getString("nombre"),
-                        rs.getString("email"),
-                        rs.getString("domicilio"),
-                        rs.getString("nif")
+                            rs.getInt("c_id"),
+                            rs.getString("nombre"),
+                            rs.getString("email"),
+                            rs.getString("domicilio"),
+                            rs.getString("nif")
                     );
                 }
 
                 Pedido p = new Pedido(
-                    rs.getInt("numero_pedido"),
-                    c,
-                    a,
-                    rs.getInt("cantidad")
+                        rs.getInt("numero_pedido"),
+                        c,
+                        a,
+                        rs.getInt("cantidad")
                 );
 
                 p.setFechaHora(rs.getTimestamp("fecha").toLocalDateTime());
@@ -183,12 +183,12 @@ public class PedidoDAOImpl implements PedidoDAO {
 
                 // ARTICULO
                 Articulo a = new Articulo(
-                    rs.getInt("a_id"),
-                    rs.getString("codigo"),
-                    rs.getString("descripcion"),
-                    rs.getDouble("precio_venta"),
-                    rs.getDouble("gastos_envio"),
-                    rs.getInt("tiempo_preparacion")
+                        rs.getInt("a_id"),
+                        rs.getString("codigo"),
+                        rs.getString("descripcion"),
+                        rs.getDouble("precio_venta"),
+                        rs.getDouble("gastos_envio"),
+                        rs.getInt("tiempo_preparacion")
                 );
 
                 // CLIENTE
@@ -197,28 +197,27 @@ public class PedidoDAOImpl implements PedidoDAO {
 
                 if ("premium".equalsIgnoreCase(tipo)) {
                     c = new ClientePremium(
-                        rs.getInt("c_id"),                       
-                        rs.getString("nombre"),
-                        rs.getString("domicilio"),
-                        rs.getString("nif"),
-                        rs.getString("email")
-                        
+                            rs.getInt("c_id"),
+                            rs.getString("nombre"),
+                            rs.getString("domicilio"),
+                            rs.getString("nif"),
+                            rs.getString("email")
                     );
                 } else {
                     c = new ClienteEstandar(
-                        rs.getInt("c_id"),
-                        rs.getString("nombre"),                   
-                        rs.getString("domicilio"),
-                        rs.getString("nif"),
-                        rs.getString("email")
+                            rs.getInt("c_id"),
+                            rs.getString("nombre"),
+                            rs.getString("domicilio"),
+                            rs.getString("nif"),
+                            rs.getString("email")
                     );
                 }
 
                 Pedido p = new Pedido(
-                    rs.getInt("numero_pedido"),
-                    c,
-                    a,
-                    rs.getInt("cantidad")
+                        rs.getInt("numero_pedido"),
+                        c,
+                        a,
+                        rs.getInt("cantidad")
                 );
 
                 p.setFechaHora(rs.getTimestamp("fecha").toLocalDateTime());
@@ -250,4 +249,78 @@ public class PedidoDAOImpl implements PedidoDAO {
             e.printStackTrace();
         }
     }
+
+    @Override
+    public List<Pedido> obtenerPorCliente(int id) {
+        List<Pedido> lista = new ArrayList<>();
+
+        String sql = """
+        SELECT *
+        FROM pedidos
+        WHERE cliente_id = ?
+        """;
+
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, id);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                Pedido p = new Pedido();
+                p.setNumeroPedido(rs.getInt("numero_pedido"));
+                p.setFechaHora(rs.getTimestamp("fecha").toLocalDateTime());
+
+                lista.add(p);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return lista;
+    }
+    
+    //Función creada para poder gestionar el error cuando un cliente esta enlazado a un pedido y no pueda borrarse
+    @Override
+    public boolean pedidosPendientesORegistrados(int clienteId) {
+
+        String sql = "SELECT COUNT(*) FROM pedidos WHERE cliente_id = ?";
+
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, clienteId);
+            ResultSet resultadoClienteEnPedidos = ps.executeQuery();
+
+            if (resultadoClienteEnPedidos.next()) {
+                return resultadoClienteEnPedidos.getInt(1) > 0;
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return false;
+    }
+    
+    //Función creada para poder gestionar el error cuando un articulo esta enlazado a un pedido y no pueda borrarse
+    @Override
+    public boolean articulosEnPedidos(int articuloId) {
+        String sql = "SELECT COUNT(*) FROM pedidos WHERE articulo_id = ?";
+
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, articuloId);
+            ResultSet resultadoArticuloEnPedidos = ps.executeQuery();
+
+            if (resultadoArticuloEnPedidos.next()) {
+                return resultadoArticuloEnPedidos.getInt(1) > 0;
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return false;
+    }
+
 }

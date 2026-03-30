@@ -54,13 +54,19 @@ public class Controladora {
         clienteDAO.eliminar(email);
     }*/
     public boolean eliminarCliente(String email) {
-
+        //Buscamos cliente y lo guardamos
         Cliente c = clienteDAO.obtenerPorEmail(email);
-
+        //Comprobamos si el contenido es null 
         if (c == null) {
             return false;
         }
-
+        
+        //Lanza la excepción cuando la base de datos no te permite borrar un dato, No se puede eliminar un cliente que tiene pedidos relacionados
+        if (pedidoDAO.pedidosPendientesORegistrados(c.getId())) {
+            throw new RuntimeException("No se puede eliminar, el cliente tiene pedidos pendientes o resgistrados");
+        }
+        
+        //Si el cliente existe y no tiene pedidos relacionados, es borrado
         clienteDAO.eliminar(email);
         return true;
     }
@@ -88,12 +94,16 @@ public class Controladora {
         articuloDAO.actualizar(a);
     }
 
-    public boolean eliminarArticulo(String codigo){
+    public boolean eliminarArticulo(String codigo) {
 
         Articulo a = articuloDAO.obtenerPorCodigo(codigo);
 
         if (a == null) {
             return false;
+        }
+        
+        if (pedidoDAO.articulosEnPedidos(a.getId())) {
+            throw new RuntimeException("No se puede eliminar, el articulo esta enlazado con pedidos");
         }
 
         articuloDAO.eliminar(codigo);

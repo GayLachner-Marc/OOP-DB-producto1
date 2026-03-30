@@ -52,7 +52,7 @@ public class MenuClientes {
         String email = leerTexto("Email: ");
         String domicilio = leerTexto("Domicilio: ");
         String nif = leerTexto("NIF: ");
-        
+
         //Usamos una ternaria
         Cliente c = (tipo == 2)
                 ? new ClientePremium(nombre, domicilio, nif, email)
@@ -87,15 +87,21 @@ public class MenuClientes {
         controladora.eliminarCliente(leerTexto("Email: "));
     }*/
     private void eliminar() {
-
+        
         String email = leerTexto("Email: ");
-
-        boolean eliminado = controladora.eliminarCliente(email);
-
-        if (eliminado) {
-            System.out.println("Cliente eliminado correctamente");
-        } else {
-            System.out.println("Cliente no existe");
+        try {
+            //Buscamos el cliente, si se borrar guardara un true y si no existe guardara un false
+            boolean eliminado = controladora.eliminarCliente(email);
+            
+            //Notificamos al usuario si el cliente se ha borrado o no existe
+            if (eliminado) {
+                System.out.println("Cliente eliminado correctamente");
+            } else {
+                System.out.println("Cliente no existe");
+            }
+        //Aqui se muestra excepción de la controladora cuando el cliente no se puede borrar
+        } catch (RuntimeException e) {
+            System.out.println("Nota: " + e.getMessage());
         }
     }
 
@@ -114,22 +120,21 @@ public class MenuClientes {
         } while (texto.isEmpty());
         return texto;
     }
-    
+
     private int leerEnteroTipoCliente(String mensaje) {
 
         while (true) {
             try {
-                
+                //Se filtra las opciones que el usuario puede elegir 
                 System.out.print(mensaje);
                 int numeroOpcion = Integer.parseInt(sc.nextLine().trim());
-                if (numeroOpcion >=1 && numeroOpcion <=2) {
+                if (numeroOpcion >= 1 && numeroOpcion <= 2) {
                     return numeroOpcion;
-                    
+
                 } else {
-                    
+
                     System.out.println("Debe introducir una opcion valida.");
                 }
-                
 
             } catch (NumberFormatException e) {
                 System.out.println("Debe introducir un numero.");
@@ -141,17 +146,16 @@ public class MenuClientes {
 
         while (true) {
             try {
-                
+                //Se filtra el número de opciones, donde el usuario solo puede introducir una opción disponible
                 System.out.print(mensaje);
                 int numeroOpcion = Integer.parseInt(sc.nextLine().trim());
-                if (numeroOpcion >=0 && numeroOpcion <=4) {
+                if (numeroOpcion >= 0 && numeroOpcion <= 4) {
                     return numeroOpcion;
-                    
+
                 } else {
-                    
+
                     System.out.println("Debe introducir una opcion valida.");
                 }
-                
 
             } catch (NumberFormatException e) {
                 System.out.println("Debe introducir un numero.");
