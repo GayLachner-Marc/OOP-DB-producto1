@@ -1,10 +1,17 @@
 package com.compilers.onlinestore.model.Clientes;
+import jakarta.persistence.*;
+@Entity
+@Table(name = "clientes")
+
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name = "tipo_cliente")
 
 public abstract class Cliente {
 
     protected String nombre;
     protected String domicilio;
     protected String nif;
+    @Id
     protected String email; // identificador
 
     public Cliente(String nombre, String domicilio, String nif, String email) {
