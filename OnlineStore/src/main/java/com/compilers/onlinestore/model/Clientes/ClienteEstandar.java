@@ -1,4 +1,7 @@
 package com.compilers.onlinestore.model.Clientes;
+import jakarta.persistence.*;
+@Entity
+@DiscriminatorValue("ESTANDAR")
 
 public class ClienteEstandar extends Cliente {
 
