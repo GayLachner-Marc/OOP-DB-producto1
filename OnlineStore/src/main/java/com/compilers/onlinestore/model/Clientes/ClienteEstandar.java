@@ -29,11 +29,11 @@ public class ClienteEstandar extends Cliente {
     @Override
     public String toString() {
         return "ClienteEstandar{"
-                + "id=" + getId()
-                + ", nombre='" + getNombre() + '\''
-                + ", domicilio='" + getDomicilio() + '\''
-                + ", nif='" + getNif() + '\''
-                + ", email='" + getEmail() + '\''
+                + "id= " + getId()
+                + ", nombre= " + getNombre()
+                + ", domicilio= " + getDomicilio()
+                + ", nif= " + getNif()
+                + ", email= " + getEmail()
                 + '}';
     }
 }

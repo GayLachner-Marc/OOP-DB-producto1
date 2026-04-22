@@ -41,12 +41,12 @@ public class ClientePremium extends Cliente {
     @Override
     public String toString() {
         return "ClientePremium{"
-                + "id=" + getId()
-                + ", nombre='" + getNombre() + '\''
-                + ", domicilio='" + getDomicilio() + '\''
-                + ", nif='" + getNif() + '\''
-                + ", email='" + getEmail() + '\''
-                + ", cuotaAnual=" + cuotaAnual
+                + "id= " + getId()
+                + ", nombre= " + getNombre()
+                + ", domicilio= " + getDomicilio()
+                + ", nif= " + getNif()
+                + ", email= " + getEmail()
+                + ", cuotaAnual= " + cuotaAnual
                 + '}';
     }
 }

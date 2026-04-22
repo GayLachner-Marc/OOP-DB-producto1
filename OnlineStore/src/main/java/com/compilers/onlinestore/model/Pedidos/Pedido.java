@@ -143,14 +143,14 @@ public class Pedido {
                 = java.time.format.DateTimeFormatter.ofPattern("HH:mm");
 
         return "Pedido{"
-                + "id=" + id
-                + ", numeroPedido=" + numeroPedido
-                + ", fecha=" + fechaHora.format(formatoFecha)
-                + ", hora=" + fechaHora.format(formatoHora)
-                + ", cantidad=" + cantidad
-                + ", cliente=" + cliente.getEmail()
-                + ", articulo=" + articulo.getCodigo()
-                + ", total=" + calcularTotal()
+                + "id= " + id
+                + ", numeroPedido= " + numeroPedido
+                + ", fecha= " + fechaHora.format(formatoFecha)
+                + ", hora= " + fechaHora.format(formatoHora)
+                + ", cantidad= " + cantidad
+                + ", cliente= " + cliente.getEmail()
+                + ", articulo= " + articulo.getCodigo()
+                + ", total= " + calcularTotal()
                 + '}';
     }
 }
