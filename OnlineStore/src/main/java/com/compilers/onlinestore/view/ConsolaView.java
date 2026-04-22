@@ -174,7 +174,7 @@ public class ConsolaView {
     }
 
    private void crearArticulo() {
-
+    int id = leerEntero("ID: ");
     String codigo = leerTexto("Codigo: ");
     String descripcion = leerTexto("Descripcion: ");
     double precioVenta = leerDouble("Precio venta: ");
@@ -182,6 +182,7 @@ public class ConsolaView {
     int tiempoPreparacion = leerEntero("Tiempo preparacion: ");
 
     Articulo a = new Articulo(
+            id,
             codigo,
             descripcion,
             precioVenta,

@@ -19,12 +19,14 @@ public class ArticuloDAOImpl implements ArticuloDAO {
         String sql = "INSERT INTO articulos VALUES (?, ?, ?, ?, ?)";
 
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            
 
-            ps.setString(1, a.getCodigo());
-            ps.setString(2, a.getDescripcion());
-            ps.setDouble(3, a.getPrecioVenta());
-            ps.setDouble(4, a.getGastosEnvio());
-            ps.setInt(5, a.getTiempoPreparacion());
+            ps.setInt(1, a.getId());
+            ps.setString(2, a.getCodigo());
+            ps.setString(3, a.getDescripcion());
+            ps.setDouble(4, a.getPrecioVenta());
+            ps.setDouble(5, a.getGastosEnvio());
+            ps.setInt(6, a.getTiempoPreparacion());
 
             ps.executeUpdate();
 
@@ -81,6 +83,7 @@ public void actualizar(Articulo a) {
 
             if (rs.next()) {
                 return new Articulo(
+                    rs.getInt("id"),
                     rs.getString("codigo"),
                     rs.getString("descripcion"),
                     rs.getDouble("precio_venta"),
@@ -105,6 +108,7 @@ public void actualizar(Articulo a) {
 
             while (rs.next()) {
                 lista.add(new Articulo(
+                    rs.getInt("id"),
                     rs.getString("codigo"),
                     rs.getString("descripcion"),
                     rs.getDouble("precio_venta"),

@@ -7,7 +7,10 @@ import jakarta.persistence.*;
 public class Articulo {
 
     @Id
-    @Column(name = "codigo")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
+
+    @Column(name = "codigo", unique = true, nullable = false)
     private String codigo;
 
     @Column(name = "descripcion")
@@ -25,8 +28,9 @@ public class Articulo {
     // Constructor vacío obligatorio para JPA
     public Articulo() {}
 
-    public Articulo(String codigo, String descripcion, double precioVenta,
+    public Articulo(int id, String codigo, String descripcion, double precioVenta,
                     double gastosEnvio, int tiempoPreparacion) {
+        this.id = id;
         this.codigo = codigo;
         this.descripcion = descripcion;
         this.precioVenta = precioVenta;
@@ -35,7 +39,12 @@ public class Articulo {
     }
 
 
-
+    public int getId() {
+        return id;
+    }
+    public void setId(int id) {
+        this.id = id;
+    }
     public String getCodigo() {
         return codigo;
     }
@@ -79,7 +88,8 @@ public class Articulo {
     @Override
     public String toString() {
         return "Articulo{" +
-                "codigo=" + codigo +
+                "id=" + id +
+                ", codigo=" + codigo +
                 ", descripcion=" + descripcion +
                 ", precioVenta=" + precioVenta +
                 ", gastosEnvio=" + gastosEnvio +

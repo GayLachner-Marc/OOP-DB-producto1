@@ -14,6 +14,8 @@ public abstract class Cliente {
     @Id
     protected String email; // identificador
 
+    public Cliente(){}
+
     public Cliente(String nombre, String domicilio, String nif, String email) {
         this.nombre = nombre;
         this.domicilio = domicilio;

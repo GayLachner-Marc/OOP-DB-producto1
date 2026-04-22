@@ -7,6 +7,9 @@ public class ClientePremium extends Cliente{
 
     private double cuotaAnual = 30.0;
 
+    public ClientePremium() {
+        super();
+    }
     
     public ClientePremium(String nombre, String domicilio, String nif, String email) {
         super(nombre, domicilio, nif, email);

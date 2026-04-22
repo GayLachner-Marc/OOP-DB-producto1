@@ -90,6 +90,7 @@ public class PedidoDAOImpl implements PedidoDAO {
 
                 // 🔹 ARTICULO
                 Articulo a = new Articulo(
+                    rs.getInt("id"),
                     rs.getString("a_codigo"),
                     rs.getString("descripcion"),
                     rs.getDouble("precio_venta"),
@@ -171,6 +172,7 @@ public class PedidoDAOImpl implements PedidoDAO {
 
                 // 🔹 ARTICULO
                 Articulo a = new Articulo(
+                    rs.getInt("id"),
                     rs.getString("a_codigo"),
                     rs.getString("descripcion"),
                     rs.getDouble("precio_venta"),

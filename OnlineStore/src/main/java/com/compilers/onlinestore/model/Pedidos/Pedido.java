@@ -3,16 +3,38 @@ package com.compilers.onlinestore.model.Pedidos;
 import java.time.Duration;
 import java.time.LocalDateTime;
 
+import jakarta.persistence.*;
+
 import com.compilers.onlinestore.model.Articulos.Articulo;
 import com.compilers.onlinestore.model.Clientes.Cliente;
 
+@Entity
+@Table(name = "pedidos")
+
 
 public class Pedido {
+    @Id
+    @Column(name = "numero_pedido")
     private int numeroPedido;
-    private LocalDateTime fechaHora;
-    private int cantidad;
+
+    @ManyToOne
+    @JoinColumn(name = "email_cliente")
     private Cliente cliente;
+
+    @ManyToOne
+    @JoinColumn(name = "codigo_articulo")
     private Articulo articulo;
+
+    @Column(name = "fecha_pedido")
+    private LocalDateTime fechaHora;
+
+    @Column(name = "cantidad")
+    private int cantidad;
+
+    @Column(name = "enviado")
+    private boolean enviado;
+   
+  
 
     public int getNumeroPedido() {
         return numeroPedido;
@@ -48,9 +70,14 @@ public class Pedido {
 
     @Override
     public String toString() {
-        return "Pedido{" + "numeroPedido=" + numeroPedido + ", fechaHora=" + fechaHora + ", cantidad=" + cantidad + ", cliente=" + cliente + ", articulo=" + articulo + '}';
+        return "Pedido{" +
+                "numero=" + numeroPedido +
+                ", cliente=" + (cliente != null ? cliente.getEmail() : "null") +
+                ", articulo=" + (articulo != null ? articulo.getCodigo() : "null") +
+                ", cantidad=" + cantidad +
+                ", enviado=" + enviado +
+                '}';
     }
-
     public Pedido() {
     }
 
