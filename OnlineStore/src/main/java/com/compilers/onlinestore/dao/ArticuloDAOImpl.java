@@ -1,140 +1,148 @@
 package com.compilers.onlinestore.dao;
 
-import java.sql.*;
-import java.util.ArrayList;
+import com.compilers.onlinestore.model.Articulos.Articulo;
+import com.compilers.onlinestore.util.JpaDbUtil;
+
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityTransaction;
+import jakarta.persistence.TypedQuery;
+
 import java.util.List;
 
-import com.compilers.onlinestore.model.Articulos.Articulo;
-
 public class ArticuloDAOImpl implements ArticuloDAO {
-
-    private Connection conn;
-
-    public ArticuloDAOImpl(Connection conn) {
-        this.conn = conn;
-    }
 
     @Override
     public void crear(Articulo a) {
 
-        // especifica columnas 
-        String sql = "INSERT INTO articulos (codigo, descripcion, precio_venta, gastos_envio, tiempo_preparacion) VALUES (?, ?, ?, ?, ?)";
+        EntityManager em = JpaDbUtil.getEntityManager();
+        EntityTransaction tx = em.getTransaction();
 
-        try (PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+        try {
+            tx.begin();
 
-            ps.setString(1, a.getCodigo());
-            ps.setString(2, a.getDescripcion());
-            ps.setDouble(3, a.getPrecioVenta());
-            ps.setDouble(4, a.getGastosEnvio());
-            ps.setInt(5, a.getTiempoPreparacion());
+            em.persist(a);
 
-            ps.executeUpdate();
+            tx.commit();
 
-            
-            ResultSet claveGeneradaDB = ps.getGeneratedKeys();
-            if (claveGeneradaDB.next()) {
-                a.setId(claveGeneradaDB.getInt(1));
+        } catch (Exception e) {
+
+            if (tx.isActive()) {
+                tx.rollback();
             }
 
-        } catch (SQLException e) {
             e.printStackTrace();
+
+        } finally {
+            em.close();
         }
     }
 
     @Override
     public void eliminar(String codigo) {
 
-        String sql = "DELETE FROM articulos WHERE codigo = ?";
+        EntityManager em = JpaDbUtil.getEntityManager();
+        EntityTransaction tx = em.getTransaction();
 
-        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+        try {
+            tx.begin();
 
-            ps.setString(1, codigo);
-            ps.executeUpdate();
+            TypedQuery<Articulo> query = em.createQuery(
+                    "SELECT a FROM Articulo a WHERE a.codigo = :codigo",
+                    Articulo.class
+            );
 
-        } catch (SQLException e) {
+            query.setParameter("codigo", codigo);
+
+            List<Articulo> lista = query.getResultList();
+
+            if (!lista.isEmpty()) {
+                em.remove(lista.get(0));
+            }
+
+            tx.commit();
+
+        } catch (Exception e) {
+
+            if (tx.isActive()) {
+                tx.rollback();
+            }
+
             e.printStackTrace();
+
+        } finally {
+            em.close();
         }
     }
 
     @Override
     public void actualizar(Articulo a) {
 
-        String sql = "UPDATE articulos SET descripcion = ?, precio_venta = ?, gastos_envio = ?, tiempo_preparacion = ? WHERE codigo = ?";
+        EntityManager em = JpaDbUtil.getEntityManager();
+        EntityTransaction tx = em.getTransaction();
 
-        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+        try {
+            tx.begin();
 
-            ps.setString(1, a.getDescripcion());
-            ps.setDouble(2, a.getPrecioVenta());
-            ps.setDouble(3, a.getGastosEnvio());
-            ps.setInt(4, a.getTiempoPreparacion());
-            ps.setString(5, a.getCodigo());
+            em.merge(a);
 
-            int filas = ps.executeUpdate();
-            System.out.println("Filas actualizadas: " + filas);
+            tx.commit();
 
-            if (filas == 0) {
-                System.out.println("No se encontró el artículo para actualizar");
-            } else {
-                System.out.println("Artículo actualizado correctamente");
+        } catch (Exception e) {
+
+            if (tx.isActive()) {
+                tx.rollback();
             }
 
-        } catch (SQLException e) {
             e.printStackTrace();
+
+        } finally {
+            em.close();
         }
     }
 
     @Override
     public Articulo obtenerPorCodigo(String codigo) {
 
-        String sql = "SELECT * FROM articulos WHERE codigo = ?";
+        EntityManager em = JpaDbUtil.getEntityManager();
 
-        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+        try {
 
-            ps.setString(1, codigo);
-            ResultSet rs = ps.executeQuery();
+            TypedQuery<Articulo> query = em.createQuery(
+                    "SELECT a FROM Articulo a WHERE a.codigo = :codigo",
+                    Articulo.class
+            );
 
-            if (rs.next()) {
-                return new Articulo(
-                    rs.getInt("id"),
-                    rs.getString("codigo"),
-                    rs.getString("descripcion"),
-                    rs.getDouble("precio_venta"),
-                    rs.getDouble("gastos_envio"),
-                    rs.getInt("tiempo_preparacion")
-                );
+            query.setParameter("codigo", codigo);
+
+            List<Articulo> lista = query.getResultList();
+
+            if (lista.isEmpty()) {
+                return null;
             }
 
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+            return lista.get(0);
 
-        return null;
+        } finally {
+            em.close();
+        }
     }
 
     @Override
     public List<Articulo> obtenerTodos() {
 
-        List<Articulo> lista = new ArrayList<>();
+        EntityManager em = JpaDbUtil.getEntityManager();
 
-        try (Statement st = conn.createStatement()) {
+        try {
 
-            ResultSet rs = st.executeQuery("SELECT * FROM articulos");
+            TypedQuery<Articulo> query = em.createQuery(
+                    "SELECT a FROM Articulo a",
+                    Articulo.class
+            );
 
-            while (rs.next()) {
-                lista.add(new Articulo(
-                    rs.getInt("id"),
-                    rs.getString("codigo"),
-                    rs.getString("descripcion"),
-                    rs.getDouble("precio_venta"),
-                    rs.getDouble("gastos_envio"),
-                    rs.getInt("tiempo_preparacion")
-                ));
-            }
+            return query.getResultList();
 
-        } catch (SQLException e) {
-            e.printStackTrace();
+        } finally {
+            em.close();
         }
-
-        return lista;
     }
 }

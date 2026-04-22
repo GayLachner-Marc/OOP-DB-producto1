@@ -104,8 +104,8 @@ public class Articulo {
     public String toString() {
         return "Articulo{" +
                 "id=" + id +
-                ", codigo='" + codigo + '\'' +
-                ", descripcion='" + descripcion + '\'' +
+                ", codigo=" + codigo  +
+                ", descripcion=" + descripcion +
                 ", precioVenta=" + precioVenta +
                 ", gastosEnvio=" + gastosEnvio +
                 ", tiempoPreparacion=" + tiempoPreparacion +

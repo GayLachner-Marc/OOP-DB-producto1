@@ -1,42 +1,40 @@
 package com.compilers.onlinestore.dao;
-
-import java.sql.*;
+import com.compilers.onlinestore.model.Pedidos.Pedido;
+import com.compilers.onlinestore.util.JpaDbUtil;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityTransaction;
+import jakarta.persistence.TypedQuery;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
-import com.compilers.onlinestore.model.Pedidos.Pedido;
-import com.compilers.onlinestore.model.Clientes.Cliente;
-import com.compilers.onlinestore.model.Clientes.ClienteEstandar;
-import com.compilers.onlinestore.model.Clientes.ClientePremium;
-import com.compilers.onlinestore.model.Articulos.Articulo;
-
 public class PedidoDAOImpl implements PedidoDAO {
-
-    private Connection conn;
-
-    public PedidoDAOImpl(Connection conn) {
-        this.conn = conn;
-    }
 
     // ===================== CREATE =====================
     @Override
     public void crear(Pedido p) {
 
-        String sql = "INSERT INTO pedidos (numero_pedido, cliente_id, articulo_id, cantidad, fecha) VALUES (?, ?, ?, ?, ?)";
+        EntityManager em = JpaDbUtil.getEntityManager();
+        EntityTransaction tx = em.getTransaction();
 
-        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+        try {
+            tx.begin();
 
-            ps.setInt(1, p.getNumeroPedido());
-            ps.setInt(2, p.getCliente().getId());
-            ps.setInt(3, p.getArticulo().getId());
-            ps.setInt(4, p.getCantidad());
-            ps.setTimestamp(5, Timestamp.valueOf(LocalDateTime.now()));
+            p.setFechaHora(LocalDateTime.now());
 
-            ps.executeUpdate();
+            em.persist(p);
 
-        } catch (SQLException e) {
+            tx.commit();
+
+        } catch (Exception e) {
+
+            if (tx.isActive()) {
+                tx.rollback();
+            }
+
             e.printStackTrace();
+
+        } finally {
+            em.close();
         }
     }
 
@@ -44,15 +42,37 @@ public class PedidoDAOImpl implements PedidoDAO {
     @Override
     public void eliminar(int numero) {
 
-        String sql = "DELETE FROM pedidos WHERE numero_pedido = ?";
+        EntityManager em = JpaDbUtil.getEntityManager();
+        EntityTransaction tx = em.getTransaction();
 
-        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+        try {
+            tx.begin();
 
-            ps.setInt(1, numero);
-            ps.executeUpdate();
+            TypedQuery<Pedido> query = em.createQuery(
+                    "SELECT p FROM Pedido p WHERE p.numeroPedido = :numero",
+                    Pedido.class
+            );
 
-        } catch (SQLException e) {
+            query.setParameter("numero", numero);
+
+            List<Pedido> lista = query.getResultList();
+
+            if (!lista.isEmpty()) {
+                em.remove(lista.get(0));
+            }
+
+            tx.commit();
+
+        } catch (Exception e) {
+
+            if (tx.isActive()) {
+                tx.rollback();
+            }
+
             e.printStackTrace();
+
+        } finally {
+            em.close();
         }
     }
 
@@ -60,267 +80,139 @@ public class PedidoDAOImpl implements PedidoDAO {
     @Override
     public Pedido obtenerPorNumero(int numero) {
 
-        String sql = """
-        SELECT 
-            p.numero_pedido,
-            p.cantidad,
-            p.fecha,
-            
-            c.id AS c_id,
-            c.email,
-            c.nombre,
-            c.domicilio,
-            c.nif,
-            c.tipo,
+        EntityManager em = JpaDbUtil.getEntityManager();
 
-            a.id AS a_id,
-            a.codigo,
-            a.descripcion,
-            a.precio_venta,
-            a.gastos_envio,
-            a.tiempo_preparacion
+        try {
 
-        FROM pedidos p
-        JOIN clientes c ON p.cliente_id = c.id
-        JOIN articulos a ON p.articulo_id = a.id
-        WHERE p.numero_pedido = ?
-        """;
+            TypedQuery<Pedido> query = em.createQuery(
+                    "SELECT p FROM Pedido p WHERE p.numeroPedido = :numero",
+                    Pedido.class
+            );
 
-        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            query.setParameter("numero", numero);
 
-            ps.setInt(1, numero);
-            ResultSet rs = ps.executeQuery();
+            List<Pedido> lista = query.getResultList();
 
-            if (rs.next()) {
-
-                // ARTICULO
-                Articulo a = new Articulo(
-                        rs.getInt("a_id"),
-                        rs.getString("codigo"),
-                        rs.getString("descripcion"),
-                        rs.getDouble("precio_venta"),
-                        rs.getDouble("gastos_envio"),
-                        rs.getInt("tiempo_preparacion")
-                );
-
-                // CLIENTE
-                Cliente c;
-                String tipo = rs.getString("tipo");
-
-                if ("premium".equalsIgnoreCase(tipo)) {
-                    c = new ClientePremium(
-                            rs.getInt("c_id"),
-                            rs.getString("nombre"),
-                            rs.getString("email"),
-                            rs.getString("domicilio"),
-                            rs.getString("nif")
-                    );
-                } else {
-                    c = new ClienteEstandar(
-                            rs.getInt("c_id"),
-                            rs.getString("nombre"),
-                            rs.getString("email"),
-                            rs.getString("domicilio"),
-                            rs.getString("nif")
-                    );
-                }
-
-                Pedido p = new Pedido(
-                        rs.getInt("numero_pedido"),
-                        c,
-                        a,
-                        rs.getInt("cantidad")
-                );
-
-                p.setFechaHora(rs.getTimestamp("fecha").toLocalDateTime());
-
-                return p;
+            if (lista.isEmpty()) {
+                return null;
             }
 
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+            return lista.get(0);
 
-        return null;
+        } finally {
+            em.close();
+        }
     }
 
     // ===================== OBTENER TODOS =====================
     @Override
     public List<Pedido> obtenerTodos() {
 
-        List<Pedido> lista = new ArrayList<>();
+        EntityManager em = JpaDbUtil.getEntityManager();
 
-        String sql = """
-        SELECT 
-            p.numero_pedido,
-            p.cantidad,
-            p.fecha,
-            
-            c.id AS c_id,
-            c.email,
-            c.nombre,
-            c.domicilio,
-            c.nif,
-            c.tipo,
+        try {
 
-            a.id AS a_id,
-            a.codigo,
-            a.descripcion,
-            a.precio_venta,
-            a.gastos_envio,
-            a.tiempo_preparacion
+            TypedQuery<Pedido> query = em.createQuery(
+                    "SELECT p FROM Pedido p",
+                    Pedido.class
+            );
 
-        FROM pedidos p
-        JOIN clientes c ON p.cliente_id = c.id
-        JOIN articulos a ON p.articulo_id = a.id
-        """;
+            return query.getResultList();
 
-        try (Statement st = conn.createStatement()) {
-
-            ResultSet rs = st.executeQuery(sql);
-
-            while (rs.next()) {
-
-                // ARTICULO
-                Articulo a = new Articulo(
-                        rs.getInt("a_id"),
-                        rs.getString("codigo"),
-                        rs.getString("descripcion"),
-                        rs.getDouble("precio_venta"),
-                        rs.getDouble("gastos_envio"),
-                        rs.getInt("tiempo_preparacion")
-                );
-
-                // CLIENTE
-                Cliente c;
-                String tipo = rs.getString("tipo");
-
-                if ("premium".equalsIgnoreCase(tipo)) {
-                    c = new ClientePremium(
-                            rs.getInt("c_id"),
-                            rs.getString("nombre"),
-                            rs.getString("domicilio"),
-                            rs.getString("nif"),
-                            rs.getString("email")
-                    );
-                } else {
-                    c = new ClienteEstandar(
-                            rs.getInt("c_id"),
-                            rs.getString("nombre"),
-                            rs.getString("domicilio"),
-                            rs.getString("nif"),
-                            rs.getString("email")
-                    );
-                }
-
-                Pedido p = new Pedido(
-                        rs.getInt("numero_pedido"),
-                        c,
-                        a,
-                        rs.getInt("cantidad")
-                );
-
-                p.setFechaHora(rs.getTimestamp("fecha").toLocalDateTime());
-
-                lista.add(p);
-            }
-
-        } catch (SQLException e) {
-            e.printStackTrace();
+        } finally {
+            em.close();
         }
-
-        return lista;
     }
 
     // ===================== ACTUALIZAR =====================
     @Override
     public void actualizar(Pedido p) {
 
-        String sql = "UPDATE pedidos SET cantidad=? WHERE numero_pedido=?";
+        EntityManager em = JpaDbUtil.getEntityManager();
+        EntityTransaction tx = em.getTransaction();
 
-        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+        try {
+            tx.begin();
 
-            ps.setInt(1, p.getCantidad());
-            ps.setInt(2, p.getNumeroPedido());
+            em.merge(p);
 
-            ps.executeUpdate();
+            tx.commit();
 
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
+        } catch (Exception e) {
 
-    @Override
-    public List<Pedido> obtenerPorCliente(int id) {
-        List<Pedido> lista = new ArrayList<>();
-
-        String sql = """
-        SELECT *
-        FROM pedidos
-        WHERE cliente_id = ?
-        """;
-
-        try (PreparedStatement ps = conn.prepareStatement(sql)) {
-
-            ps.setInt(1, id);
-            ResultSet rs = ps.executeQuery();
-
-            while (rs.next()) {
-                Pedido p = new Pedido();
-                p.setNumeroPedido(rs.getInt("numero_pedido"));
-                p.setFechaHora(rs.getTimestamp("fecha").toLocalDateTime());
-
-                lista.add(p);
+            if (tx.isActive()) {
+                tx.rollback();
             }
 
-        } catch (SQLException e) {
             e.printStackTrace();
-        }
 
-        return lista;
+        } finally {
+            em.close();
+        }
     }
-    
-    //Función creada para poder gestionar el error cuando un cliente esta enlazado a un pedido y no pueda borrarse
+
+    // ===================== OBTENER POR CLIENTE =====================
+    @Override
+    public List<Pedido> obtenerPorCliente(int id) {
+
+        EntityManager em = JpaDbUtil.getEntityManager();
+
+        try {
+
+            TypedQuery<Pedido> query = em.createQuery(
+                    "SELECT p FROM Pedido p WHERE p.cliente.id = :id",
+                    Pedido.class
+            );
+
+            query.setParameter("id", id);
+
+            return query.getResultList();
+
+        } finally {
+            em.close();
+        }
+    }
+
+    // ===================== VALIDACIONES =====================
     @Override
     public boolean pedidosPendientesORegistrados(int clienteId) {
 
-        String sql = "SELECT COUNT(*) FROM pedidos WHERE cliente_id = ?";
+        EntityManager em = JpaDbUtil.getEntityManager();
 
-        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+        try {
 
-            ps.setInt(1, clienteId);
-            ResultSet resultadoClienteEnPedidos = ps.executeQuery();
+            TypedQuery<Long> query = em.createQuery(
+                    "SELECT COUNT(p) FROM Pedido p WHERE p.cliente.id = :id",
+                    Long.class
+            );
 
-            if (resultadoClienteEnPedidos.next()) {
-                return resultadoClienteEnPedidos.getInt(1) > 0;
-            }
+            query.setParameter("id", clienteId);
 
-        } catch (SQLException e) {
-            e.printStackTrace();
+            return query.getSingleResult() > 0;
+
+        } finally {
+            em.close();
         }
-
-        return false;
     }
-    
-    //Función creada para poder gestionar el error cuando un articulo esta enlazado a un pedido y no pueda borrarse
+
     @Override
     public boolean articulosEnPedidos(int articuloId) {
-        String sql = "SELECT COUNT(*) FROM pedidos WHERE articulo_id = ?";
 
-        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+        EntityManager em = JpaDbUtil.getEntityManager();
 
-            ps.setInt(1, articuloId);
-            ResultSet resultadoArticuloEnPedidos = ps.executeQuery();
+        try {
 
-            if (resultadoArticuloEnPedidos.next()) {
-                return resultadoArticuloEnPedidos.getInt(1) > 0;
-            }
+            TypedQuery<Long> query = em.createQuery(
+                    "SELECT COUNT(p) FROM Pedido p WHERE p.articulo.id = :id",
+                    Long.class
+            );
 
-        } catch (SQLException e) {
-            e.printStackTrace();
+            query.setParameter("id", articuloId);
+
+            return query.getSingleResult() > 0;
+
+        } finally {
+            em.close();
         }
-
-        return false;
     }
-
 }

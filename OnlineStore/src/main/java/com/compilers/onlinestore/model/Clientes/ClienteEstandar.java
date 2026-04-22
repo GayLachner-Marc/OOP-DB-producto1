@@ -1,16 +1,24 @@
 package com.compilers.onlinestore.model.Clientes;
-import jakarta.persistence.*;
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.DiscriminatorValue;
+
 @Entity
 @DiscriminatorValue("ESTANDAR")
-
 public class ClienteEstandar extends Cliente {
 
-    public ClienteEstandar(int id, String nombre, String email, String domicilio, String nif) {
-        super(id, nombre, email, domicilio, nif);
+    // Constructor vacío obligatorio para JPA
+    public ClienteEstandar() {
     }
 
-    public ClienteEstandar(String nombre, String email, String domicilio, String nif) {
-        super(nombre, email, domicilio, nif);
+    // Constructor para nuevos clientes
+    public ClienteEstandar(String nombre, String domicilio, String nif, String email) {
+        super(nombre, domicilio, nif, email);
+    }
+
+    // Constructor opcional con id
+    public ClienteEstandar(int id, String nombre, String domicilio, String nif, String email) {
+        super(id, nombre, domicilio, nif, email);
     }
 
     @Override
@@ -21,10 +29,11 @@ public class ClienteEstandar extends Cliente {
     @Override
     public String toString() {
         return "ClienteEstandar{"
-            + "nombre=" + getNombre()
-            + ", domicilio=" + getDomicilio()
-            + ", nif=" + getNif()
-            + ", email=" + getEmail()
-            + '}';
+                + "id=" + getId()
+                + ", nombre='" + getNombre() + '\''
+                + ", domicilio='" + getDomicilio() + '\''
+                + ", nif='" + getNif() + '\''
+                + ", email='" + getEmail() + '\''
+                + '}';
     }
 }

@@ -1,36 +1,24 @@
 package com.compilers.onlinestore.controller;
 
 import com.compilers.onlinestore.dao.*;
-import com.compilers.onlinestore.factory.DAOFactory;
 import com.compilers.onlinestore.model.Articulos.Articulo;
 import com.compilers.onlinestore.model.Clientes.Cliente;
 import com.compilers.onlinestore.model.Pedidos.Pedido;
 import com.compilers.onlinestore.exceptions.*;
 
-import java.sql.Connection;
-import java.sql.SQLException;
 import java.util.List;
-
-import com.compilers.onlinestore.util.ConexionBD;
 
 public class Controladora {
 
-    private Connection conn;
     private ClienteDAO clienteDAO;
     private ArticuloDAO articuloDAO;
     private PedidoDAO pedidoDAO;
 
     public Controladora() {
-        try {
-            conn = ConexionBD.getConnection();
 
-            clienteDAO = DAOFactory.getClienteDAO(conn);//retorna clienteDaoimpl
-            articuloDAO = DAOFactory.getArticuloDAO(conn);
-            pedidoDAO = DAOFactory.getPedidoDAO(conn);
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        clienteDAO = new ClienteDAOImpl();
+        articuloDAO = new ArticuloDAOImpl();
+        pedidoDAO = new PedidoDAOImpl();
     }
 
     // ================= CLIENTES =================
@@ -50,23 +38,18 @@ public class Controladora {
         clienteDAO.actualizar(cliente);
     }
 
-    /*public void eliminarCliente(String email) {
-        clienteDAO.eliminar(email);
-    }*/
     public boolean eliminarCliente(String email) {
-        //Buscamos cliente y lo guardamos
+
         Cliente c = clienteDAO.obtenerPorEmail(email);
-        //Comprobamos si el contenido es null 
+
         if (c == null) {
             return false;
         }
-        
-        //Lanza la excepción cuando la base de datos no te permite borrar un dato, No se puede eliminar un cliente que tiene pedidos relacionados
+
         if (pedidoDAO.pedidosPendientesORegistrados(c.getId())) {
-            throw new RuntimeException("No se puede eliminar, el cliente tiene pedidos pendientes o resgistrados");
+            throw new RuntimeException("No se puede eliminar, el cliente tiene pedidos pendientes o registrados");
         }
-        
-        //Si el cliente existe y no tiene pedidos relacionados, es borrado
+
         clienteDAO.eliminar(email);
         return true;
     }
@@ -101,9 +84,9 @@ public class Controladora {
         if (a == null) {
             return false;
         }
-        
+
         if (pedidoDAO.articulosEnPedidos(a.getId())) {
-            throw new RuntimeException("No se puede eliminar, el articulo esta enlazado con pedidos");
+            throw new RuntimeException("No se puede eliminar, el articulo está enlazado con pedidos");
         }
 
         articuloDAO.eliminar(codigo);
@@ -151,5 +134,4 @@ public class Controladora {
 
         return true;
     }
-
 }
