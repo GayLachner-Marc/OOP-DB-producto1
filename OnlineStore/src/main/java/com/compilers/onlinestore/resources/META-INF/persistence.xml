@@ -6,7 +6,7 @@
 
     <persistence-unit name="OnlineStorePU">
 
-        <!-- ENTIDADES -->
+       
         <class>com.compilers.onlinestore.model.Articulos.Articulo</class>
         <class>com.compilers.onlinestore.model.Pedidos.Pedido</class>
         <class>com.compilers.onlinestore.model.Clientes.Cliente</class>
