@@ -1,5 +1,162 @@
 package com.compilers.onlinestore.view;
 
+import com.compilers.onlinestore.controller.Controladora;
+import com.compilers.onlinestore.exceptions.ArticuloNoExisteException;
+import com.compilers.onlinestore.model.Articulos.Articulo;
+import java.util.List;
+import java.util.Scanner;
+
 public class MenuArticulos {
-    
+
+    private Controladora controladora;
+    private Scanner sc;
+
+    public MenuArticulos(Controladora c, Scanner sc) {
+        this.controladora = c;
+        this.sc = sc;
+    }
+
+    public void iniciar() throws ArticuloNoExisteException {
+
+        int opcion;
+
+        do {
+            System.out.println("\n--- ARTICULOS ---");
+            System.out.println("1. Crear");
+            System.out.println("2. Listar");
+            System.out.println("3. Modificar");
+            System.out.println("4. Eliminar");
+            System.out.println("0. Volver");
+
+            opcion = leerEnteroOpciones("Opcion: ");
+
+            switch (opcion) {
+                case 1 ->
+                    crear();
+                case 2 ->
+                    listar();
+                case 3 ->
+                    actualizar();
+                case 4 ->
+                    eliminar();
+            }
+
+        } while (opcion != 0);
+    }
+
+    private void crear() {
+      int id = leerEntero("ID: ");
+    String codigo = leerTexto("Codigo: ");
+    String descripcion = leerTexto("Descripcion: ");
+    double precioVenta = leerDouble("Precio venta: ");
+    double gastosEnvio = leerDouble("Gastos envio: ");
+    int tiempoPreparacion = leerEntero("Tiempo preparacion: ");
+
+    Articulo a = new Articulo(
+            id,
+            codigo,
+            descripcion,
+            precioVenta,
+            gastosEnvio,
+            tiempoPreparacion
+    );
+
+    controladora.crearArticulo(a);
+
+    System.out.println("Articulo creado.");
+    }
+
+    private void listar() {
+        List<Articulo> lista = controladora.listarArticulos();
+        lista.forEach(System.out::println);
+    }
+
+    private void actualizar() throws ArticuloNoExisteException {
+        Articulo a = controladora.buscarArticulo(leerTexto("Codigo: "));
+        if (a == null) {
+            System.out.println("Articulo no existe");
+            return;
+        }
+
+        a.setDescripcion(leerTexto("Descripcion: "));
+        a.setPrecioVenta(leerDouble("Precio: "));
+        a.setGastosEnvio(leerDouble("Envio: "));
+        a.setTiempoPreparacion(leerEntero("Tiempo: "));
+
+        controladora.actualizarArticulo(a);
+    }
+
+    /*private void eliminar() throws ArticuloNoExisteException {
+        controladora.eliminarArticulo(leerTexto("Codigo: "));
+    }*/
+    private void eliminar() {
+
+        String codigo = leerTexto("Codigo Articulo: ");
+        Articulo a = controladora.buscarArticulo(codigo);
+          if (a == null) {
+        System.out.println("Articulo no encontrado.");
+        return;
+    }
+
+    try {
+        controladora.eliminarArticulo(codigo);
+        System.out.println("Articulo eliminado.");
+    } catch (ArticuloNoExisteException e) {
+        System.out.println(e.getMessage());
+    }
+    }
+    // ================= LECTURA SEGURA =================
+    private String leerTexto(String mensaje) {
+        String texto;
+
+        do {
+            System.out.print(mensaje);
+            texto = sc.nextLine().trim();
+
+            if (texto.isEmpty()) {
+                System.out.println("Campo obligatorio.");
+            }
+        } while (texto.isEmpty());
+
+        return texto;
+    }
+
+    //Función para leer enteros en general
+    private int leerEntero(String m) {
+        System.out.print(m);
+        return Integer.parseInt(sc.nextLine().trim());
+    }
+
+    //Función para realizar un filtro de las opciones del menu
+    private int leerEnteroOpciones(String mensaje) {
+
+        while (true) {
+            try {
+                System.out.print(mensaje);
+                int numeroOpcion = Integer.parseInt(sc.nextLine().trim());
+                if (numeroOpcion >= 0 && numeroOpcion <= 4) {
+                    return numeroOpcion;
+
+                } else {
+                    System.out.println("Debe introducir una opcion valida.");
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("Debe introducir un numero.");
+            }
+        }
+    }
+
+    private double leerDouble(String mensaje) {
+
+        while (true) {
+            try {
+                System.out.print(mensaje);
+                return Double.parseDouble(sc.nextLine());
+
+            } catch (NumberFormatException e) {
+                System.out.println("Debe introducir un numero valido.");
+            }
+        }
+    }
+
 }
