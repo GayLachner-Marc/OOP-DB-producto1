@@ -128,9 +128,9 @@ public class Tienda {
         return null;
     }
 
-    public Articulo buscarArticuloPorCodigo(String codigo) {
+    public Articulo buscarArticuloPorCodigo(Integer codigo) {
         for (Articulo a : articulos) {
-            if (a.getCodigo().equalsIgnoreCase(codigo)) {
+            if (a.getCodigo().equals(codigo)) {
                 return a;
             }
         }

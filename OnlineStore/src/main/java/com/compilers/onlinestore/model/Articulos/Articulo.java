@@ -11,7 +11,7 @@ public class Articulo {
     private int id;
 
     @Column(name = "codigo", unique = true, nullable = false)
-    private String codigo;
+    private Integer codigo;
 
     @Column(name = "descripcion")
     private String descripcion;
@@ -28,7 +28,7 @@ public class Articulo {
     // Constructor vacío obligatorio para JPA
     public Articulo() {}
 
-    public Articulo(int id, String codigo, String descripcion, double precioVenta,
+    public Articulo(int id, Integer codigo, String descripcion, double precioVenta,
                     double gastosEnvio, int tiempoPreparacion) {
         this.id = id;
         this.codigo = codigo;
@@ -45,11 +45,11 @@ public class Articulo {
     public void setId(int id) {
         this.id = id;
     }
-    public String getCodigo() {
+    public Integer getCodigo() {
         return codigo;
     }
 
-    public void setCodigo(String codigo) {
+    public void setCodigo(Integer codigo) {
         this.codigo = codigo;
     }
 

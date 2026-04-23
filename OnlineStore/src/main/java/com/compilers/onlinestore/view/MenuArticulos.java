@@ -45,8 +45,8 @@ public class MenuArticulos {
     }
 
     private void crear() {
-      int id = leerEntero("ID: ");
-    String codigo = leerTexto("Codigo: ");
+      Integer id = leerEntero("ID: ");
+    Integer codigo = leerEntero("Codigo: ");
     String descripcion = leerTexto("Descripcion: ");
     double precioVenta = leerDouble("Precio venta: ");
     double gastosEnvio = leerDouble("Gastos envio: ");
@@ -72,7 +72,7 @@ public class MenuArticulos {
     }
 
     private void actualizar() throws ArticuloNoExisteException {
-        Articulo a = controladora.buscarArticulo(leerTexto("Codigo: "));
+        Articulo a = controladora.buscarArticulo(leerEntero("Codigo: "));
         if (a == null) {
             System.out.println("Articulo no existe");
             return;
@@ -91,7 +91,7 @@ public class MenuArticulos {
     }*/
     private void eliminar() {
 
-        String codigo = leerTexto("Codigo Articulo: ");
+        Integer codigo = leerEntero("Codigo Articulo: ");
         Articulo a = controladora.buscarArticulo(codigo);
           if (a == null) {
         System.out.println("Articulo no encontrado.");

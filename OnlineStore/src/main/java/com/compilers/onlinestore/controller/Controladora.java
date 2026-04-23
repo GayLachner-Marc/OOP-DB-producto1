@@ -108,7 +108,7 @@ public class Controladora {
     }
     }
 
-    public Articulo buscarArticulo(String codigo) {
+    public Articulo buscarArticulo(Integer codigo) {
         EntityManager em = JPAUtil.getEntityManager();
         Articulo a = em.find(Articulo.class, codigo);
         em.close();
@@ -142,7 +142,7 @@ public class Controladora {
         }
          
        
-    public void eliminarArticulo(String codigo)
+    public void eliminarArticulo(Integer codigo)
         throws ArticuloNoExisteException {
 
     EntityManager em = JPAUtil.getEntityManager();

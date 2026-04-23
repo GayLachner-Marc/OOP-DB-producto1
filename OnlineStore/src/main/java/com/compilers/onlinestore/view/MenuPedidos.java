@@ -51,7 +51,7 @@ public class MenuPedidos {
 
         int numero = leerEntero("Numero de pedido: ");
         Cliente c = controladora.buscarCliente(leerTexto("Email cliente: "));
-        Articulo a = controladora.buscarArticulo(leerTexto("Codigo de articulo: "));
+        Articulo a = controladora.buscarArticulo(leerEntero("Codigo de articulo: "));
         
         // Se comprueba si cliente y articulo existen
         if (c == null) {

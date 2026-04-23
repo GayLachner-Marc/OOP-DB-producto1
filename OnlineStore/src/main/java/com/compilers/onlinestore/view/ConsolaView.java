@@ -1,5 +1,4 @@
 package com.compilers.onlinestore.view;
-
 import com.compilers.onlinestore.controller.Controladora;
 import com.compilers.onlinestore.exceptions.ArticuloNoExisteException;
 import com.compilers.onlinestore.exceptions.PedidoYaEnviadoException;
@@ -176,7 +175,7 @@ public class ConsolaView {
 
    private void crearArticulo() {
     int id = leerEntero("ID: ");
-    String codigo = leerTexto("Codigo: ");
+    Integer codigo = leerEntero("Codigo: ");
     String descripcion = leerTexto("Descripcion: ");
     double precioVenta = leerDouble("Precio venta: ");
     double gastosEnvio = leerDouble("Gastos envio: ");
@@ -198,7 +197,7 @@ public class ConsolaView {
 
     private void actualizarArticulo() throws ArticuloNoExisteException {
 
-    String codigo = leerTexto("Codigo articulo: ");
+    Integer codigo = leerEntero("Codigo articulo: ");
     Articulo a = controladora.buscarArticulo(codigo);
 
     if (a == null) {
@@ -237,7 +236,7 @@ public class ConsolaView {
 
   private void eliminarArticulo() {
 
-    String codigo = leerTexto("Codigo articulo: ");
+    Integer codigo = leerEntero("Codigo articulo: ");
 
     Articulo a = controladora.buscarArticulo(codigo);
 
@@ -285,7 +284,7 @@ public class ConsolaView {
 
     int numero = leerEntero("Numero pedido: ");
     String email = leerTexto("Email cliente: ");
-    String codigo = leerTexto("Codigo articulo: ");
+    Integer codigo = leerEntero("Codigo articulo: ");
     int cantidad = leerEntero("Cantidad: ");
 
     Cliente c = controladora.buscarCliente(email);
