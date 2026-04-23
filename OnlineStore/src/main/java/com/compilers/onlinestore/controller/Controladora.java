@@ -1,17 +1,10 @@
 package com.compilers.onlinestore.controller;
-import com.compilers.onlinestore.dao.*;
-import com.compilers.onlinestore.factory.DAOFactory;
 import com.compilers.onlinestore.model.Articulos.Articulo;
 import com.compilers.onlinestore.model.Clientes.Cliente;
 import com.compilers.onlinestore.model.Pedidos.Pedido;
 import com.compilers.onlinestore.util.JPAUtil;
-
 import jakarta.persistence.EntityManager;
-
 import com.compilers.onlinestore.exceptions.*;
-
-import java.sql.Connection;
-import java.sql.SQLException;
 import java.util.List;
 
 public class Controladora {

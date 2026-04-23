@@ -10,9 +10,6 @@ import com.compilers.onlinestore.model.Clientes.Cliente;
 import com.compilers.onlinestore.model.Clientes.ClientePremium;
 import com.compilers.onlinestore.model.Clientes.ClienteEstandar;
 import com.compilers.onlinestore.model.Pedidos.Pedido;
-import com.compilers.onlinestore.dao.ArticuloDAOImpl;
-import com.compilers.onlinestore.dao.ClienteDAOImpl;
-import com.compilers.onlinestore.dao.PedidoDAOImpl;
 import java.util.List;
 import java.util.Scanner;
 
