@@ -132,8 +132,12 @@ public class ConsolaView {
     c.setNombre(nombre);
     c.setDomicilio(domicilio);
     c.setNif(nif);
-
+    try{
     controladora.actualizarCliente(c);
+    } catch (ClienteNoExisteException e) {
+        System.out.println("Error: " + e.getMessage());
+        return;
+    }
 
     System.out.println("Cliente actualizado.");
 }
@@ -234,20 +238,22 @@ public class ConsolaView {
         }
     }
 
-   private void eliminarArticulo() {
+  private void eliminarArticulo() {
 
     String codigo = leerTexto("Codigo articulo: ");
 
+    Articulo a = controladora.buscarArticulo(codigo);
+
+    if (a == null) {
+        System.out.println("Articulo no encontrado.");
+        return;
+    }
+
     try {
-
-        if (controladora.eliminarArticulo(codigo)) {
-            System.out.println("Articulo eliminado.");
-        } else {
-            System.out.println("Articulo no encontrado.");
-        }
-
+        controladora.eliminarArticulo(codigo);
+        System.out.println("Articulo eliminado.");
     } catch (ArticuloNoExisteException e) {
-        System.out.println("Error: " + e.getMessage());
+        System.out.println(e.getMessage());
     }
 }
 
@@ -285,15 +291,15 @@ public class ConsolaView {
     String codigo = leerTexto("Codigo articulo: ");
     int cantidad = leerEntero("Cantidad: ");
 
-    Cliente cliente = controladora.buscarCliente(email);
-    Articulo articulo = controladora.buscarArticulo(codigo);
+    Cliente c = controladora.buscarCliente(email);
+    Articulo a = controladora.buscarArticulo(codigo);
 
-    if (cliente == null || articulo == null) {
+    if (c == null || a == null) {
         System.out.println("Error: cliente o articulo no existe.");
         return;
     }
 
-    Pedido p = new Pedido(numero, cliente, articulo, cantidad);
+    Pedido p = new Pedido(numero, c, a, cantidad);
 
     controladora.crearPedido(p);
 
@@ -320,6 +326,8 @@ public class ConsolaView {
         System.out.println("Pedido modificado.");
 
     } catch (PedidoYaEnviadoException e) {
+        System.out.println(e.getMessage());
+    } catch (PedidoNoExisteException e) {
         System.out.println(e.getMessage());
     }
 }

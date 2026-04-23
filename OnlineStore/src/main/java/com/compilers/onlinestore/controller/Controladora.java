@@ -175,30 +175,37 @@ public class Controladora {
 
     // ================= PEDIDOS =================
 
-    public void crearPedido(int numero, String email, String codigo, int cantidad)
-            throws ClienteNoExisteException, ArticuloNoExisteException {
-        EntityManager em = JPAUtil.getEntityManager();
+    public void crearPedido(Pedido p) {
 
-        try{
-            em.getTransaction().begin();
+    EntityManager em = JPAUtil.getEntityManager();
 
-            Cliente cliente = em.find(Cliente.class, email);
-            Articulo articulo = em.find(Articulo.class, codigo);
+    try {
+        em.getTransaction().begin();
 
-            if (cliente == null || articulo == null) {
-               System.out.println("El cliente o el articulo no existen");
-               return;
-            }
-            Pedido p = new Pedido(numero, cliente, articulo, cantidad);
-            em.persist(p);
-            em.getTransaction().commit();
-        } catch (Exception e){
-            em.getTransaction().rollback();
-            e.printStackTrace();
-        } finally{
-            em.close();
+        // Opcional: validar que existen en BD
+        Cliente cliente = em.find(Cliente.class, p.getCliente().getEmail());
+        Articulo articulo = em.find(Articulo.class, p.getArticulo().getCodigo());
+
+        if (cliente == null || articulo == null) {
+            System.out.println("Cliente o articulo no existen");
+            return;
         }
+
+        // Reasociar entidades gestionadas
+        p.setCliente(cliente);
+        p.setArticulo(articulo);
+
+        em.persist(p);
+
+        em.getTransaction().commit();
+
+    } catch (Exception e) {
+        em.getTransaction().rollback();
+        e.printStackTrace();
+    } finally {
+        em.close();
     }
+}
 
     public Pedido buscarPedido(int numero) {
         EntityManager em = JPAUtil.getEntityManager();
@@ -216,30 +223,35 @@ public class Controladora {
         return lista;
     }
 
-    public void actualizarPedido(int numero, int nuevaCantidad)
-            throws PedidoYaEnviadoException, PedidoNoExisteException {
-        EntityManager em = JPAUtil.getEntityManager();
+   public void actualizarPedido(Pedido p)
+        throws PedidoYaEnviadoException, PedidoNoExisteException {
 
-        try{
-            em.getTransaction().begin();
-            Pedido p = em.find(Pedido.class, numero);
+    EntityManager em = JPAUtil.getEntityManager();
 
-            if (p==null){
-                throw new PedidoNoExisteException("Pedido no encontrado");
-            }
+    try {
+        em.getTransaction().begin();
 
-            if (p.estaEnviado()) {
-                throw new PedidoYaEnviadoException("El pedido ya fue enviado");
-            }
-            p.setCantidad(nuevaCantidad);
-            em.getTransaction().commit();
-        } catch (Exception e){
-            em.getTransaction().rollback();
-            throw e;
-        } finally {
-            em.close();
-        } 
+        Pedido existente = em.find(Pedido.class, p.getNumeroPedido());
+
+        if (existente == null) {
+            throw new PedidoNoExisteException("Pedido no encontrado");
+        }
+
+        if (existente.estaEnviado()) {
+            throw new PedidoYaEnviadoException("El pedido ya fue enviado");
+        }
+
+        existente.setCantidad(p.getCantidad());
+
+        em.getTransaction().commit();
+
+    } catch (Exception e) {
+        em.getTransaction().rollback();
+        throw e;
+    } finally {
+        em.close();
     }
+}
     public boolean eliminarPedido(int numero)
         throws PedidoYaEnviadoException {
             EntityManager em = JPAUtil.getEntityManager();
