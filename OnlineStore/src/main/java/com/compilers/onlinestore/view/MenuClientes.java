@@ -46,22 +46,22 @@ public class MenuClientes {
 
     private void crear() {
 
-        System.out.println("1. Estandar  2. Premium");
-        int tipo = leerEnteroTipoCliente("Tipo: ");
+    System.out.println("1. Estandar  2. Premium");
+    int tipo = leerEnteroTipoCliente("Tipo: ");
 
-        String nombre = leerTexto("Nombre: ");
-        String email = leerTexto("Email: ");
-        String domicilio = leerTexto("Domicilio: ");
-        String nif = leerTexto("NIF: ");
+    String nombre = leerTexto("Nombre: ");
+    String email = leerTexto("Email: ");
+    String domicilio = leerTexto("Domicilio: ");
+    String nif = leerTexto("NIF: ");
 
-        //Usamos una ternaria
-        Cliente c = (tipo == 2)
-                ? new ClientePremium(nombre, domicilio, nif, email)
-                : new ClienteEstandar(nombre, domicilio, nif, email);
+    Cliente c = (tipo == 2)
+            ? new ClientePremium(nombre, domicilio, nif, email)
+            : new ClienteEstandar(nombre, domicilio, nif, email);
 
-        controladora.crearCliente(c);
+    if (controladora.crearCliente(c)) {
         System.out.println("Cliente creado.");
     }
+}
 
     private void listar() {
         List<Cliente> lista = controladora.listarClientes();

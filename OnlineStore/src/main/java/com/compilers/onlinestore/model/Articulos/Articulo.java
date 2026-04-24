@@ -3,7 +3,7 @@ package com.compilers.onlinestore.model.Articulos;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "articulos") 
+@Table(name = "articulos")
 public class Articulo {
 
     @Id
@@ -11,7 +11,7 @@ public class Articulo {
     private int id;
 
     @Column(name = "codigo", unique = true, nullable = false)
-    private Integer codigo;
+    private String codigo;
 
     @Column(name = "descripcion")
     private String descripcion;
@@ -25,11 +25,14 @@ public class Articulo {
     @Column(name = "tiempo_preparacion")
     private int tiempoPreparacion;
 
-    // Constructor vacío obligatorio para JPA
-    public Articulo() {}
+    // Constructor vacío obligatorio JPA
+    public Articulo() {
+    }
 
-    public Articulo(int id, Integer codigo, String descripcion, double precioVenta,
-                    double gastosEnvio, int tiempoPreparacion) {
+    // Constructor completo
+    public Articulo(int id, String codigo, String descripcion,
+                    double precioVenta, double gastosEnvio,
+                    int tiempoPreparacion) {
         this.id = id;
         this.codigo = codigo;
         this.descripcion = descripcion;
@@ -38,18 +41,30 @@ public class Articulo {
         this.tiempoPreparacion = tiempoPreparacion;
     }
 
+    // Constructor sin id
+    public Articulo(String codigo, String descripcion,
+                    double precioVenta, double gastosEnvio,
+                    int tiempoPreparacion) {
+        this.codigo = codigo;
+        this.descripcion = descripcion;
+        this.precioVenta = precioVenta;
+        this.gastosEnvio = gastosEnvio;
+        this.tiempoPreparacion = tiempoPreparacion;
+    }
 
     public int getId() {
         return id;
     }
+
     public void setId(int id) {
         this.id = id;
     }
-    public Integer getCodigo() {
+
+    public String getCodigo() {
         return codigo;
     }
 
-    public void setCodigo(Integer codigo) {
+    public void setCodigo(String codigo) {
         this.codigo = codigo;
     }
 
@@ -88,12 +103,12 @@ public class Articulo {
     @Override
     public String toString() {
         return "Articulo{" +
-                "id=" + id +
-                ", codigo=" + codigo +
-                ", descripcion=" + descripcion +
-                ", precioVenta=" + precioVenta +
-                ", gastosEnvio=" + gastosEnvio +
-                ", tiempoPreparacion=" + tiempoPreparacion +
+                "id= " + id +
+                ", codigo= " + codigo  +
+                ", descripcion= " + descripcion +
+                ", precioVenta= " + precioVenta +
+                ", gastosEnvio= " + gastosEnvio +
+                ", tiempoPreparacion= " + tiempoPreparacion +
                 '}';
     }
 }

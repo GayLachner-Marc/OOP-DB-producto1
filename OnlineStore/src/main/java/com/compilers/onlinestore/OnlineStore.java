@@ -5,13 +5,28 @@ import com.compilers.onlinestore.exceptions.ArticuloNoExisteException;
 import com.compilers.onlinestore.exceptions.PedidoYaEnviadoException;
 import com.compilers.onlinestore.exceptions.ClienteNoExisteException;
 import com.compilers.onlinestore.exceptions.PedidoNoExisteException;
-import com.compilers.onlinestore.view.ConsolaView;
+import com.compilers.onlinestore.util.JPAUtil;
+import com.compilers.onlinestore.view.MenuPrincipal;
+
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class OnlineStore {
 
-    public static void main(String[] args) throws ClienteNoExisteException, PedidoNoExisteException, ArticuloNoExisteException, PedidoYaEnviadoException {
-         Controladora controladora = new Controladora();
-        ConsolaView vista = new ConsolaView(controladora);
+    public static void main(String[] args)
+            throws ClienteNoExisteException, PedidoNoExisteException,
+                   ArticuloNoExisteException, PedidoYaEnviadoException {
 
-        vista.iniciar(); }
+        // Oculta logs de Hibernate
+        Logger.getLogger("org.hibernate").setLevel(Level.SEVERE);
+
+        // Fuerza arranque de Hibernate al iniciar
+        JPAUtil.getEntityManager().close();
+
+        // Inicia programa
+        Controladora controladora = new Controladora();
+        MenuPrincipal vista = new MenuPrincipal(controladora);
+
+        vista.iniciar();
+    }
 }

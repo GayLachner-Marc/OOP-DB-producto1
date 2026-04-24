@@ -16,14 +16,15 @@
             <!-- CONEXIÓN -->
             <property name="jakarta.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/compilers"/>
             <property name="jakarta.persistence.jdbc.user" value="root"/>
-            <property name="jakarta.persistence.jdbc.password" value="GayLachner-111"/>
+            <property name="jakarta.persistence.jdbc.password" value="123"/>
             <property name="jakarta.persistence.jdbc.driver" value="com.mysql.cj.jdbc.Driver"/>
 
             <!-- HIBERNATE -->
             <property name="hibernate.dialect" value="org.hibernate.dialect.MySQLDialect"/>
             <property name="hibernate.hbm2ddl.auto" value="update"/>
-            <property name="hibernate.show_sql" value="true"/>
-            <property name="hibernate.format_sql" value="true"/>
+            <property name="hibernate.show_sql" value="false"/>
+            <property name="hibernate.format_sql" value="false"/>
+            <property name="hibernate.generate_statistics" value="false"/>
 
         </properties>
 

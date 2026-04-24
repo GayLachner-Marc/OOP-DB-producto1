@@ -45,26 +45,17 @@ public class MenuArticulos {
     }
 
     private void crear() {
-      Integer id = leerEntero("ID: ");
-    Integer codigo = leerEntero("Codigo: ");
-    String descripcion = leerTexto("Descripcion: ");
-    double precioVenta = leerDouble("Precio venta: ");
-    double gastosEnvio = leerDouble("Gastos envio: ");
-    int tiempoPreparacion = leerEntero("Tiempo preparacion: ");
+        Articulo a = new Articulo(
+                leerTexto("Codigo: "),
+                leerTexto("Descripcion: "),
+                leerDouble("Precio: "),
+                leerDouble("Envio: "),
+                leerEntero("Tiempo: ")
+        );
 
-    Articulo a = new Articulo(
-            id,
-            codigo,
-            descripcion,
-            precioVenta,
-            gastosEnvio,
-            tiempoPreparacion
-    );
-
-    controladora.crearArticulo(a);
-
-    System.out.println("Articulo creado.");
+        controladora.crearArticulo(a);
     }
+   
 
     private void listar() {
         List<Articulo> lista = controladora.listarArticulos();
