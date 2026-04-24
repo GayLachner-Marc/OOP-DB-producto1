@@ -55,47 +55,66 @@ public class MenuArticulos {
 
         controladora.crearArticulo(a);
     }
-   
 
     private void listar() {
         List<Articulo> lista = controladora.listarArticulos();
         lista.forEach(System.out::println);
     }
 
-    private void actualizar() throws ArticuloNoExisteException {
-        Articulo a = controladora.buscarArticulo(leerEntero("Codigo: "));
+    private void actualizar() {
+
+        try {
+
+            String codigo = leerTexto("Codigo: ");
+
+            Articulo a = controladora.buscarArticulo(codigo);
+
+            if (a == null) {
+                System.out.println("Articulo no existe.");
+                return;
+            }
+
+            a.setDescripcion(leerTexto("Descripcion: "));
+            a.setPrecioVenta(leerDouble("Precio: "));
+            a.setGastosEnvio(leerDouble("Envio: "));
+            a.setTiempoPreparacion(leerEntero("Tiempo: "));
+
+            controladora.actualizarArticulo(a);
+
+            System.out.println("Articulo actualizado.");
+
+        } catch (ArticuloNoExisteException e) {
+
+            System.out.println(e.getMessage());
+        }
+    }
+
+    private void eliminar() {
+
+        String codigo = leerTexto("Codigo Articulo: ");
+
+        Articulo a = controladora.buscarArticulo(codigo);
+
         if (a == null) {
-            System.out.println("Articulo no existe");
+            System.out.println("Articulo no encontrado.");
             return;
         }
 
-        a.setDescripcion(leerTexto("Descripcion: "));
-        a.setPrecioVenta(leerDouble("Precio: "));
-        a.setGastosEnvio(leerDouble("Envio: "));
-        a.setTiempoPreparacion(leerEntero("Tiempo: "));
+        try {
 
-        controladora.actualizarArticulo(a);
+            boolean eliminado = controladora.eliminarArticulo(codigo);
+
+            if (eliminado) {
+                System.out.println("Articulo eliminado.");
+            } else {
+                System.out.println("Articulo no encontrado.");
+            }
+
+        } catch (ArticuloNoExisteException e) {
+            System.out.println(e.getMessage());
+        }
     }
 
-    /*private void eliminar() throws ArticuloNoExisteException {
-        controladora.eliminarArticulo(leerTexto("Codigo: "));
-    }*/
-    private void eliminar() {
-
-        Integer codigo = leerEntero("Codigo Articulo: ");
-        Articulo a = controladora.buscarArticulo(codigo);
-          if (a == null) {
-        System.out.println("Articulo no encontrado.");
-        return;
-    }
-
-    try {
-        controladora.eliminarArticulo(codigo);
-        System.out.println("Articulo eliminado.");
-    } catch (ArticuloNoExisteException e) {
-        System.out.println(e.getMessage());
-    }
-    }
     // ================= LECTURA SEGURA =================
     private String leerTexto(String mensaje) {
         String texto;

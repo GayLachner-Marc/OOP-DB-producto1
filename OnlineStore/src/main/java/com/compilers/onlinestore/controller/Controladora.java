@@ -1,4 +1,5 @@
 package com.compilers.onlinestore.controller;
+
 import com.compilers.onlinestore.model.Articulos.Articulo;
 import com.compilers.onlinestore.model.Clientes.Cliente;
 import com.compilers.onlinestore.model.Pedidos.Pedido;
@@ -9,230 +10,235 @@ import java.util.List;
 
 public class Controladora {
 
-   public Controladora(){}
+    public Controladora() {
+    }
 
-    
+    // ================= CLIENTES =================
+    public boolean crearCliente(Cliente c) {
 
-   // ================= CLIENTES =================
+        EntityManager em = JPAUtil.getEntityManager();
 
-public boolean crearCliente(Cliente c) {
+        try {
 
-    EntityManager em = JPAUtil.getEntityManager();
+            Long existe = em.createQuery(
+                    "SELECT COUNT(c) FROM Cliente c WHERE c.nif = :nif OR c.email = :email",
+                    Long.class)
+                    .setParameter("nif", c.getNif())
+                    .setParameter("email", c.getEmail())
+                    .getSingleResult();
 
-    try {
+            if (existe > 0) {
+                System.out.println("Ya existe un cliente con ese numero de documento o email.");
+                return false;
+            }
 
-        Long existe = em.createQuery(
-                "SELECT COUNT(c) FROM Cliente c WHERE c.nif = :nif OR c.email = :email",
-                Long.class)
-                .setParameter("nif", c.getNif())
-                .setParameter("email", c.getEmail())
-                .getSingleResult();
+            em.getTransaction().begin();
+            em.persist(c);
+            em.getTransaction().commit();
 
-        if (existe > 0) {
-            System.out.println("Ya existe un cliente con ese numero de documento o email.");
+            return true;
+
+        } catch (Exception e) {
+
+            if (em.getTransaction().isActive()) {
+                em.getTransaction().rollback();
+            }
+
+            System.out.println("Error al crear cliente.");
             return false;
+
+        } finally {
+            em.close();
         }
+    }
 
-        em.getTransaction().begin();
-        em.persist(c);
-        em.getTransaction().commit();
+    public Cliente buscarCliente(String email) {
 
-        return true;
+        EntityManager em = JPAUtil.getEntityManager();
 
-    } catch (Exception e) {
+        try {
 
-        if (em.getTransaction().isActive()) {
-            em.getTransaction().rollback();
+            return em.createQuery(
+                    "SELECT c FROM Cliente c WHERE c.email = :email",
+                    Cliente.class)
+                    .setParameter("email", email)
+                    .getResultStream()
+                    .findFirst()
+                    .orElse(null);
+
+        } finally {
+            em.close();
         }
-
-        System.out.println("Error al crear cliente.");
-        return false;
-
-    } finally {
-        em.close();
     }
-}
 
+    public List<Cliente> listarClientes() {
 
-public Cliente buscarCliente(String email) {
+        EntityManager em = JPAUtil.getEntityManager();
 
-    EntityManager em = JPAUtil.getEntityManager();
+        try {
 
-    try {
+            return em.createQuery(
+                    "SELECT c FROM Cliente c",
+                    Cliente.class)
+                    .getResultList();
 
-        return em.createQuery(
-                "SELECT c FROM Cliente c WHERE c.email = :email",
-                Cliente.class)
-                .setParameter("email", email)
-                .getResultStream()
-                .findFirst()
-                .orElse(null);
-
-    } finally {
-        em.close();
-    }
-}
-
-
-public List<Cliente> listarClientes() {
-
-    EntityManager em = JPAUtil.getEntityManager();
-
-    try {
-
-        return em.createQuery(
-                "SELECT c FROM Cliente c",
-                Cliente.class)
-                .getResultList();
-
-    } finally {
-        em.close();
-    }
-}
-
-
-public void actualizarCliente(Cliente cliente) throws ClienteNoExisteException {
-
-    EntityManager em = JPAUtil.getEntityManager();
-
-    try {
-
-        em.getTransaction().begin();
-
-        Cliente existente = em.createQuery(
-                "SELECT c FROM Cliente c WHERE c.email = :email",
-                Cliente.class)
-                .setParameter("email", cliente.getEmail())
-                .getResultStream()
-                .findFirst()
-                .orElse(null);
-
-        if (existente == null) {
-            throw new ClienteNoExisteException("Cliente no encontrado");
+        } finally {
+            em.close();
         }
-
-        existente.setNombre(cliente.getNombre());
-        existente.setDomicilio(cliente.getDomicilio());
-        existente.setNif(cliente.getNif());
-
-        em.getTransaction().commit();
-
-    } catch (Exception e) {
-
-        if (em.getTransaction().isActive()) {
-            em.getTransaction().rollback();
-        }
-
-        throw e;
-
-    } finally {
-        em.close();
     }
-}
 
+    public void actualizarCliente(Cliente cliente) throws ClienteNoExisteException {
 
-public boolean eliminarCliente(String email) {
+        EntityManager em = JPAUtil.getEntityManager();
 
-    EntityManager em = JPAUtil.getEntityManager();
+        try {
 
-    try {
+            em.getTransaction().begin();
 
-        em.getTransaction().begin();
+            Cliente existente = em.createQuery(
+                    "SELECT c FROM Cliente c WHERE c.email = :email",
+                    Cliente.class)
+                    .setParameter("email", cliente.getEmail())
+                    .getResultStream()
+                    .findFirst()
+                    .orElse(null);
 
-        Cliente c = em.createQuery(
-                "SELECT c FROM Cliente c WHERE c.email = :email",
-                Cliente.class)
-                .setParameter("email", email)
-                .getResultStream()
-                .findFirst()
-                .orElse(null);
+            if (existente == null) {
+                throw new ClienteNoExisteException("Cliente no encontrado");
+            }
 
-        if (c == null) {
-            em.getTransaction().rollback();
+            existente.setNombre(cliente.getNombre());
+            existente.setDomicilio(cliente.getDomicilio());
+            existente.setNif(cliente.getNif());
+
+            em.getTransaction().commit();
+
+        } catch (Exception e) {
+
+            if (em.getTransaction().isActive()) {
+                em.getTransaction().rollback();
+            }
+
+            throw e;
+
+        } finally {
+            em.close();
+        }
+    }
+
+    public boolean eliminarCliente(String email) {
+
+        EntityManager em = JPAUtil.getEntityManager();
+
+        try {
+
+            em.getTransaction().begin();
+
+            Cliente c = em.createQuery(
+                    "SELECT c FROM Cliente c WHERE c.email = :email",
+                    Cliente.class)
+                    .setParameter("email", email)
+                    .getResultStream()
+                    .findFirst()
+                    .orElse(null);
+
+            if (c == null) {
+                em.getTransaction().rollback();
+                return false;
+            }
+
+            if (!c.getPedidos().isEmpty()) {
+                em.getTransaction().rollback();
+                throw new RuntimeException(
+                        "No se puede eliminar, el cliente tiene pedidos asociados."
+                );
+            }
+
+            em.remove(c);
+            em.getTransaction().commit();
+
+            return true;
+
+        } catch (RuntimeException e) {
+
+            if (em.getTransaction().isActive()) {
+                em.getTransaction().rollback();
+            }
+
+            throw e;
+
+        } catch (Exception e) {
+
+            if (em.getTransaction().isActive()) {
+                em.getTransaction().rollback();
+            }
+
             return false;
+
+        } finally {
+            em.close();
         }
-
-        if (!c.getPedidos().isEmpty()) {
-            em.getTransaction().rollback();
-            throw new RuntimeException(
-                "No se puede eliminar, el cliente tiene pedidos asociados."
-            );
-        }
-
-        em.remove(c);
-        em.getTransaction().commit();
-
-        return true;
-
-    } catch (RuntimeException e) {
-
-        if (em.getTransaction().isActive()) {
-            em.getTransaction().rollback();
-        }
-
-        throw e;
-
-    } catch (Exception e) {
-
-        if (em.getTransaction().isActive()) {
-            em.getTransaction().rollback();
-        }
-
-        return false;
-
-    } finally {
-        em.close();
     }
-}
 
     // ================= ARTICULOS =================
-
     public boolean crearArticulo(Articulo a) {
 
-    EntityManager em = JPAUtil.getEntityManager();
-
-    try {
-
-        Long existe = em.createQuery(
-                "SELECT COUNT(a) FROM Articulo a WHERE a.codigo = :codigo",
-                Long.class)
-                .setParameter("codigo", a.getCodigo())
-                .getSingleResult();
-
-        if (existe > 0) {
-            System.out.println("Ya existe un articulo con ese codigo.");
-            return false;
-        }
-
-        em.getTransaction().begin();
-        em.persist(a);
-        em.getTransaction().commit();
-
-        return true;
-
-    } catch (Exception e) {
-
-        if (em.getTransaction().isActive()) {
-            em.getTransaction().rollback();
-        }
-
-        System.out.println("Error al crear articulo.");
-        return false;
-
-    } finally {
-        em.close();
-    }
-    }
-
-    public Articulo buscarArticulo(Integer codigo) {
         EntityManager em = JPAUtil.getEntityManager();
-        Articulo a = em.find(Articulo.class, codigo);
-        em.close();
-        return a;
+
+        try {
+
+            Long existe = em.createQuery(
+                    "SELECT COUNT(a) FROM Articulo a WHERE a.codigo = :codigo",
+                    Long.class)
+                    .setParameter("codigo", a.getCodigo())
+                    .getSingleResult();
+
+            if (existe > 0) {
+                System.out.println("Ya existe un articulo con ese codigo.");
+                return false;
+            }
+
+            em.getTransaction().begin();
+            em.persist(a);
+            em.getTransaction().commit();
+
+            return true;
+
+        } catch (Exception e) {
+
+            if (em.getTransaction().isActive()) {
+                em.getTransaction().rollback();
+            }
+
+            System.out.println("Error al crear articulo.");
+            return false;
+
+        } finally {
+            em.close();
+        }
+    }
+
+    public Articulo buscarArticulo(String codigo) {
+
+        EntityManager em = JPAUtil.getEntityManager();
+
+        try {
+
+            return em.createQuery(
+                    "SELECT a FROM Articulo a WHERE a.codigo = :codigo",
+                    Articulo.class)
+                    .setParameter("codigo", codigo)
+                    .getResultStream()
+                    .findFirst()
+                    .orElse(null);
+
+        } finally {
+            em.close();
+        }
     }
 
     public List<Articulo> listarArticulos() {
-        EntityManager em =JPAUtil.getEntityManager();
+        EntityManager em = JPAUtil.getEntityManager();
         List<Articulo> lista = em
                 .createQuery("SELECT a FROM Articulo a", Articulo.class)
                 .getResultList();
@@ -241,150 +247,248 @@ public boolean eliminarCliente(String email) {
         return lista;
     }
 
-    public void actualizarArticulo(Articulo a)
+    public void actualizarArticulo(Articulo articulo)
             throws ArticuloNoExisteException {
-        EntityManager em= JPAUtil.getEntityManager();
 
-        try{
+        EntityManager em = JPAUtil.getEntityManager();
+
+        try {
+
             em.getTransaction().begin();
-            em.merge(a);
+
+            Articulo existente = em.createQuery(
+                    "SELECT a FROM Articulo a WHERE a.codigo = :codigo",
+                    Articulo.class)
+                    .setParameter("codigo", articulo.getCodigo())
+                    .getResultStream()
+                    .findFirst()
+                    .orElse(null);
+
+            if (existente == null) {
+                throw new ArticuloNoExisteException("Articulo no existe");
+            }
+
+            existente.setDescripcion(articulo.getDescripcion());
+            existente.setPrecioVenta(articulo.getPrecioVenta());
+            existente.setGastosEnvio(articulo.getGastosEnvio());
+            existente.setTiempoPreparacion(articulo.getTiempoPreparacion());
+
             em.getTransaction().commit();
-        }catch (Exception e){
-            em.getTransaction().rollback();
-            e.printStackTrace();
-        } finally{
+
+        } catch (Exception e) {
+
+            if (em.getTransaction().isActive()) {
+                em.getTransaction().rollback();
+            }
+
+            throw e;
+
+        } finally {
             em.close();
         }
-        }
-         
-       
-    public void eliminarArticulo(Integer codigo)
-        throws ArticuloNoExisteException {
+    }
 
-    EntityManager em = JPAUtil.getEntityManager();
+    public boolean eliminarArticulo(String codigo)
+            throws ArticuloNoExisteException {
 
-    try{
-        em.getTransaction().begin();
-        Articulo a = em.find(Articulo.class, codigo);
-        if(a!= null) {
+        EntityManager em = JPAUtil.getEntityManager();
+
+        try {
+
+            em.getTransaction().begin();
+
+            Articulo a = em.createQuery(
+                    "SELECT a FROM Articulo a WHERE a.codigo = :codigo",
+                    Articulo.class)
+                    .setParameter("codigo", codigo)
+                    .getResultStream()
+                    .findFirst()
+                    .orElse(null);
+
+            if (a == null) {
+                em.getTransaction().rollback();
+                return false;
+            }
+
             em.remove(a);
+            em.getTransaction().commit();
+
+            return true;
+
+        } catch (Exception e) {
+
+            if (em.getTransaction().isActive()) {
+                em.getTransaction().rollback();
+            }
+
+            return false;
+
+        } finally {
+            em.close();
         }
-        em.getTransaction().commit();
-    }catch (Exception e) {
-        em.getTransaction().rollback();
-        e.printStackTrace();
-    } finally{
-        em.close();
     }
-
-    }
-    
-   
-
 
     // ================= PEDIDOS =================
-
     public void crearPedido(Pedido p) {
 
-    EntityManager em = JPAUtil.getEntityManager();
+        EntityManager em = JPAUtil.getEntityManager();
 
-    try {
-        em.getTransaction().begin();
+        try {
+            em.getTransaction().begin();
 
-        // Opcional: validar que existen en BD
-        Cliente cliente = em.find(Cliente.class, p.getCliente().getEmail());
-        Articulo articulo = em.find(Articulo.class, p.getArticulo().getCodigo());
+            Cliente cliente = em.createQuery(
+                    "SELECT c FROM Cliente c WHERE c.email = :email",
+                    Cliente.class)
+                    .setParameter("email", p.getCliente().getEmail())
+                    .getResultStream()
+                    .findFirst()
+                    .orElse(null);
 
-        if (cliente == null || articulo == null) {
-            System.out.println("Cliente o articulo no existen");
-            return;
+            Articulo articulo = em.createQuery(
+                    "SELECT a FROM Articulo a WHERE a.codigo = :codigo",
+                    Articulo.class)
+                    .setParameter("codigo", p.getArticulo().getCodigo())
+                    .getResultStream()
+                    .findFirst()
+                    .orElse(null);
+
+            if (cliente == null) {
+                System.out.println("Cliente no existe.");
+                em.getTransaction().rollback();
+                return;
+            }
+
+            if (articulo == null) {
+                System.out.println("Articulo no existe.");
+                em.getTransaction().rollback();
+                return;
+            }
+
+            Pedido existe = em.find(Pedido.class, p.getNumeroPedido());
+
+            if (existe != null) {
+                System.out.println("Ya existe un pedido con ese numero.");
+                em.getTransaction().rollback();
+                return;
+            }
+
+            p.setCliente(cliente);
+            p.setArticulo(articulo);
+
+            em.persist(p);
+            em.getTransaction().commit();
+
+            System.out.println("Pedido creado.");
+
+        } catch (Exception e) {
+
+            if (em.getTransaction().isActive()) {
+                em.getTransaction().rollback();
+            }
+
+            System.out.println("Error al crear pedido.");
+
+        } finally {
+            em.close();
         }
-
-        // Reasociar entidades gestionadas
-        p.setCliente(cliente);
-        p.setArticulo(articulo);
-
-        em.persist(p);
-
-        em.getTransaction().commit();
-
-    } catch (Exception e) {
-        em.getTransaction().rollback();
-        e.printStackTrace();
-    } finally {
-        em.close();
     }
-}
 
     public Pedido buscarPedido(int numero) {
+
         EntityManager em = JPAUtil.getEntityManager();
-        Pedido p = em.find(Pedido.class, numero);
-        em.close();
-        return p;
+
+        try {
+            return em.find(Pedido.class, numero);
+        } finally {
+            em.close();
+        }
     }
 
     public List<Pedido> listarPedidos() {
+
         EntityManager em = JPAUtil.getEntityManager();
-        List<Pedido> lista = em
-            .createQuery("SELECT p FROM Pedido p", Pedido.class)
-            .getResultList();
-        em.close();
-        return lista;
+
+        try {
+            return em.createQuery(
+                    "SELECT p FROM Pedido p",
+                    Pedido.class
+            ).getResultList();
+
+        } finally {
+            em.close();
+        }
     }
 
-   public void actualizarPedido(Pedido p)
-        throws PedidoYaEnviadoException, PedidoNoExisteException {
+    public void actualizarPedido(Pedido p)
+            throws PedidoYaEnviadoException, PedidoNoExisteException {
 
-    EntityManager em = JPAUtil.getEntityManager();
+        EntityManager em = JPAUtil.getEntityManager();
 
-    try {
-        em.getTransaction().begin();
+        try {
+            em.getTransaction().begin();
 
-        Pedido existente = em.find(Pedido.class, p.getNumeroPedido());
+            Pedido existente = em.find(Pedido.class, p.getNumeroPedido());
 
-        if (existente == null) {
-            throw new PedidoNoExisteException("Pedido no encontrado");
-        }
-
-        if (existente.estaEnviado()) {
-            throw new PedidoYaEnviadoException("El pedido ya fue enviado");
-        }
-
-        existente.setCantidad(p.getCantidad());
-
-        em.getTransaction().commit();
-
-    } catch (Exception e) {
-        em.getTransaction().rollback();
-        throw e;
-    } finally {
-        em.close();
-    }
-}
-    public boolean eliminarPedido(int numero)
-        throws PedidoYaEnviadoException {
-            EntityManager em = JPAUtil.getEntityManager();
-
-            try{
-                em.getTransaction().begin();
-                Pedido p = em.find(Pedido.class, numero);
-
-                if(p==null){
-                    return false;
-                }
-                if(p.estaEnviado()) {
-                    throw new PedidoYaEnviadoException("No se puede eliminar el pedido, ya fue enviado");
-                }
-                em.remove(p);
-                em.getTransaction().commit();
-
-                return true;
-            } catch (Exception e) {
-                em.getTransaction().rollback();
-                throw e;
-            } finally {
-                em.close();
+            if (existente == null) {
+                throw new PedidoNoExisteException("Pedido no encontrado");
             }
-}
-    
+
+            if (existente.estaEnviado()) {
+                throw new PedidoYaEnviadoException("El pedido ya fue enviado");
+            }
+
+            existente.setCantidad(p.getCantidad());
+
+            em.getTransaction().commit();
+
+        } catch (Exception e) {
+
+            if (em.getTransaction().isActive()) {
+                em.getTransaction().rollback();
+            }
+
+            throw e;
+
+        } finally {
+            em.close();
+        }
+    }
+
+    public boolean eliminarPedido(int numero)
+            throws PedidoYaEnviadoException {
+
+        EntityManager em = JPAUtil.getEntityManager();
+
+        try {
+            em.getTransaction().begin();
+
+            Pedido p = em.find(Pedido.class, numero);
+
+            if (p == null) {
+                return false;
+            }
+
+            if (p.estaEnviado()) {
+                throw new PedidoYaEnviadoException(
+                        "No se puede eliminar el pedido, ya fue enviado"
+                );
+            }
+
+            em.remove(p);
+            em.getTransaction().commit();
+
+            return true;
+
+        } catch (Exception e) {
+
+            if (em.getTransaction().isActive()) {
+                em.getTransaction().rollback();
+            }
+
+            throw e;
+
+        } finally {
+            em.close();
+        }
+    }
 }

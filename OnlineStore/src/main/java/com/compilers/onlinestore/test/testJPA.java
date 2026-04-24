@@ -10,7 +10,7 @@ public class testJPA {
         Controladora c = new Controladora();
 
         // Crear artículo
-        Articulo a = new Articulo( "a999", "Test JPA", 10.0, 2.0, 5);
+        Articulo a = new Articulo( "999", "Test JPA", 10.0, 2.0, 5);
         c.crearArticulo(a);
 
         // Listar
@@ -21,6 +21,6 @@ public class testJPA {
         c.actualizarArticulo(a);
 
         // Ver resultado
-        System.out.println(c.buscarArticulo(999));
+        System.out.println(c.buscarArticulo("999"));
     }
 }

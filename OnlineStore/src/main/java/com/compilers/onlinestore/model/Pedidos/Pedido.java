@@ -1,7 +1,6 @@
 package com.compilers.onlinestore.model.Pedidos;
 
 import jakarta.persistence.*;
-
 import java.time.Duration;
 import java.time.LocalDateTime;
 
@@ -13,10 +12,7 @@ import com.compilers.onlinestore.model.Clientes.Cliente;
 public class Pedido {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
-
-    @Column(name = "numero_pedido", nullable = false, unique = true)
+    @Column(name = "numero_pedido")
     private int numeroPedido;
 
     @Column(name = "fecha_hora", nullable = false)
@@ -44,24 +40,11 @@ public class Pedido {
         this.fechaHora = LocalDateTime.now();
     }
 
-    public Pedido(int id, int numeroPedido, Cliente cliente, Articulo articulo, int cantidad) {
-        this.id = id;
-        this.numeroPedido = numeroPedido;
-        this.cliente = cliente;
-        this.articulo = articulo;
-        this.cantidad = cantidad;
-        this.fechaHora = LocalDateTime.now();
-    }
-
     @PrePersist
     public void asignarFechaCreacion() {
         if (fechaHora == null) {
             fechaHora = LocalDateTime.now();
         }
-    }
-
-    public int getId() {
-        return id;
     }
 
     public int getNumeroPedido() {
@@ -82,10 +65,6 @@ public class Pedido {
 
     public Articulo getArticulo() {
         return articulo;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public void setNumeroPedido(int numeroPedido) {
@@ -111,9 +90,7 @@ public class Pedido {
     public double calcularTotal() {
 
         double subtotal = articulo.getPrecioVenta() * cantidad;
-
         double envio = articulo.getGastosEnvio();
-
         double descuento = envio * cliente.calcularDescuentoEnvio();
 
         envio -= descuento;
@@ -123,12 +100,11 @@ public class Pedido {
 
     public boolean estaEnviado() {
 
-        long minutosTranscurridos
-                = Duration.between(fechaHora, LocalDateTime.now()).toMinutes();
+        long minutos = Duration.between(fechaHora, LocalDateTime.now()).toMinutes();
 
-        return minutosTranscurridos >= articulo.getTiempoPreparacion();
+        return minutos >= articulo.getTiempoPreparacion();
     }
-
+    
     public boolean puedeCancelarse() {
         return !estaEnviado();
     }
@@ -136,21 +112,12 @@ public class Pedido {
     @Override
     public String toString() {
 
-        java.time.format.DateTimeFormatter formatoFecha
-                = java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd");
-
-        java.time.format.DateTimeFormatter formatoHora
-                = java.time.format.DateTimeFormatter.ofPattern("HH:mm");
-
-        return "Pedido{"
-                + "id= " + id
-                + ", numeroPedido= " + numeroPedido
-                + ", fecha= " + fechaHora.format(formatoFecha)
-                + ", hora= " + fechaHora.format(formatoHora)
-                + ", cantidad= " + cantidad
-                + ", cliente= " + cliente.getEmail()
-                + ", articulo= " + articulo.getCodigo()
-                + ", total= " + calcularTotal()
-                + '}';
+        return "Pedido{numeroPedido=" + numeroPedido
+                + ", fechaHora=" + fechaHora
+                + ", cantidad=" + cantidad
+                + ", cliente=" + cliente.getEmail()
+                + ", articulo=" + articulo.getCodigo()
+                + ", total=" + calcularTotal()
+                + "}";
     }
 }

@@ -103,8 +103,7 @@ public class Articulo {
     @Override
     public String toString() {
         return "Articulo{" +
-                "id= " + id +
-                ", codigo= " + codigo  +
+                "codigo= " + codigo  +
                 ", descripcion= " + descripcion +
                 ", precioVenta= " + precioVenta +
                 ", gastosEnvio= " + gastosEnvio +
