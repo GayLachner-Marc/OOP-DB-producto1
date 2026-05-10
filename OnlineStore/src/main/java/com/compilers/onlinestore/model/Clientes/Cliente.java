@@ -105,20 +105,10 @@ public abstract class Cliente {
     @Override
     public String toString() {
         return "Cliente{"
-<<<<<<< HEAD
-                + "id= " + id
-                + ", nombre= " + nombre
-=======
-                
                 + "nombre= " + nombre
->>>>>>> origin/emanuel
                 + ", domicilio= " + domicilio
                 + ", nif= " + nif
                 + ", email= " + email
                 + '}';
     }
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> origin/emanuel

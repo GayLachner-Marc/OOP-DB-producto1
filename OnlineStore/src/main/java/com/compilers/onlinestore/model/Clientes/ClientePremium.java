@@ -11,18 +11,11 @@ public class ClientePremium extends Cliente {
     @Column(name = "cuota_anual")
     private double cuotaAnual = 30.0;
 
-<<<<<<< HEAD
     // Constructor vacío obligatorio para JPA
-    public ClientePremium() {
-    }
-
-    // Constructor para nuevos clientes
-=======
     public ClientePremium() {
         super();
     }
-    
->>>>>>> origin/emanuel
+
     public ClientePremium(String nombre, String domicilio, String nif, String email) {
         super(nombre, domicilio, nif, email);
     }

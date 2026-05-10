@@ -31,8 +31,8 @@ public class Articulo {
 
     // Constructor completo
     public Articulo(int id, String codigo, String descripcion,
-                    double precioVenta, double gastosEnvio,
-                    int tiempoPreparacion) {
+                     double precioVenta, double gastosEnvio,
+                     int tiempoPreparacion) {
         this.id = id;
         this.codigo = codigo;
         this.descripcion = descripcion;
@@ -43,8 +43,8 @@ public class Articulo {
 
     // Constructor sin id
     public Articulo(String codigo, String descripcion,
-                    double precioVenta, double gastosEnvio,
-                    int tiempoPreparacion) {
+                     double precioVenta, double gastosEnvio,
+                     int tiempoPreparacion) {
         this.codigo = codigo;
         this.descripcion = descripcion;
         this.precioVenta = precioVenta;
@@ -103,12 +103,7 @@ public class Articulo {
     @Override
     public String toString() {
         return "Articulo{" +
-<<<<<<< HEAD
-                "id= " + id +
-                ", codigo= " + codigo  +
-=======
-                "codigo= " + codigo  +
->>>>>>> origin/emanuel
+                "codigo= " + codigo +
                 ", descripcion= " + descripcion +
                 ", precioVenta= " + precioVenta +
                 ", gastosEnvio= " + gastosEnvio +

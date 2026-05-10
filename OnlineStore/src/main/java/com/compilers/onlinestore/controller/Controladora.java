@@ -1,43 +1,21 @@
 package com.compilers.onlinestore.controller;
 
-<<<<<<< HEAD
-import com.compilers.onlinestore.dao.*;
-=======
->>>>>>> origin/emanuel
+import com.compilers.onlinestore.exceptions.*;
 import com.compilers.onlinestore.model.Articulos.Articulo;
 import com.compilers.onlinestore.model.Clientes.Cliente;
 import com.compilers.onlinestore.model.Pedidos.Pedido;
 import com.compilers.onlinestore.util.JPAUtil;
 import jakarta.persistence.EntityManager;
-import com.compilers.onlinestore.exceptions.*;
-<<<<<<< HEAD
 
-=======
->>>>>>> origin/emanuel
 import java.util.List;
 
 public class Controladora {
 
-<<<<<<< HEAD
-    private ClienteDAO clienteDAO;
-    private ArticuloDAO articuloDAO;
-    private PedidoDAO pedidoDAO;
-
-    public Controladora() {
-
-        clienteDAO = new ClienteDAOImpl();
-        articuloDAO = new ArticuloDAOImpl();
-        pedidoDAO = new PedidoDAOImpl();
-    }
-
-    // ================= CLIENTES =================
-    public void crearCliente(Cliente cliente) {
-        clienteDAO.crear(cliente);
-=======
     public Controladora() {
     }
 
     // ================= CLIENTES =================
+
     public boolean crearCliente(Cliente c) {
 
         EntityManager em = JPAUtil.getEntityManager();
@@ -74,7 +52,6 @@ public class Controladora {
         } finally {
             em.close();
         }
->>>>>>> origin/emanuel
     }
 
     public Cliente buscarCliente(String email) {
@@ -112,7 +89,8 @@ public class Controladora {
         }
     }
 
-    public void actualizarCliente(Cliente cliente) throws ClienteNoExisteException {
+    public void actualizarCliente(Cliente cliente)
+            throws ClienteNoExisteException {
 
         EntityManager em = JPAUtil.getEntityManager();
 
@@ -153,25 +131,6 @@ public class Controladora {
 
     public boolean eliminarCliente(String email) {
 
-<<<<<<< HEAD
-        Cliente c = clienteDAO.obtenerPorEmail(email);
-
-        if (c == null) {
-            return false;
-        }
-
-        if (pedidoDAO.pedidosPendientesORegistrados(c.getId())) {
-            throw new RuntimeException("No se puede eliminar, el cliente tiene pedidos pendientes o registrados");
-        }
-
-        clienteDAO.eliminar(email);
-        return true;
-    }
-
-    // ================= ARTICULOS =================
-    public void crearArticulo(Articulo a) {
-        articuloDAO.crear(a);
-=======
         EntityManager em = JPAUtil.getEntityManager();
 
         try {
@@ -225,6 +184,7 @@ public class Controladora {
     }
 
     // ================= ARTICULOS =================
+
     public boolean crearArticulo(Articulo a) {
 
         EntityManager em = JPAUtil.getEntityManager();
@@ -260,7 +220,6 @@ public class Controladora {
         } finally {
             em.close();
         }
->>>>>>> origin/emanuel
     }
 
     public Articulo buscarArticulo(String codigo) {
@@ -283,20 +242,22 @@ public class Controladora {
     }
 
     public List<Articulo> listarArticulos() {
-        EntityManager em = JPAUtil.getEntityManager();
-        List<Articulo> lista = em
-                .createQuery("SELECT a FROM Articulo a", Articulo.class)
-                .getResultList();
 
-        em.close();
-        return lista;
+        EntityManager em = JPAUtil.getEntityManager();
+
+        try {
+
+            return em.createQuery(
+                    "SELECT a FROM Articulo a",
+                    Articulo.class)
+                    .getResultList();
+
+        } finally {
+            em.close();
+        }
     }
 
-<<<<<<< HEAD
-    public void actualizarArticulo(Articulo a)
-=======
     public void actualizarArticulo(Articulo articulo)
->>>>>>> origin/emanuel
             throws ArticuloNoExisteException {
 
         EntityManager em = JPAUtil.getEntityManager();
@@ -337,25 +298,7 @@ public class Controladora {
         }
     }
 
-<<<<<<< HEAD
     public boolean eliminarArticulo(String codigo) {
-
-        Articulo a = articuloDAO.obtenerPorCodigo(codigo);
-
-        if (a == null) {
-            return false;
-        }
-
-        if (pedidoDAO.articulosEnPedidos(a.getId())) {
-            throw new RuntimeException("No se puede eliminar, el articulo está enlazado con pedidos");
-        }
-
-        articuloDAO.eliminar(codigo);
-
-        return true;
-=======
-    public boolean eliminarArticulo(String codigo)
-            throws ArticuloNoExisteException {
 
         EntityManager em = JPAUtil.getEntityManager();
 
@@ -392,52 +335,29 @@ public class Controladora {
         } finally {
             em.close();
         }
->>>>>>> origin/emanuel
     }
 
     // ================= PEDIDOS =================
+
     public void crearPedido(Pedido p) {
 
         EntityManager em = JPAUtil.getEntityManager();
 
         try {
+
             em.getTransaction().begin();
 
             Cliente cliente = em.createQuery(
                     "SELECT c FROM Cliente c WHERE c.email = :email",
                     Cliente.class)
                     .setParameter("email", p.getCliente().getEmail())
-                    .getResultStream()
-                    .findFirst()
-                    .orElse(null);
+                    .getSingleResult();
 
             Articulo articulo = em.createQuery(
                     "SELECT a FROM Articulo a WHERE a.codigo = :codigo",
                     Articulo.class)
                     .setParameter("codigo", p.getArticulo().getCodigo())
-                    .getResultStream()
-                    .findFirst()
-                    .orElse(null);
-
-            if (cliente == null) {
-                System.out.println("Cliente no existe.");
-                em.getTransaction().rollback();
-                return;
-            }
-
-            if (articulo == null) {
-                System.out.println("Articulo no existe.");
-                em.getTransaction().rollback();
-                return;
-            }
-
-            Pedido existe = em.find(Pedido.class, p.getNumeroPedido());
-
-            if (existe != null) {
-                System.out.println("Ya existe un pedido con ese numero.");
-                em.getTransaction().rollback();
-                return;
-            }
+                    .getSingleResult();
 
             p.setCliente(cliente);
             p.setArticulo(articulo);
@@ -445,15 +365,11 @@ public class Controladora {
             em.persist(p);
             em.getTransaction().commit();
 
-            System.out.println("Pedido creado.");
-
         } catch (Exception e) {
 
             if (em.getTransaction().isActive()) {
                 em.getTransaction().rollback();
             }
-
-            System.out.println("Error al crear pedido.");
 
         } finally {
             em.close();
@@ -492,6 +408,7 @@ public class Controladora {
         EntityManager em = JPAUtil.getEntityManager();
 
         try {
+
             em.getTransaction().begin();
 
             Pedido existente = em.find(Pedido.class, p.getNumeroPedido());
@@ -524,13 +441,10 @@ public class Controladora {
     public boolean eliminarPedido(int numero)
             throws PedidoYaEnviadoException {
 
-<<<<<<< HEAD
-        if (p.estaEnviado()) {
-            throw new PedidoYaEnviadoException("No se puede modificar, el pedido ya fue enviado");
-=======
         EntityManager em = JPAUtil.getEntityManager();
 
         try {
+
             em.getTransaction().begin();
 
             Pedido p = em.find(Pedido.class, numero);
@@ -560,28 +474,6 @@ public class Controladora {
 
         } finally {
             em.close();
->>>>>>> origin/emanuel
         }
     }
-<<<<<<< HEAD
-
-    public boolean eliminarPedido(int numero)
-            throws PedidoYaEnviadoException {
-
-        Pedido p = pedidoDAO.obtenerPorNumero(numero);
-
-        if (p == null) {
-            return false;
-        }
-
-        if (p.estaEnviado()) {
-            throw new PedidoYaEnviadoException("No se puede eliminar, el pedido ya fue enviado");
-        }
-
-        pedidoDAO.eliminar(numero);
-
-        return true;
-    }
-=======
->>>>>>> origin/emanuel
 }

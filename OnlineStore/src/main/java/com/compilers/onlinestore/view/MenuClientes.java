@@ -1,11 +1,9 @@
 package com.compilers.onlinestore.view;
 
 import com.compilers.onlinestore.controller.Controladora;
-<<<<<<< HEAD
-=======
 import com.compilers.onlinestore.exceptions.ClienteNoExisteException;
->>>>>>> origin/emanuel
 import com.compilers.onlinestore.model.Clientes.*;
+
 import java.util.List;
 import java.util.Scanner;
 
@@ -24,6 +22,7 @@ public class MenuClientes {
         int opcion;
 
         do {
+
             System.out.println("\n--- CLIENTES ---");
             System.out.println("1. Crear");
             System.out.println("2. Listar");
@@ -34,14 +33,10 @@ public class MenuClientes {
             opcion = leerEnteroOpciones("Opcion: ");
 
             switch (opcion) {
-                case 1 ->
-                    crear();
-                case 2 ->
-                    listar();
-                case 3 ->
-                    actualizar();
-                case 4 ->
-                    eliminar();
+                case 1 -> crear();
+                case 2 -> listar();
+                case 3 -> actualizar();
+                case 4 -> eliminar();
             }
 
         } while (opcion != 0);
@@ -49,7 +44,6 @@ public class MenuClientes {
 
     private void crear() {
 
-<<<<<<< HEAD
         System.out.println("1. Estandar  2. Premium");
         int tipo = leerEnteroTipoCliente("Tipo: ");
 
@@ -58,90 +52,82 @@ public class MenuClientes {
         String domicilio = leerTexto("Domicilio: ");
         String nif = leerTexto("NIF: ");
 
-        //Usamos una ternaria
         Cliente c = (tipo == 2)
                 ? new ClientePremium(nombre, domicilio, nif, email)
                 : new ClienteEstandar(nombre, domicilio, nif, email);
 
-        controladora.crearCliente(c);
-        System.out.println("Cliente creado.");
+        if (controladora.crearCliente(c)) {
+            System.out.println("Cliente creado.");
+        } else {
+            System.out.println("No se pudo crear el cliente.");
+        }
     }
-=======
-    System.out.println("1. Estandar  2. Premium");
-    int tipo = leerEnteroTipoCliente("Tipo: ");
-
-    String nombre = leerTexto("Nombre: ");
-    String email = leerTexto("Email: ");
-    String domicilio = leerTexto("Domicilio: ");
-    String nif = leerTexto("NIF: ");
-
-    Cliente c = (tipo == 2)
-            ? new ClientePremium(nombre, domicilio, nif, email)
-            : new ClienteEstandar(nombre, domicilio, nif, email);
-
-    if (controladora.crearCliente(c)) {
-        System.out.println("Cliente creado.");
-    }
-}
->>>>>>> origin/emanuel
 
     private void listar() {
+
         List<Cliente> lista = controladora.listarClientes();
+
+        if (lista.isEmpty()) {
+            System.out.println("No hay clientes.");
+            return;
+        }
+
         lista.forEach(System.out::println);
     }
 
     private void actualizar() {
+
         String email = leerTexto("Email: ");
         Cliente c = controladora.buscarCliente(email);
 
         if (c == null) {
-            System.out.println("No existe.");
+            System.out.println("Cliente no existe.");
             return;
         }
+
         c.setNombre(leerTexto("Nombre: "));
         c.setDomicilio(leerTexto("Domicilio: "));
         c.setNif(leerTexto("NIF: "));
-<<<<<<< HEAD
 
-        controladora.actualizarCliente(c);
-=======
-        try{
-        controladora.actualizarCliente(c);
-          } catch (ClienteNoExisteException e) {
-        System.out.println("Error: " + e.getMessage());
-        return;
-    }
->>>>>>> origin/emanuel
-    }
-
-    /*
-    private void eliminar() {
-        controladora.eliminarCliente(leerTexto("Email: "));
-    }*/
-    private void eliminar() {
-        
-        String email = leerTexto("Email: ");
         try {
-            //Buscamos el cliente, si se borrar guardara un true y si no existe guardara un false
+
+            controladora.actualizarCliente(c);
+            System.out.println("Cliente actualizado.");
+
+        } catch (ClienteNoExisteException e) {
+
+            System.out.println("Error: " + e.getMessage());
+        }
+    }
+
+    private void eliminar() {
+
+        String email = leerTexto("Email: ");
+
+        try {
+
             boolean eliminado = controladora.eliminarCliente(email);
-            
-            //Notificamos al usuario si el cliente se ha borrado o no existe
+
             if (eliminado) {
                 System.out.println("Cliente eliminado correctamente");
             } else {
                 System.out.println("Cliente no existe");
             }
-        //Aqui se muestra excepción de la controladora cuando el cliente no se puede borrar
+
         } catch (RuntimeException e) {
+
             System.out.println("Nota: " + e.getMessage());
         }
     }
 
     // ================= LECTURA SEGURA =================
+
     private String leerTexto(String mensaje) {
 
         String texto;
+
         do {
+
             System.out.print(mensaje);
             texto = sc.nextLine().trim();
 
@@ -150,25 +136,27 @@ public class MenuClientes {
             }
 
         } while (texto.isEmpty());
+
         return texto;
     }
 
     private int leerEnteroTipoCliente(String mensaje) {
 
         while (true) {
+
             try {
-                //Se filtra las opciones que el usuario puede elegir 
+
                 System.out.print(mensaje);
                 int numeroOpcion = Integer.parseInt(sc.nextLine().trim());
+
                 if (numeroOpcion >= 1 && numeroOpcion <= 2) {
                     return numeroOpcion;
-
-                } else {
-
-                    System.out.println("Debe introducir una opcion valida.");
                 }
 
+                System.out.println("Debe introducir una opcion valida.");
+
             } catch (NumberFormatException e) {
+
                 System.out.println("Debe introducir un numero.");
             }
         }
@@ -177,33 +165,21 @@ public class MenuClientes {
     private int leerEnteroOpciones(String mensaje) {
 
         while (true) {
+
             try {
-                //Se filtra el número de opciones, donde el usuario solo puede introducir una opción disponible
+
                 System.out.print(mensaje);
                 int numeroOpcion = Integer.parseInt(sc.nextLine().trim());
+
                 if (numeroOpcion >= 0 && numeroOpcion <= 4) {
                     return numeroOpcion;
-
-                } else {
-
-                    System.out.println("Debe introducir una opcion valida.");
                 }
 
+                System.out.println("Debe introducir una opcion valida.");
+
             } catch (NumberFormatException e) {
+
                 System.out.println("Debe introducir un numero.");
-            }
-        }
-    }
-
-    private double leerDouble(String mensaje) {
-
-        while (true) {
-            try {
-                System.out.print(mensaje);
-                return Double.parseDouble(sc.nextLine());
-
-            } catch (NumberFormatException e) {
-                System.out.println("Debe introducir un numero valido.");
             }
         }
     }

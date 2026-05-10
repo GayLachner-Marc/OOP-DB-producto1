@@ -3,6 +3,7 @@ package com.compilers.onlinestore.view;
 import com.compilers.onlinestore.controller.Controladora;
 import com.compilers.onlinestore.exceptions.ArticuloNoExisteException;
 import com.compilers.onlinestore.model.Articulos.Articulo;
+
 import java.util.List;
 import java.util.Scanner;
 
@@ -16,7 +17,7 @@ public class MenuArticulos {
         this.sc = sc;
     }
 
-    public void iniciar() throws ArticuloNoExisteException {
+    public void iniciar() {
 
         int opcion;
 
@@ -31,20 +32,17 @@ public class MenuArticulos {
             opcion = leerEnteroOpciones("Opcion: ");
 
             switch (opcion) {
-                case 1 ->
-                    crear();
-                case 2 ->
-                    listar();
-                case 3 ->
-                    actualizar();
-                case 4 ->
-                    eliminar();
+                case 1 -> crear();
+                case 2 -> listar();
+                case 3 -> actualizar();
+                case 4 -> eliminar();
             }
 
         } while (opcion != 0);
     }
 
     private void crear() {
+
         Articulo a = new Articulo(
                 leerTexto("Codigo: "),
                 leerTexto("Descripcion: "),
@@ -53,37 +51,27 @@ public class MenuArticulos {
                 leerEntero("Tiempo: ")
         );
 
-        controladora.crearArticulo(a);
+        boolean creado = controladora.crearArticulo(a);
+
+        if (creado) {
+            System.out.println("Articulo creado.");
+        } else {
+            System.out.println("No se pudo crear el articulo.");
+        }
     }
 
     private void listar() {
-        List<Articulo> lista = controladora.listarArticulos();
-        lista.forEach(System.out::println);
-    }
 
-<<<<<<< HEAD
-    private void actualizar() throws ArticuloNoExisteException {
-        Articulo a = controladora.buscarArticulo(leerTexto("Codigo: "));
-        if (a == null) {
-            System.out.println("Articulo no existe");
+        List<Articulo> lista = controladora.listarArticulos();
+
+        if (lista.isEmpty()) {
+            System.out.println("No hay articulos.");
             return;
         }
 
-        a.setDescripcion(leerTexto("Descripcion: "));
-        a.setPrecioVenta(leerDouble("Precio: "));
-        a.setGastosEnvio(leerDouble("Envio: "));
-        a.setTiempoPreparacion(leerEntero("Tiempo: "));
-
-        controladora.actualizarArticulo(a);
+        lista.forEach(System.out::println);
     }
 
-    /*private void eliminar() throws ArticuloNoExisteException {
-        controladora.eliminarArticulo(leerTexto("Codigo: "));
-    }*/
-    private void eliminar() {
-
-        String codigo = leerTexto("Codigo: ");
-=======
     private void actualizar() {
 
         try {
@@ -123,33 +111,25 @@ public class MenuArticulos {
             return;
         }
 
->>>>>>> origin/emanuel
         try {
 
             boolean eliminado = controladora.eliminarArticulo(codigo);
 
             if (eliminado) {
-<<<<<<< HEAD
-                System.out.println("Articulo eliminado correctamente");
-            } else {
-                System.out.println("Articulo no existe");
-            }
-        } catch (RuntimeException e) {
-            System.out.println("Nota: " + e.getMessage());
-=======
                 System.out.println("Articulo eliminado.");
             } else {
                 System.out.println("Articulo no encontrado.");
             }
 
-        } catch (ArticuloNoExisteException e) {
+        } catch (RuntimeException e) {
             System.out.println(e.getMessage());
->>>>>>> origin/emanuel
         }
     }
 
     // ================= LECTURA SEGURA =================
+
     private String leerTexto(String mensaje) {
+
         String texto;
 
         do {
@@ -159,31 +139,43 @@ public class MenuArticulos {
             if (texto.isEmpty()) {
                 System.out.println("Campo obligatorio.");
             }
+
         } while (texto.isEmpty());
 
         return texto;
     }
 
-    //Función para leer enteros en general
-    private int leerEntero(String m) {
-        System.out.print(m);
-        return Integer.parseInt(sc.nextLine().trim());
+    private int leerEntero(String mensaje) {
+
+        while (true) {
+
+            try {
+                System.out.print(mensaje);
+                return Integer.parseInt(sc.nextLine().trim());
+
+            } catch (NumberFormatException e) {
+                System.out.println("Debe introducir un numero.");
+            }
+        }
     }
 
-    //Función para realizar un filtro de las opciones del menu
     private int leerEnteroOpciones(String mensaje) {
 
         while (true) {
+
             try {
+
                 System.out.print(mensaje);
                 int numeroOpcion = Integer.parseInt(sc.nextLine().trim());
+
                 if (numeroOpcion >= 0 && numeroOpcion <= 4) {
                     return numeroOpcion;
-
-                } else {
-                    System.out.println("Debe introducir una opcion valida.");
                 }
+
+                System.out.println("Debe introducir una opcion valida.");
+
             } catch (NumberFormatException e) {
+
                 System.out.println("Debe introducir un numero.");
             }
         }
@@ -192,14 +184,16 @@ public class MenuArticulos {
     private double leerDouble(String mensaje) {
 
         while (true) {
+
             try {
+
                 System.out.print(mensaje);
                 return Double.parseDouble(sc.nextLine());
 
             } catch (NumberFormatException e) {
+
                 System.out.println("Debe introducir un numero valido.");
             }
         }
     }
-
 }

@@ -1,23 +1,17 @@
 package com.compilers.onlinestore.model.Clientes;
 
-import jakarta.persistence.Entity;
 import jakarta.persistence.DiscriminatorValue;
+import jakarta.persistence.Entity;
 
 @Entity
 @DiscriminatorValue("ESTANDAR")
 public class ClienteEstandar extends Cliente {
 
-<<<<<<< HEAD
     // Constructor vacío obligatorio para JPA
-    public ClienteEstandar() {
-    }
-
-    // Constructor para nuevos clientes
-=======
     public ClienteEstandar() {
         super();
     }
->>>>>>> origin/emanuel
+
     public ClienteEstandar(String nombre, String domicilio, String nif, String email) {
         super(nombre, domicilio, nif, email);
     }
