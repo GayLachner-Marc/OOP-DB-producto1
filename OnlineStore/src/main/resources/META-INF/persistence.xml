@@ -8,9 +8,13 @@
 
     <persistence-unit name="OnlineStorePU">
 
+<<<<<<< HEAD
         <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
 
         <!-- ENTIDADES -->
+=======
+       
+>>>>>>> origin/emanuel
         <class>com.compilers.onlinestore.model.Articulos.Articulo</class>
         <class>com.compilers.onlinestore.model.Pedidos.Pedido</class>
         <class>com.compilers.onlinestore.model.Clientes.Cliente</class>
@@ -22,14 +26,20 @@
             <!-- CONEXIÓN -->
             <property name="jakarta.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/compilers"/>
             <property name="jakarta.persistence.jdbc.user" value="root"/>
-            <property name="jakarta.persistence.jdbc.password" value=""/>
+            <property name="jakarta.persistence.jdbc.password" value="123"/>
             <property name="jakarta.persistence.jdbc.driver" value="com.mysql.cj.jdbc.Driver"/>
 
             <!-- HIBERNATE -->
             <property name="hibernate.dialect" value="org.hibernate.dialect.MySQLDialect"/>
             <property name="hibernate.hbm2ddl.auto" value="update"/>
+<<<<<<< HEAD
             <!-- <property name="hibernate.show_sql" value="false"/>-->
             <property name="hibernate.format_sql" value="false"/>
+=======
+            <property name="hibernate.show_sql" value="false"/>
+            <property name="hibernate.format_sql" value="false"/>
+            <property name="hibernate.generate_statistics" value="false"/>
+>>>>>>> origin/emanuel
 
         </properties>
 

@@ -1,6 +1,10 @@
 package com.compilers.onlinestore.view;
 
 import com.compilers.onlinestore.controller.Controladora;
+<<<<<<< HEAD
+=======
+import com.compilers.onlinestore.exceptions.ClienteNoExisteException;
+>>>>>>> origin/emanuel
 import com.compilers.onlinestore.model.Clientes.*;
 import java.util.List;
 import java.util.Scanner;
@@ -45,6 +49,7 @@ public class MenuClientes {
 
     private void crear() {
 
+<<<<<<< HEAD
         System.out.println("1. Estandar  2. Premium");
         int tipo = leerEnteroTipoCliente("Tipo: ");
 
@@ -61,6 +66,24 @@ public class MenuClientes {
         controladora.crearCliente(c);
         System.out.println("Cliente creado.");
     }
+=======
+    System.out.println("1. Estandar  2. Premium");
+    int tipo = leerEnteroTipoCliente("Tipo: ");
+
+    String nombre = leerTexto("Nombre: ");
+    String email = leerTexto("Email: ");
+    String domicilio = leerTexto("Domicilio: ");
+    String nif = leerTexto("NIF: ");
+
+    Cliente c = (tipo == 2)
+            ? new ClientePremium(nombre, domicilio, nif, email)
+            : new ClienteEstandar(nombre, domicilio, nif, email);
+
+    if (controladora.crearCliente(c)) {
+        System.out.println("Cliente creado.");
+    }
+}
+>>>>>>> origin/emanuel
 
     private void listar() {
         List<Cliente> lista = controladora.listarClientes();
@@ -78,8 +101,17 @@ public class MenuClientes {
         c.setNombre(leerTexto("Nombre: "));
         c.setDomicilio(leerTexto("Domicilio: "));
         c.setNif(leerTexto("NIF: "));
+<<<<<<< HEAD
 
         controladora.actualizarCliente(c);
+=======
+        try{
+        controladora.actualizarCliente(c);
+          } catch (ClienteNoExisteException e) {
+        System.out.println("Error: " + e.getMessage());
+        return;
+    }
+>>>>>>> origin/emanuel
     }
 
     /*

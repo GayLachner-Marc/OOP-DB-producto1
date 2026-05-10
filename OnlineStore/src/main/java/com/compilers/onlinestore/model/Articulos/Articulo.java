@@ -103,8 +103,12 @@ public class Articulo {
     @Override
     public String toString() {
         return "Articulo{" +
+<<<<<<< HEAD
                 "id= " + id +
                 ", codigo= " + codigo  +
+=======
+                "codigo= " + codigo  +
+>>>>>>> origin/emanuel
                 ", descripcion= " + descripcion +
                 ", precioVenta= " + precioVenta +
                 ", gastosEnvio= " + gastosEnvio +

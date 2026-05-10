@@ -61,6 +61,7 @@ public class MenuArticulos {
         lista.forEach(System.out::println);
     }
 
+<<<<<<< HEAD
     private void actualizar() throws ArticuloNoExisteException {
         Articulo a = controladora.buscarArticulo(leerTexto("Codigo: "));
         if (a == null) {
@@ -82,17 +83,68 @@ public class MenuArticulos {
     private void eliminar() {
 
         String codigo = leerTexto("Codigo: ");
+=======
+    private void actualizar() {
+
+        try {
+
+            String codigo = leerTexto("Codigo: ");
+
+            Articulo a = controladora.buscarArticulo(codigo);
+
+            if (a == null) {
+                System.out.println("Articulo no existe.");
+                return;
+            }
+
+            a.setDescripcion(leerTexto("Descripcion: "));
+            a.setPrecioVenta(leerDouble("Precio: "));
+            a.setGastosEnvio(leerDouble("Envio: "));
+            a.setTiempoPreparacion(leerEntero("Tiempo: "));
+
+            controladora.actualizarArticulo(a);
+
+            System.out.println("Articulo actualizado.");
+
+        } catch (ArticuloNoExisteException e) {
+
+            System.out.println(e.getMessage());
+        }
+    }
+
+    private void eliminar() {
+
+        String codigo = leerTexto("Codigo Articulo: ");
+
+        Articulo a = controladora.buscarArticulo(codigo);
+
+        if (a == null) {
+            System.out.println("Articulo no encontrado.");
+            return;
+        }
+
+>>>>>>> origin/emanuel
         try {
 
             boolean eliminado = controladora.eliminarArticulo(codigo);
 
             if (eliminado) {
+<<<<<<< HEAD
                 System.out.println("Articulo eliminado correctamente");
             } else {
                 System.out.println("Articulo no existe");
             }
         } catch (RuntimeException e) {
             System.out.println("Nota: " + e.getMessage());
+=======
+                System.out.println("Articulo eliminado.");
+            } else {
+                System.out.println("Articulo no encontrado.");
+            }
+
+        } catch (ArticuloNoExisteException e) {
+            System.out.println(e.getMessage());
+>>>>>>> origin/emanuel
         }
     }
 

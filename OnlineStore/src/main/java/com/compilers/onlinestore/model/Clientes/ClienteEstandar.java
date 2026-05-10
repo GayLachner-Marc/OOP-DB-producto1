@@ -7,11 +7,17 @@ import jakarta.persistence.DiscriminatorValue;
 @DiscriminatorValue("ESTANDAR")
 public class ClienteEstandar extends Cliente {
 
+<<<<<<< HEAD
     // Constructor vacío obligatorio para JPA
     public ClienteEstandar() {
     }
 
     // Constructor para nuevos clientes
+=======
+    public ClienteEstandar() {
+        super();
+    }
+>>>>>>> origin/emanuel
     public ClienteEstandar(String nombre, String domicilio, String nif, String email) {
         super(nombre, domicilio, nif, email);
     }
