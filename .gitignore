@@ -17,6 +17,7 @@ nbproject/private/
 nbbuild/
 dist/
 nbdist/
+nbactions.xml
 
 # OS
 .DS_Store
