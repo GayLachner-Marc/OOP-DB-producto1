@@ -12,7 +12,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class OnlineStore {
-
+/*
     public static void main(String[] args)
             throws ClienteNoExisteException,
                    PedidoNoExisteException,
@@ -30,5 +30,5 @@ public class OnlineStore {
         MenuPrincipal vista = new MenuPrincipal(controladora);
 
         vista.iniciar();
-    }
+    }*/
 }
