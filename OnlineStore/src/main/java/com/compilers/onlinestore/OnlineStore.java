@@ -5,28 +5,33 @@ import com.compilers.onlinestore.exceptions.ArticuloNoExisteException;
 import com.compilers.onlinestore.exceptions.PedidoYaEnviadoException;
 import com.compilers.onlinestore.exceptions.ClienteNoExisteException;
 import com.compilers.onlinestore.exceptions.PedidoNoExisteException;
-import com.compilers.onlinestore.util.JPAUtil;
-import com.compilers.onlinestore.view.MenuPrincipal;
+import com.compilers.onlinestore.view.ConsolaView;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
-public class OnlineStore {
+import javafx.application.Application;
+import javafx.scene.Scene;
+import javafx.scene.control.Label;
+import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 
-    public static void main(String[] args)
-            throws ClienteNoExisteException, PedidoNoExisteException,
-                   ArticuloNoExisteException, PedidoYaEnviadoException {
+public class OnlineStore extends Application {
+ @Override
+    public void start(Stage stage) {
 
-        // Oculta logs de Hibernate
-        Logger.getLogger("org.hibernate").setLevel(Level.SEVERE);
+        VBox root = new VBox();
 
-        // Fuerza arranque de Hibernate al iniciar
-        JPAUtil.getEntityManager().close();
+        root.getChildren().add(
+            new Label("OnlineStore funcionando con JavaFX 🚀")
+        );
 
-        // Inicia programa
-        Controladora controladora = new Controladora();
-        MenuPrincipal vista = new MenuPrincipal(controladora);
+        Scene scene = new Scene(root, 500, 300);
 
-        vista.iniciar();
+        stage.setTitle("OnlineStore");
+        stage.setScene(scene);
+        stage.show();
+    }
+
+    public static void main(String[] args) {
+        launch();
     }
 }
