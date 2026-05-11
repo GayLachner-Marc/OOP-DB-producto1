@@ -2,16 +2,17 @@ package com.compilers.onlinestore.view;
 
 import com.compilers.onlinestore.controller.Controladora;
 import com.compilers.onlinestore.model.Articulos.Articulo;
+
 import javafx.collections.ObservableList;
 import javafx.collections.FXCollections;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-//import javafx.scene.Scene;
+
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.*;
-//import javafx.stage.Stage;
+
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
@@ -19,7 +20,9 @@ import javafx.scene.control.TextField;
 
 public class ArticuloView extends VBox {
 
-    //private final Controladora controladora;
+    private final Controladora controladora =
+            new Controladora();
+
     private TableView<Articulo> tablaArticulos;
     private ObservableList<Articulo> listaArticulos;
 
@@ -28,19 +31,24 @@ public class ArticuloView extends VBox {
     private VBox panelArticulos;
 
     public ArticuloView() {
-        //this.controladora = new Controladora();
+
         ventanaPrincipal = new BorderPane();
-        ventanaPrincipal.setStyle("-fx-background-color: #f5f6f8;");
+
+        ventanaPrincipal.setStyle(
+                "-fx-background-color: #f5f6f8;"
+        );
 
         crearContenido();
-        //cargarArticulos();
 
-        getChildren().add(ventanaPrincipal);
+        getChildren().add(
+                ventanaPrincipal
+        );
     }
 
     private void crearContenido() {
 
         contenedorPrincipal = new VBox();
+
         contenedorPrincipal.setSpacing(18);
 
         contenedorPrincipal.setPadding(
@@ -49,31 +57,37 @@ public class ArticuloView extends VBox {
 
         HBox cabeceraArticulo = new HBox();
 
-        Label titulo
-                = new Label("Gestión de Artículos");
+        Label titulo =
+                new Label(
+                        "Gestión de Artículos"
+                );
 
         titulo.setStyle("""
-        -fx-font-size: 28px;
-        -fx-font-weight: bold;
-        """);
+            -fx-font-size: 28px;
+            -fx-font-weight: bold;
+            """);
 
-        Region espacioFlexible = new Region();
+        Region espacioFlexible =
+                new Region();
+
         HBox.setHgrow(
                 espacioFlexible,
                 Priority.ALWAYS
         );
 
-        Button btnAgregarArt
-                = new Button("+ Añadir Artículo");
+        Button btnAgregarArt =
+                new Button(
+                        "+ Añadir Artículo"
+                );
 
         btnAgregarArt.setStyle("""
-        -fx-background-color: #2563eb;
-        -fx-text-fill: white;
-        -fx-font-size: 15px;
-        -fx-font-weight: bold;
-        -fx-background-radius: 10;
-        -fx-padding: 12 22;
-        """);
+            -fx-background-color: #2563eb;
+            -fx-text-fill: white;
+            -fx-font-size: 15px;
+            -fx-font-weight: bold;
+            -fx-background-radius: 10;
+            -fx-padding: 12 22;
+            """);
 
         btnAgregarArt.setOnAction(e -> {
             mostrarFormularioArticulo();
@@ -88,7 +102,10 @@ public class ArticuloView extends VBox {
         panelArticulos = new VBox();
 
         panelArticulos.setFillWidth(true);
-        panelArticulos.setMaxWidth(Double.MAX_VALUE);
+
+        panelArticulos.setMaxWidth(
+                Double.MAX_VALUE
+        );
 
         panelArticulos.setPadding(
                 new Insets(12, 0, 25, 0)
@@ -97,11 +114,11 @@ public class ArticuloView extends VBox {
         panelArticulos.setSpacing(30);
 
         panelArticulos.setStyle("""
-        -fx-background-color: white;
-        -fx-background-radius: 12;
-        -fx-border-color: #d1d5db;
-        -fx-border-radius: 12;
-        """);
+            -fx-background-color: white;
+            -fx-background-radius: 12;
+            -fx-border-color: #d1d5db;
+            -fx-border-radius: 12;
+            """);
 
         mostrarTablaArticulos();
 
@@ -119,63 +136,139 @@ public class ArticuloView extends VBox {
 
         panelArticulos.getChildren().clear();
 
-        Label subtitulo
-                = new Label("Artículos");
+        Label subtitulo =
+                new Label("Artículos");
 
         subtitulo.setStyle("""
-        -fx-font-size: 18px;
-        -fx-font-weight: bold;
-        """);
+            -fx-font-size: 18px;
+            -fx-font-weight: bold;
+            """);
 
         subtitulo.setPadding(
                 new Insets(4, 0, -17, 22)
         );
 
-        TableView tablaArticulos
-                = new TableView();
+        // CAMBIO IMPORTANTE:
+        // usamos el atributo de clase
+        tablaArticulos =
+                new TableView<>();
 
         tablaArticulos.setStyle("""
-        -fx-background-color: white;
-        -fx-control-inner-background: white;
-        -fx-table-cell-border-color: transparent;
-        -fx-border-color: transparent;
-        """);
+            -fx-background-color: white;
+            -fx-control-inner-background: white;
+            -fx-table-cell-border-color: transparent;
+            -fx-border-color: transparent;
+            """);
 
-        TableColumn columnaCodigo
-                = new TableColumn("CÓDIGO");
+        // ===== COLUMNAS =====
 
-        TableColumn columnaDescripcion
-                = new TableColumn("DESCRIPCIÓN");
+        TableColumn<Articulo, String>
+                columnaCodigo =
+                new TableColumn<>("CÓDIGO");
 
-        TableColumn columnaPrecio
-                = new TableColumn("PRECIO");
+        columnaCodigo.setCellValueFactory(
+                new PropertyValueFactory<>(
+                        "codigo"
+                )
+        );
 
-        TableColumn columnaGastosEnvio
-                = new TableColumn("GASTOS ENVÍO");
 
-        TableColumn columnaTiempoPrep
-                = new TableColumn("TIEMPO PREPARACIÓN");
+        TableColumn<Articulo, String>
+                columnaDescripcion =
+                new TableColumn<>("DESCRIPCIÓN");
 
-        TableColumn columnaAcciones
-                = new TableColumn("ACCIONES");
+        columnaDescripcion
+                .setCellValueFactory(
+                        new PropertyValueFactory<>(
+                                "descripcion"
+                        )
+                );
+
+
+        TableColumn<Articulo, Double>
+                columnaPrecio =
+                new TableColumn<>("PRECIO");
+
+        columnaPrecio.setCellValueFactory(
+                new PropertyValueFactory<>(
+                        "precioVenta"
+                )
+        );
+
+
+        TableColumn<Articulo, Double>
+                columnaGastosEnvio =
+                new TableColumn<>("GASTOS ENVÍO");
+
+        columnaGastosEnvio
+                .setCellValueFactory(
+                        new PropertyValueFactory<>(
+                                "gastosEnvio"
+                        )
+                );
+
+
+        TableColumn<Articulo, Integer>
+                columnaTiempoPrep =
+                new TableColumn<>(
+                        "TIEMPO PREPARACIÓN"
+                );
+
+        columnaTiempoPrep
+                .setCellValueFactory(
+                        new PropertyValueFactory<>(
+                                "tiempoPreparacion"
+                        )
+                );
+
+
+        TableColumn<Articulo, Void>
+                columnaAcciones =
+                new TableColumn<>("ACCIONES");
+
+        // ===== ANCHOS =====
 
         columnaCodigo.prefWidthProperty()
-                .bind(tablaArticulos.widthProperty().multiply(0.10));
+                .bind(
+                        tablaArticulos
+                                .widthProperty()
+                                .multiply(0.10)
+                );
 
         columnaDescripcion.prefWidthProperty()
-                .bind(tablaArticulos.widthProperty().multiply(0.28));
+                .bind(
+                        tablaArticulos
+                                .widthProperty()
+                                .multiply(0.28)
+                );
 
         columnaPrecio.prefWidthProperty()
-                .bind(tablaArticulos.widthProperty().multiply(0.14));
+                .bind(
+                        tablaArticulos
+                                .widthProperty()
+                                .multiply(0.14)
+                );
 
         columnaGastosEnvio.prefWidthProperty()
-                .bind(tablaArticulos.widthProperty().multiply(0.16));
+                .bind(
+                        tablaArticulos
+                                .widthProperty()
+                                .multiply(0.16)
+                );
 
         columnaTiempoPrep.prefWidthProperty()
-                .bind(tablaArticulos.widthProperty().multiply(0.18));
+                .bind(
+                        tablaArticulos
+                                .widthProperty()
+                                .multiply(0.18)
+                );
 
         columnaAcciones.prefWidthProperty()
-                .bind(tablaArticulos.widthProperty().multiply(0.14));
+                .bind(
+                        tablaArticulos
+                                .widthProperty()
+                                .multiply(0.14)
+                );
 
         tablaArticulos.getColumns().addAll(
                 columnaCodigo,
@@ -192,17 +285,14 @@ public class ArticuloView extends VBox {
                 )
         );
 
-        // Las columnas ocupan todo el ancho
         tablaArticulos.setColumnResizePolicy(
                 TableView.UNCONSTRAINED_RESIZE_POLICY
         );
 
-        // Filas más altas
         tablaArticulos.setFixedCellSize(50);
 
         tablaArticulos.setPrefHeight(520);
 
-        // Hace que la tabla ocupe todo el ancho
         tablaArticulos.setPrefWidth(
                 Double.MAX_VALUE
         );
@@ -211,7 +301,6 @@ public class ArticuloView extends VBox {
                 Double.MAX_VALUE
         );
 
-        // Hace que crezca dentro del VBox
         VBox.setVgrow(
                 tablaArticulos,
                 Priority.ALWAYS
@@ -220,10 +309,11 @@ public class ArticuloView extends VBox {
         tablaArticulos.skinProperty().addListener(
                 (obs, oldSkin, newSkin) -> {
 
-                    Region header
-                    = (Region) tablaArticulos.lookup(
-                            ".column-header-background"
-                    );
+                    Region header =
+                            (Region)
+                                    tablaArticulos.lookup(
+                                            ".column-header-background"
+                                    );
 
                     if (header != null) {
 
@@ -234,7 +324,10 @@ public class ArticuloView extends VBox {
                             -fx-min-height: 40px;
                             -fx-max-height: 40px;
                         """);
-                        tablaArticulos.lookupAll(".column-header")
+
+                        tablaArticulos.lookupAll(
+                                        ".column-header"
+                                )
                                 .forEach(node -> {
 
                                     node.setStyle("""
@@ -242,11 +335,13 @@ public class ArticuloView extends VBox {
                                         -fx-pref-height: 20px;
                                         -fx-padding: 0;
                                     """);
-                                }
-                                );
+                                });
                     }
                 }
         );
+
+        // NUEVO
+        cargarArticulos();
 
         panelArticulos.getChildren().addAll(
                 subtitulo,
@@ -254,38 +349,65 @@ public class ArticuloView extends VBox {
         );
     }
 
+    private void cargarArticulos() {
+
+        try {
+
+            listaArticulos =
+                    FXCollections.observableArrayList(
+                            controladora
+                                    .listarArticulos()
+                    );
+
+            tablaArticulos.setItems(
+                    listaArticulos
+            );
+
+        } catch (Exception e) {
+
+            System.out.println(
+                    "Error cargando artículos"
+            );
+
+            e.printStackTrace();
+        }
+    }
+
     private void mostrarFormularioArticulo() {
 
         panelArticulos.getChildren().clear();
 
-        Label tituloFormulario
-                = new Label("Nuevo Artículo");
+        Label tituloFormulario =
+                new Label(
+                        "Nuevo Artículo"
+                );
 
         tituloFormulario.setStyle("""
             -fx-font-size: 18px;
             -fx-font-weight: bold;
             """);
 
-        GridPane formulario = new GridPane();
+        GridPane formulario =
+                new GridPane();
 
         formulario.setHgap(15);
         formulario.setVgap(18);
 
-        Label lblCodigo
-                = new Label("Código");
+        Label lblCodigo =
+                new Label("Código");
 
-        TextField txtCodigo
-                = new TextField();
+        TextField txtCodigo =
+                new TextField();
 
         txtCodigo.setPromptText(
                 "Introduce el código"
         );
 
-        Label lblDescripcion
-                = new Label("Descripción");
+        Label lblDescripcion =
+                new Label("Descripción");
 
-        TextArea txtDescripcion
-                = new TextArea();
+        TextArea txtDescripcion =
+                new TextArea();
 
         txtDescripcion.setPromptText(
                 "Introduce la descripción"
@@ -293,31 +415,35 @@ public class ArticuloView extends VBox {
 
         txtDescripcion.setPrefRowCount(3);
 
-        Label lblPrecio
-                = new Label("Precio");
+        Label lblPrecio =
+                new Label("Precio");
 
-        TextField txtPrecio
-                = new TextField();
+        TextField txtPrecio =
+                new TextField();
 
         txtPrecio.setPromptText(
                 "Ejemplo: 19.99"
         );
 
-        Label lblGastosEnvio
-                = new Label("Gastos de envío");
+        Label lblGastosEnvio =
+                new Label(
+                        "Gastos de envío"
+                );
 
-        TextField txtGastosEnvio
-                = new TextField();
+        TextField txtGastosEnvio =
+                new TextField();
 
         txtGastosEnvio.setPromptText(
                 "Ejemplo: 4.50"
         );
 
-        Label lblTiempoPrep
-                = new Label("Tiempo preparación");
+        Label lblTiempoPrep =
+                new Label(
+                        "Tiempo preparación"
+                );
 
-        TextField txtTiempoPrep
-                = new TextField();
+        TextField txtTiempoPrep =
+                new TextField();
 
         txtTiempoPrep.setPromptText(
                 "Ejemplo: 2 días"
@@ -338,22 +464,30 @@ public class ArticuloView extends VBox {
         formulario.add(lblTiempoPrep, 0, 8);
         formulario.add(txtTiempoPrep, 0, 9);
 
-        Button btnCancelar
-                = new Button("Cancelar");
+        Button btnCancelar =
+                new Button(
+                        "Cancelar"
+                );
 
-        Button btnGuardar
-                = new Button("Guardar");
+        Button btnGuardar =
+                new Button(
+                        "Guardar"
+                );
 
-        HBox botones = new HBox(10);
-        botones.setAlignment(Pos.CENTER_RIGHT);
+        HBox botones =
+                new HBox(10);
+
+        botones.setAlignment(
+                Pos.CENTER_RIGHT
+        );
 
         botones.getChildren().addAll(
                 btnCancelar,
                 btnGuardar
         );
 
-        VBox contenedorFormulario
-                = new VBox(25);
+        VBox contenedorFormulario =
+                new VBox(25);
 
         contenedorFormulario.getChildren().addAll(
                 tituloFormulario,
@@ -362,7 +496,9 @@ public class ArticuloView extends VBox {
         );
 
         panelArticulos.getChildren()
-                .add(contenedorFormulario);
+                .add(
+                        contenedorFormulario
+                );
 
         btnCancelar.setOnAction(e -> {
             mostrarTablaArticulos();
