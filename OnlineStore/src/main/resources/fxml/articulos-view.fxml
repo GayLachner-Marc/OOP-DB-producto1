@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.compilers.onlinestore.view.controllers.ArticulosController"
+      spacing="20"
+      style="-fx-padding: 20;">
+
+    <HBox spacing="20">
+
+        <Label text="Gestión de Artículos"
+               style="-fx-font-size: 28px; -fx-font-weight: bold;" />
+
+        <Button text="+ Añadir Artículo" onAction="#abrirFormularioArticulo" />
+        
+        <Button text="Editar Artículo" onAction="#editarArticulo"/>
+
+    </HBox>
+
+    <TableView fx:id="tablaArticulos"
+               prefHeight="600">
+
+        <columns>
+
+            <TableColumn fx:id="colCodigo"
+                         text="Código"
+                         prefWidth="120" />
+
+            <TableColumn fx:id="colDescripcion"
+                         text="Descripción"
+                         prefWidth="350" />
+
+            <TableColumn fx:id="colPrecio"
+                         text="Precio"
+                         prefWidth="120" />
+
+            <TableColumn fx:id="colEnvio"
+                         text="Gastos Envío"
+                         prefWidth="140" />
+
+            <TableColumn fx:id="colTiempo"
+                         text="Tiempo Prep."
+                         prefWidth="140" />
+
+        </columns>
+
+    </TableView>
+
+</VBox>

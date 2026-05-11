@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox spacing="10"
+      alignment="CENTER"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.compilers.onlinestore.view.controllers.ArticuloFormController">
+
+    <padding>
+        <Insets top="20" right="20" bottom="20" left="20"/>
+    </padding>
+
+    <Label text="Nuevo Artículo"
+           style="-fx-font-size: 20px; -fx-font-weight: bold;" />
+    
+    <TextField fx:id="txtId"
+               promptText="ID"/>
+
+    <TextField fx:id="txtCodigo"
+               promptText="Código" />
+
+    <TextField fx:id="txtDescripcion"
+               promptText="Descripción" />
+
+    <TextField fx:id="txtPrecio"
+               promptText="Precio" />
+
+    <TextField fx:id="txtEnvio"
+               promptText="Gastos envío" />
+
+    <TextField fx:id="txtTiempo"
+               promptText="Tiempo preparación" />
+
+    <Button text="Guardar"
+            onAction="#guardarArticulo"
+            style="-fx-background-color: #2563eb; -fx-text-fill: white;" />
+
+</VBox>

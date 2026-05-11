@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.fxml.FXMLLoader?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml">
+
+    <top>
+        <VBox spacing="10" style="-fx-padding: 20;">
+
+            <Label text="Online Store"
+                   style="-fx-font-size: 28px; -fx-font-weight: bold;" />
+
+            <Label text="Sistema de Gestión de Tienda Electrónica"
+                   style="-fx-font-size: 14px;" />
+
+        </VBox>
+    </top>
+
+    <center>
+
+        <TabPane>
+
+            <tabs>
+
+                <Tab text="Gestión Artículos">
+                    <fx:include source="articulos-view.fxml" />
+                </Tab>
+
+                <Tab text="Gestión Clientes">
+                    <AnchorPane />
+                </Tab>
+
+                <Tab text="Gestión Pedidos">
+                    <AnchorPane />
+                </Tab>
+
+            </tabs>
+
+        </TabPane>
+
+    </center>
+
+</BorderPane>
