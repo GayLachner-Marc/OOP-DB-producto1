@@ -24,6 +24,10 @@
 
         <columns>
 
+            <TableColumn fx:id="colId"
+                         text="ID"
+                         prefWidth="120" />
+
             <TableColumn fx:id="colCodigo"
                          text="Código"
                          prefWidth="120" />
