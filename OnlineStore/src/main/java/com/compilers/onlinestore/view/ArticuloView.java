@@ -1,13 +1,16 @@
 package com.compilers.onlinestore.view;
 
 import javafx.geometry.Insets;
-import javafx.scene.Scene;
+import javafx.geometry.Pos;
+//import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.*;
 //import javafx.stage.Stage;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
 
 public class ArticuloView extends VBox {
 
@@ -21,24 +24,25 @@ public class ArticuloView extends VBox {
         ventanaPrincipal.setStyle("-fx-background-color: #f5f6f8;");
 
         crearContenido();
-        
+
         getChildren().add(ventanaPrincipal);
     }
 
     private void crearContenido() {
 
         contenedorPrincipal = new VBox();
-        contenedorPrincipal.setSpacing(25);
-        contenedorPrincipal.setPadding(new Insets(30));
-
-        // FILA TÍTULO + BOTÓN
+        contenedorPrincipal.setSpacing(18);
+        //contenedorPrincipal.setPadding(new Insets(30));
+        contenedorPrincipal.setPadding(
+                new Insets(10, 0, 0, 0)
+        );
         HBox cabeceraArticulo = new HBox();
 
         Label titulo = new Label("Gestión de Artículos");
         titulo.setStyle("""
-                -fx-font-size: 28px;
-                -fx-font-weight: bold;
-                """);
+            -fx-font-size: 28px;
+            -fx-font-weight: bold;
+            """);
 
         Region espacioFlexible = new Region();
         HBox.setHgrow(espacioFlexible, Priority.ALWAYS);
@@ -46,45 +50,57 @@ public class ArticuloView extends VBox {
         Button btnAgregarArt = new Button("+ Añadir Artículo");
 
         btnAgregarArt.setStyle("""
-                -fx-background-color: #2563eb;
-                -fx-text-fill: white;
-                -fx-font-size: 15px;
-                -fx-font-weight: bold;
-                -fx-background-radius: 10;
-                -fx-padding: 12 22;
-                """);
+            -fx-background-color: #2563eb;
+            -fx-text-fill: white;
+            -fx-font-size: 15px;
+            -fx-font-weight: bold;
+            -fx-background-radius: 10;
+            -fx-padding: 12 22;
+            """);
+
         btnAgregarArt.setOnAction(e -> {
             mostrarFormularioArticulo();
         });
 
-        cabeceraArticulo.getChildren().addAll(titulo,
+        cabeceraArticulo.getChildren().addAll(
+                titulo,
                 espacioFlexible,
                 btnAgregarArt
         );
 
-        // CONTENEDOR DE TABLA
         panelArticulos = new VBox();
         panelArticulos.setPadding(new Insets(25));
         panelArticulos.setSpacing(20);
 
         panelArticulos.setStyle("""
-                -fx-background-color: white;
-                -fx-background-radius: 12;
-                -fx-border-color: #d1d5db;
-                -fx-border-radius: 12;
-                """);
+            -fx-background-color: white;
+            -fx-background-radius: 12;
+            -fx-border-color: #d1d5db;
+            -fx-border-radius: 12;
+            """);
+
+        // CARGA LA TABLA INICIAL
+        mostrarTablaArticulos();
+
+        contenedorPrincipal.getChildren().addAll(
+                cabeceraArticulo,
+                panelArticulos
+        );
+
+        ventanaPrincipal.setCenter(contenedorPrincipal);
+    }
+
+    private void mostrarTablaArticulos() {
+
+        panelArticulos.getChildren().clear();
 
         Label subtitulo = new Label("Artículos");
+
         subtitulo.setStyle("""
-                -fx-font-size: 22px;
-                -fx-font-weight: bold;
-                """);
+            -fx-font-size: 22px;
+            -fx-font-weight: bold;
+            """);
 
-        /*Label msjSinArticulos = new Label("Aquí aparecerán los artículos");
-
-        panelArticulos.getChildren().addAll(subtitulo,
-                msjSinArticulos
-        );*/
         TableView tablaArticulos = new TableView();
 
         TableColumn columnaCodigo
@@ -128,33 +144,72 @@ public class ArticuloView extends VBox {
                 subtitulo,
                 tablaArticulos
         );
-
-        contenedorPrincipal.getChildren().addAll(cabeceraArticulo,
-                panelArticulos
-        );
-
-        ventanaPrincipal.setCenter(contenedorPrincipal);
-        
     }
 
     private void mostrarFormularioArticulo() {
 
         panelArticulos.getChildren().clear();
 
-        Label tituloFormulario
-                = new Label("Nuevo Artículo");
-
-        tituloFormulario.setStyle("""
-            -fx-font-size: 24px;
-            -fx-font-weight: bold;
-            """);
-
-        Label mensaje
-                = new Label("Aquí irá el formulario");
-
-        panelArticulos.getChildren().addAll(
-                tituloFormulario,
-                mensaje
+        Label tituloFormulario = new Label("Nuevo Artículo");
+        tituloFormulario.setStyle(
+                "-fx-font-size: 24px;"
+                + "-fx-font-weight: bold;"
+                + "-fx-text-fill: #2c3e50;"
         );
+
+        GridPane formulario = new GridPane();
+        formulario.setHgap(15);
+        formulario.setVgap(15);
+        formulario.setPadding(new Insets(20));
+        formulario.setStyle(
+                "-fx-background-color: white;"
+                + "-fx-background-radius: 10;"
+                + "-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.08), 10, 0, 0, 4);"
+        );
+
+        Label lblNombre = new Label("Nombre:");
+        TextField txtNombre = new TextField();
+        txtNombre.setPromptText("Introduce el nombre del artículo");
+
+        Label lblDescripcion = new Label("Descripción:");
+        TextArea txtDescripcion = new TextArea();
+        txtDescripcion.setPromptText("Introduce una descripción");
+        txtDescripcion.setPrefRowCount(3);
+
+        Label lblPrecio = new Label("Precio:");
+        TextField txtPrecio = new TextField();
+        txtPrecio.setPromptText("Ejemplo: 19.99");
+
+        Label lblStock = new Label("Stock:");
+        TextField txtStock = new TextField();
+        txtStock.setPromptText("Cantidad disponible");
+
+        formulario.add(lblNombre, 0, 0);
+        formulario.add(txtNombre, 1, 0);
+
+        formulario.add(lblDescripcion, 0, 1);
+        formulario.add(txtDescripcion, 1, 1);
+
+        formulario.add(lblPrecio, 0, 2);
+        formulario.add(txtPrecio, 1, 2);
+
+        formulario.add(lblStock, 0, 3);
+        formulario.add(txtStock, 1, 3);
+
+        Button btnGuardar = new Button("Guardar");
+        Button btnCancelar = new Button("Cancelar");
+
+        HBox botones = new HBox(10);
+        botones.setAlignment(Pos.CENTER_RIGHT);
+        botones.getChildren().addAll(btnCancelar, btnGuardar);
+
+        VBox contenedorFormulario = new VBox(20);
+        contenedorFormulario.getChildren().addAll(tituloFormulario, formulario, botones);
+
+        panelArticulos.getChildren().add(contenedorFormulario);
+
+        btnCancelar.setOnAction(e -> {
+            mostrarTablaArticulos();
+        });
     }
 }
