@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox spacing="10"
+      alignment="CENTER"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.compilers.onlinestore.view.controllers.ClienteFormController">
+
+    <padding>
+        <Insets top="20" right="20" bottom="20" left="20"/>
+    </padding>
+
+    <Label text="Nuevo Cliente"
+           style="-fx-font-size: 20px; -fx-font-weight: bold;" />
+    
+
+    <TextField fx:id="txtNombre"
+               promptText="Nombre" />
+
+    <TextField fx:id="txtEmail"
+               promptText="Email" />
+
+    <TextField fx:id="txtDomicilio"
+               promptText="Domicilio" />
+
+    <TextField fx:id="txtNif"
+               promptText="NIF" />
+
+    <TextField fx:id="txtTipoCliente"
+               promptText="Tipo de Cliente" />
+
+    <TextField fx:id="txtCuotaAnual"
+               promptText="Cuota Anual" />
+
+    <Button text="Guardar"
+            onAction="#guardarCliente"
+            style="-fx-background-color: #2563eb; -fx-text-fill: white;" />
+
+</VBox>
