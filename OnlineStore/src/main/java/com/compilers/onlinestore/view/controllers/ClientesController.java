@@ -66,7 +66,7 @@ public class ClientesController {
                         data.getValue().getNif()
                 )
         );
-
+/*
         colTipoCliente.setCellValueFactory(data ->
                 new javafx.beans.property.SimpleStringProperty(
                         data.getValue().getTipoCliente()
@@ -77,7 +77,7 @@ public class ClientesController {
                 new javafx.beans.property.SimpleObjectProperty<>(
                         data.getValue().getCuotaAnual()
                 )
-        );
+        );*/
     }
 
     @FXML
@@ -119,7 +119,7 @@ private void editarCliente() {
             Parent root = loader.load();
 
             ClienteFormController controller = loader.getController();
-            controller.setCliente(clienteSeleccionado);
+            /*controller.setCliente(clienteSeleccionado);*/
 
             Stage stage = new Stage();
             stage.setTitle("Editar Cliente");

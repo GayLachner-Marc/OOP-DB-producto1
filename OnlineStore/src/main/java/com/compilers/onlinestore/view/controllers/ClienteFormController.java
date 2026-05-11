@@ -44,16 +44,16 @@ public class ClienteFormController {
 
         try {
 
-            Cliente c = new Cliente(
+           /* Cliente c = new Cliente(
                     txtNombre.getText(),
                     txtEmail.getText(),
                     txtDomicilio.getText(),
                     txtNif.getText(),
                     txtTipoCliente.getText(),
                     Double.parseDouble(txtCuotaAnual.getText())
-            );
+            );*/
 
-            controladora.crearCliente(c);
+            controladora.crearCliente(null);//c
 
             cerrarVentana();
 
@@ -67,7 +67,7 @@ public class ClienteFormController {
         Stage stage = (Stage) txtNombre.getScene().getWindow();
         stage.close();
     }
-
+/*
         public void cargarCliente(Cliente cliente) {
             txtNombre.setText(String.valueOf(cliente.getNombre()));
             txtEmail.setText(String.valueOf(cliente.getEmail()));
@@ -75,11 +75,11 @@ public class ClienteFormController {
             txtNif.setText(String.valueOf(cliente.getNif()));
             txtTipoCliente.setText(String.valueOf(cliente.getTipoCliente()));
             txtCuotaAnual.setText(String.valueOf(cliente.getCuotaAnual()));
-        }
+        }*/
 
-
+/*
 void setCliente(Cliente cliente) {
         cargarCliente(cliente);
-    }
+    }*/
 
 }

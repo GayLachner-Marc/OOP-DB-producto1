@@ -1,4 +1,4 @@
-package com.compilers.onlinestore.view;
+/*package com.compilers.onlinestore.view;
 
 import javafx.application.Application;
 import javafx.scene.Scene;
@@ -23,4 +23,4 @@ public class MainView extends Application {
     public static void main(String[] args) {
         launch(args);
     }
-}
+}*/

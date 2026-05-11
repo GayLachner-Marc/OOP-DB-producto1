@@ -36,7 +36,7 @@ public class ArticuloFormController {
 
             Articulo a = new Articulo(
                     Integer.parseInt(txtId.getText()),
-                    Integer.parseInt(txtCodigo.getText()),
+                    txtCodigo.getText(),
                     txtDescripcion.getText(),
                     Double.parseDouble(txtPrecio.getText()),
                     Double.parseDouble(txtEnvio.getText()),
