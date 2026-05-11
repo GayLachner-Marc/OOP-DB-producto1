@@ -19,7 +19,7 @@ import javafx.scene.control.TextField;
 
 public class ArticuloView extends VBox {
 
-    private final Controladora controladora = new Controladora();
+    //private final Controladora controladora;
     private TableView<Articulo> tablaArticulos;
     private ObservableList<Articulo> listaArticulos;
 
@@ -28,11 +28,12 @@ public class ArticuloView extends VBox {
     private VBox panelArticulos;
 
     public ArticuloView() {
-
+        //this.controladora = new Controladora();
         ventanaPrincipal = new BorderPane();
         ventanaPrincipal.setStyle("-fx-background-color: #f5f6f8;");
 
         crearContenido();
+        //cargarArticulos();
 
         getChildren().add(ventanaPrincipal);
     }
