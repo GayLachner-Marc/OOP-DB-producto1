@@ -45,7 +45,7 @@ public class HomeView extends VBox {
 
         Label titulo
                 = new Label(
-                        "Bienvenido de nuevo"
+                        "Bienvenido"
                 );
 
         titulo.setStyle("""
