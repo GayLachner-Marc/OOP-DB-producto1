@@ -164,12 +164,14 @@
     </HBox>
 
 </VBox>
+            
             <!-- Card -->
-            <VBox spacing="0"
-                  style="-fx-background-color: white;
-                         -fx-background-radius: 14;
-                         -fx-border-radius: 14;
-                         -fx-border-color: #e5e7eb;">
+<VBox fx:id="cardTablaPedidos"
+      spacing="0"
+      style="-fx-background-color: white;
+             -fx-background-radius: 14;
+             -fx-border-radius: 14;
+             -fx-border-color: #e5e7eb;">
 
                 <!-- Card Header -->
                 <HBox alignment="CENTER_LEFT"
@@ -184,52 +186,41 @@
                 </HBox>
 
                 <!-- Table -->
-                <TableView fx:id="tablaPedidos"
-                           VBox.vgrow="ALWAYS"
-                           style="-fx-background-color: white;
-                                  -fx-border-color: transparent;">
+<!-- Table -->
+<TableView fx:id="tablaPedidos"
+           VBox.vgrow="ALWAYS"
+           style="-fx-background-color: white;
+                  -fx-border-color: transparent;">
 
-                    <columns>
+    <columns>
 
-                        <TableColumn fx:id="colNumero"
-                                     text="N° PEDIDO"
-                                     prefWidth="120"/>
+        <TableColumn fx:id="colNumero"
+                     text="N° PEDIDO"/>
 
-                        <TableColumn fx:id="colCliente"
-                                     text="CLIENTE"
-                                     prefWidth="180"/>
+        <TableColumn fx:id="colCliente"
+                     text="CLIENTE"/>
 
-                        <TableColumn fx:id="colArticulo"
-                                     text="ARTÍCULO"
-                                     prefWidth="260"/>
+        <TableColumn fx:id="colArticulo"
+                     text="ARTÍCULO"/>
 
-                        <TableColumn fx:id="colCantidad"
-                                     text="CANTIDAD"
-                                     prefWidth="120"/>
+        <TableColumn fx:id="colCantidad"
+                     text="CANTIDAD"/>
 
-                        <TableColumn fx:id="colFecha"
-                                     text="FECHA/HORA"
-                                     prefWidth="180"/>
+        <TableColumn fx:id="colFecha"
+                     text="FECHA/HORA"/>
 
-                        <TableColumn fx:id="colTotal"
-                                     text="PRECIO TOTAL"
-                                     prefWidth="160"/>
+        <TableColumn fx:id="colTotal"
+                     text="PRECIO TOTAL"/>
 
-                        <TableColumn fx:id="colEstado"
-                                     text="ESTADO"
-                                     prefWidth="140"/>
+        <TableColumn fx:id="colEstado"
+                     text="ESTADO"/>
 
-                        <TableColumn fx:id="colAcciones"
-                                     text="ACCIONES"
-                                     prefWidth="140"/>
+        <TableColumn fx:id="colAcciones"
+                     text="ACCIONES"/>
 
-                    </columns>
+    </columns>
 
-                    <padding>
-                        <Insets bottom="10" left="10" right="10" top="10"/>
-                    </padding>
-
-                </TableView>
+</TableView>
 
             </VBox>
 

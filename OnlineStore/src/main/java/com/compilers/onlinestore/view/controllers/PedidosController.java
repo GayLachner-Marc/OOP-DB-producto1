@@ -65,6 +65,8 @@ public class PedidosController {
 
     @FXML
     private VBox panelNuevoPedido;
+    @FXML
+private VBox cardTablaPedidos;
 
     @FXML
     private TextField txtEmailCliente;
@@ -79,21 +81,25 @@ public class PedidosController {
     // INIT
     // ==========================
 
-    @FXML
-    public void initialize() {
+   @FXML
+public void initialize() {
 
-        comboClientes.getItems().add(
-                "Todos los clientes"
-        );
+    comboClientes.getItems().add(
+            "Todos los clientes"
+    );
 
-        comboClientes
-                .getSelectionModel()
-                .selectFirst();
+    comboClientes
+            .getSelectionModel()
+            .selectFirst();
 
-        comboArticuloPedido.getItems().addAll(
-                controladora.listarArticulos()
-        );
-    }
+    comboArticuloPedido.getItems().addAll(
+            controladora.listarArticulos()
+    );
+
+    tablaPedidos.setColumnResizePolicy(
+            TableView.CONSTRAINED_RESIZE_POLICY_ALL_COLUMNS
+    );
+}
 
     // ==========================
     // BOTONES PENDIENTES/ENVIADOS
@@ -151,27 +157,33 @@ public class PedidosController {
     // NUEVO PEDIDO
     // ==========================
 
-    @FXML
-    private void nuevoPedido() {
+ @FXML
+private void nuevoPedido() {
 
-        panelNuevoPedido.setVisible(true);
-        panelNuevoPedido.setManaged(true);
+    panelNuevoPedido.setVisible(true);
+    panelNuevoPedido.setManaged(true);
 
-        txtEmailCliente.clear();
+    cardTablaPedidos.setVisible(false);
+    cardTablaPedidos.setManaged(false);
 
-        comboArticuloPedido
-                .getSelectionModel()
-                .clearSelection();
+    txtEmailCliente.clear();
 
-        txtCantidadPedido.setText("1");
-    }
+    comboArticuloPedido
+            .getSelectionModel()
+            .clearSelection();
 
-    @FXML
-    private void cancelarNuevoPedido() {
+    txtCantidadPedido.setText("1");
+}
 
-        panelNuevoPedido.setVisible(false);
-        panelNuevoPedido.setManaged(false);
-    }
+@FXML
+private void cancelarNuevoPedido() {
+
+    panelNuevoPedido.setVisible(false);
+    panelNuevoPedido.setManaged(false);
+
+    cardTablaPedidos.setVisible(true);
+    cardTablaPedidos.setManaged(true);
+}
 
     @FXML
     private void crearPedido() {
@@ -192,6 +204,9 @@ public class PedidosController {
         );
 
         panelNuevoPedido.setVisible(false);
-        panelNuevoPedido.setManaged(false);
+panelNuevoPedido.setManaged(false);
+
+cardTablaPedidos.setVisible(true);
+cardTablaPedidos.setManaged(true);
     }
 }
