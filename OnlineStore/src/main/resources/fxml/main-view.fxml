@@ -4,41 +4,100 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.fxml.FXMLLoader?>
 
-<BorderPane xmlns:fx="http://javafx.com/fxml">
+<BorderPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.compilers.onlinestore.view.controllers.MainController"
+            style="-fx-background-color: #f5f6f8;">
 
+    <!-- HEADER -->
     <top>
-        <VBox spacing="10" style="-fx-padding: 20;">
+
+        <VBox spacing="8"
+              style="
+                -fx-padding: 20;
+                -fx-background-color: white;
+                -fx-border-color: #d9d9d9;
+                -fx-border-width: 0 0 1 0;
+              ">
 
             <Label text="Online Store"
-                   style="-fx-font-size: 28px; -fx-font-weight: bold;" />
+                   style="
+                        -fx-font-size: 30px;
+                        -fx-font-weight: bold;
+                   "/>
 
             <Label text="Sistema de Gestión de Tienda Electrónica"
-                   style="-fx-font-size: 14px;" />
+                   style="
+                        -fx-font-size: 14px;
+                        -fx-text-fill: #6b7280;
+                   "/>
 
         </VBox>
+
     </top>
 
+    <!-- BODY -->
     <center>
 
-        <TabPane>
+       <VBox spacing="25"
+      fillWidth="false"
+      style="-fx-padding: 20;">
+            <!-- MENU SUPERIOR -->
+           <StackPane alignment="CENTER_LEFT"
+           maxWidth="-1">
 
-            <tabs>
+    <HBox alignment="CENTER_LEFT"
+          spacing="0"
+          maxWidth="-1"
+          prefWidth="-1"
+          style="
+            -fx-background-color: #eceef2;
+            -fx-background-radius: 16;
+            -fx-padding: 5;
+          ">
 
-                <Tab text="Gestión Artículos">
-                    <fx:include source="articulos-view.fxml" />
-                </Tab>
+        <Button fx:id="btnArticulos"
+                text="Gestión de Artículos"
+                onAction="#mostrarArticulos"
+                prefWidth="200"
+                style="
+                    -fx-background-color: white;
+                    -fx-background-radius: 14;
+                    -fx-font-weight: bold;
+                    -fx-padding: 12 20;
+                "/>
 
-                <Tab text="Gestión Clientes">
-                    <fx:include source="clientes-view.fxml" />
-                </Tab>
+        <Button fx:id="btnClientes"
+                text="Gestión de Clientes"
+                onAction="#mostrarClientes"
+                prefWidth="200"
+                style="
+                    -fx-background-color: transparent;
+                    -fx-background-radius: 14;
+                    -fx-padding: 12 20;
+                "/>
 
-                <Tab text="Gestión Pedidos">
-                    <AnchorPane />
-                </Tab>
+        <Button fx:id="btnPedidos"
+                text="Gestión de Pedidos"
+                onAction="#mostrarPedidos"
+                prefWidth="200"
+                style="
+                    -fx-background-color: transparent;
+                    -fx-background-radius: 14;
+                    -fx-padding: 12 20;
+                "/>
 
-            </tabs>
+    </HBox>
 
-        </TabPane>
+</StackPane>
+
+            <!-- CONTENIDO -->
+            <StackPane fx:id="contenedorVista">
+
+                <fx:include source="articulos-view.fxml"/>
+
+            </StackPane>
+
+        </VBox>
 
     </center>
 

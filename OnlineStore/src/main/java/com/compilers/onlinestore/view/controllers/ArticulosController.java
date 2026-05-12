@@ -37,37 +37,74 @@ public class ArticulosController {
 
     private final Controladora controladora = new Controladora();
 
-   @FXML
+ @FXML
 public void initialize() {
 
-    colCodigo.setCellValueFactory(data ->
-            new javafx.beans.property.SimpleObjectProperty(
-                    data.getValue().getCodigo()
+    colCodigo.setCellValueFactory(
+            new javafx.scene.control.cell
+                    .PropertyValueFactory<>(
+                    "codigo"
             )
     );
 
-    colDescripcion.setCellValueFactory(data ->
-            new javafx.beans.property.SimpleStringProperty(
-                    data.getValue().getDescripcion()
+    colDescripcion.setCellValueFactory(
+            new javafx.scene.control.cell
+                    .PropertyValueFactory<>(
+                    "descripcion"
             )
     );
 
-    colPrecio.setCellValueFactory(data ->
-            new javafx.beans.property.SimpleObjectProperty<>(
-                    data.getValue().getPrecioVenta()
+    colPrecio.setCellValueFactory(
+            new javafx.scene.control.cell
+                    .PropertyValueFactory<>(
+                    "precioVenta"
             )
     );
 
-    colEnvio.setCellValueFactory(data ->
-            new javafx.beans.property.SimpleObjectProperty<>(
-                    data.getValue().getGastosEnvio()
+    colEnvio.setCellValueFactory(
+            new javafx.scene.control.cell
+                    .PropertyValueFactory<>(
+                    "gastosEnvio"
             )
     );
 
-    colTiempo.setCellValueFactory(data ->
-            new javafx.beans.property.SimpleObjectProperty<>(
-                    data.getValue().getTiempoPreparacion()
+    colTiempo.setCellValueFactory(
+            new javafx.scene.control.cell
+                    .PropertyValueFactory<>(
+                    "tiempoPreparacion"
             )
+    );
+
+    // ESTILO TABLA
+    tablaArticulos.setColumnResizePolicy(
+            TableView.CONSTRAINED_RESIZE_POLICY
+    );
+
+    tablaArticulos.setFixedCellSize(52);
+
+    tablaArticulos.setStyle("""
+        -fx-background-color: white;
+        -fx-control-inner-background: white;
+        -fx-border-color: transparent;
+        -fx-table-cell-border-color: transparent;
+    """);
+
+    tablaArticulos.skinProperty().addListener(
+            (obs, oldSkin, newSkin) -> {
+
+                var header = tablaArticulos.lookup(
+                        ".column-header-background"
+                );
+
+                if (header != null) {
+
+                    header.setStyle("""
+                        -fx-background-color: #eef1f5;
+                        -fx-border-color: transparent;
+                        -fx-background-radius: 12 12 0 0;
+                    """);
+                }
+            }
     );
 
     cargarArticulos();
@@ -75,13 +112,27 @@ public void initialize() {
 
     private void cargarArticulos() {
 
-        ObservableList<Articulo> lista =
+    try {
+
+        ObservableList<Articulo> listaArticulos =
                 FXCollections.observableArrayList(
-                        controladora.listarArticulos()
+                        controladora
+                                .listarArticulos()
                 );
 
-        tablaArticulos.setItems(lista);
+        tablaArticulos.setItems(
+                listaArticulos
+        );
+
+    } catch (Exception e) {
+
+        System.out.println(
+                "Error cargando artículos"
+        );
+
+        e.printStackTrace();
     }
+}
 
     @FXML
 private void abrirFormularioArticulo() {
@@ -107,6 +158,38 @@ private void abrirFormularioArticulo() {
         cargarArticulos();
 
     } catch (Exception e) {
+        e.printStackTrace();
+    }
+}
+
+@FXML
+private void eliminarArticulo() {
+
+    Articulo articuloSeleccionado =
+            tablaArticulos
+                    .getSelectionModel()
+                    .getSelectedItem();
+
+    if (articuloSeleccionado == null) {
+        return;
+    }
+
+    try {
+
+        boolean eliminado =
+                controladora
+                        .eliminarArticulo(
+                                articuloSeleccionado
+                                        .getCodigo()
+                        );
+
+        if (eliminado) {
+
+            cargarArticulos();
+        }
+
+    } catch (Exception e) {
+
         e.printStackTrace();
     }
 }

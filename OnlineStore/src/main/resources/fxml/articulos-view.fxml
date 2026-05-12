@@ -5,51 +5,85 @@
 
 <VBox xmlns:fx="http://javafx.com/fxml"
       fx:controller="com.compilers.onlinestore.view.controllers.ArticulosController"
-      spacing="20"
-      style="-fx-padding: 20;">
+      spacing="25"
+      style="
+        -fx-background-color: #f5f6f8;
+        -fx-padding: 25;
+      ">
 
-    <HBox spacing="20">
+    <!-- CABECERA -->
+    <HBox alignment="CENTER_LEFT">
 
-        <Label text="Gestión de Artículos"
-               style="-fx-font-size: 28px; -fx-font-weight: bold;" />
+    <Label text="Gestión de Artículos"
+           style="
+                -fx-font-size: 28px;
+                -fx-font-weight: bold;
+           "/>
 
-        <Button text="+ Añadir Artículo" onAction="#abrirFormularioArticulo" />
-        
-        <Button text="Editar Artículo" onAction="#editarArticulo"/>
+    <Region HBox.hgrow="ALWAYS"/>
 
-    </HBox>
+    <Button text="+ Añadir Artículo"
+            onAction="#abrirFormularioArticulo"
+            style="
+                -fx-background-color: #2563eb;
+                -fx-text-fill: white;
+                -fx-font-size: 14px;
+                -fx-font-weight: bold;
+                -fx-padding: 14 24;
+                -fx-background-radius: 12;
+            "/>
 
-    <TableView fx:id="tablaArticulos"
-               prefHeight="600">
+</HBox>
 
-        <columns>
+    <!-- CARD BLANCA -->
+    <VBox spacing="15"
+      style="
+        -fx-background-color: white;
+        -fx-background-radius: 16;
+        -fx-border-color: #d8dce2;
+        -fx-border-radius: 16;
+        -fx-padding: 22;
+      ">
 
-            <TableColumn fx:id="colId"
-                         text="ID"
-                         prefWidth="120" />
+        <Label text="Artículos"
+               style="
+                    -fx-font-size: 22px;
+                    -fx-font-weight: bold;
+               "/>
 
-            <TableColumn fx:id="colCodigo"
-                         text="Código"
-                         prefWidth="120" />
+        <TableView fx:id="tablaArticulos"
+                   prefHeight="600"
+                   style="
+                        -fx-background-color: white;
+                        -fx-border-color: transparent;
+                   ">
 
-            <TableColumn fx:id="colDescripcion"
-                         text="Descripción"
-                         prefWidth="350" />
+            <columns>
 
-            <TableColumn fx:id="colPrecio"
-                         text="Precio"
-                         prefWidth="120" />
+                <TableColumn fx:id="colCodigo"
+                             text="CÓDIGO"
+                             prefWidth="180"/>
 
-            <TableColumn fx:id="colEnvio"
-                         text="Gastos Envío"
-                         prefWidth="140" />
+                <TableColumn fx:id="colDescripcion"
+                             text="DESCRIPCIÓN"
+                             prefWidth="420"/>
 
-            <TableColumn fx:id="colTiempo"
-                         text="Tiempo Prep."
-                         prefWidth="140" />
+                <TableColumn fx:id="colPrecio"
+                             text="PRECIO"
+                             prefWidth="180"/>
 
-        </columns>
+                <TableColumn fx:id="colEnvio"
+                             text="GASTOS ENVÍO"
+                             prefWidth="200"/>
 
-    </TableView>
+                <TableColumn fx:id="colTiempo"
+                             text="TIEMPO PREP."
+                             prefWidth="200"/>
+
+            </columns>
+
+        </TableView>
+
+    </VBox>
 
 </VBox>

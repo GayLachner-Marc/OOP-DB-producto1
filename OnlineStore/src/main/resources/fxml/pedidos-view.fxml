@@ -1,0 +1,240 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Priority?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+
+<AnchorPane prefHeight="700.0"
+            prefWidth="1200.0"
+            style="-fx-background-color: #f5f6f8;"
+            xmlns="http://javafx.com/javafx/21"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.compilers.onlinestore.view.controllers.PedidosController">
+
+    <children>
+
+        <VBox spacing="20.0"
+              AnchorPane.topAnchor="20.0"
+              AnchorPane.leftAnchor="20.0"
+              AnchorPane.rightAnchor="20.0"
+              AnchorPane.bottomAnchor="20.0">
+
+            <!-- Header -->
+            <HBox alignment="CENTER_LEFT">
+
+                <VBox spacing="4">
+                    <Label text="Gestión de Pedidos"
+                           style="-fx-font-size: 34px;
+                                  -fx-font-weight: bold;
+                                  -fx-text-fill: #0f172a;" />
+                </VBox>
+
+                <Region HBox.hgrow="ALWAYS"/>
+
+                <Button text="+ Añadir Pedido"
+                        fx:id="btnNuevoPedido"
+                        onAction="#nuevoPedido"
+                        style="-fx-background-color: #2563eb;
+                               -fx-text-fill: white;
+                               -fx-font-size: 14px;
+                               -fx-font-weight: bold;
+                               -fx-background-radius: 12;
+                               -fx-padding: 12 24;
+                               -fx-cursor: hand;" />
+            </HBox>
+
+            <!-- Toolbar -->
+            <HBox spacing="16" alignment="CENTER_LEFT">
+
+                <!-- Segmented Control -->
+                <HBox spacing="8"
+                      style="-fx-background-color: transparent;">
+
+                    <Button fx:id="btnPendientes"
+                            text="◷ Pedidos Pendientes"
+                            onAction="#mostrarPendientes"
+                            style="-fx-background-color: #2563eb;
+                                   -fx-text-fill: white;
+                                   -fx-font-weight: bold;
+                                   -fx-background-radius: 12;
+                                   -fx-padding: 12 18;
+                                   -fx-cursor: hand;" />
+
+                    <Button fx:id="btnEnviados"
+                            text="✓ Pedidos Enviados"
+                            onAction="#mostrarEnviados"
+                            style="-fx-background-color: #eef2f7;
+                                   -fx-text-fill: #334155;
+                                   -fx-font-weight: bold;
+                                   -fx-background-radius: 12;
+                                   -fx-padding: 12 18;
+                                   -fx-cursor: hand;" />
+                </HBox>
+
+                <Label text="Filtrar por cliente:"
+                       style="-fx-font-size: 14px;
+                              -fx-font-weight: bold;
+                              -fx-text-fill: #334155;" />
+
+                <ComboBox fx:id="comboClientes"
+                          prefWidth="320"/>
+            </HBox>
+<!-- Nuevo Pedido -->
+<VBox fx:id="panelNuevoPedido"
+      spacing="20"
+      visible="false"
+      managed="false"
+      style="-fx-background-color: white;
+             -fx-background-radius: 14;
+             -fx-border-color: #e5e7eb;
+             -fx-border-radius: 14;
+             -fx-padding: 24;">
+
+    <Label text="Nuevo Pedido"
+           style="-fx-font-size: 18px;
+                  -fx-font-weight: bold;
+                  -fx-text-fill: #0f172a;" />
+
+    <HBox spacing="16">
+
+        <!-- Cliente -->
+        <VBox spacing="8"
+              HBox.hgrow="ALWAYS">
+
+            <Label text="Email Cliente*"
+                   style="-fx-font-weight: bold;" />
+
+            <TextField fx:id="txtEmailCliente"
+                       promptText="cliente@ejemplo.com"/>
+        </VBox>
+
+        <!-- Artículo -->
+        <VBox spacing="8"
+              HBox.hgrow="ALWAYS">
+
+            <Label text="Código Artículo*"
+                   style="-fx-font-weight: bold;" />
+
+            <ComboBox fx:id="comboArticuloPedido"
+                      promptText="Seleccionar artículo"
+                      maxWidth="Infinity"/>
+        </VBox>
+
+        <!-- Cantidad -->
+        <VBox spacing="8"
+              HBox.hgrow="ALWAYS">
+
+            <Label text="Cantidad*"
+                   style="-fx-font-weight: bold;" />
+
+            <TextField fx:id="txtCantidadPedido"
+                       text="1"/>
+        </VBox>
+
+    </HBox>
+
+    <HBox spacing="12"
+          alignment="CENTER_RIGHT">
+
+        <Button text="Cancelar"
+                onAction="#cancelarNuevoPedido"
+                style="-fx-background-color: white;
+                       -fx-border-color: #d1d5db;
+                       -fx-background-radius: 10;
+                       -fx-border-radius: 10;
+                       -fx-padding: 10 18;" />
+
+        <Button text="Crear Pedido"
+                onAction="#crearPedido"
+                style="-fx-background-color: #2563eb;
+                       -fx-text-fill: white;
+                       -fx-font-weight: bold;
+                       -fx-background-radius: 10;
+                       -fx-padding: 10 18;" />
+
+    </HBox>
+
+</VBox>
+            <!-- Card -->
+            <VBox spacing="0"
+                  style="-fx-background-color: white;
+                         -fx-background-radius: 14;
+                         -fx-border-radius: 14;
+                         -fx-border-color: #e5e7eb;">
+
+                <!-- Card Header -->
+                <HBox alignment="CENTER_LEFT"
+                      style="-fx-padding: 22;
+                             -fx-border-color: transparent transparent #e5e7eb transparent;">
+
+                    <Label fx:id="lblTituloTabla"
+                           text="Pedidos Pendientes de Envío (0)"
+                           style="-fx-font-size: 24px;
+                                  -fx-font-weight: bold;
+                                  -fx-text-fill: #0f172a;" />
+                </HBox>
+
+                <!-- Table -->
+                <TableView fx:id="tablaPedidos"
+                           VBox.vgrow="ALWAYS"
+                           style="-fx-background-color: white;
+                                  -fx-border-color: transparent;">
+
+                    <columns>
+
+                        <TableColumn fx:id="colNumero"
+                                     text="N° PEDIDO"
+                                     prefWidth="120"/>
+
+                        <TableColumn fx:id="colCliente"
+                                     text="CLIENTE"
+                                     prefWidth="180"/>
+
+                        <TableColumn fx:id="colArticulo"
+                                     text="ARTÍCULO"
+                                     prefWidth="260"/>
+
+                        <TableColumn fx:id="colCantidad"
+                                     text="CANTIDAD"
+                                     prefWidth="120"/>
+
+                        <TableColumn fx:id="colFecha"
+                                     text="FECHA/HORA"
+                                     prefWidth="180"/>
+
+                        <TableColumn fx:id="colTotal"
+                                     text="PRECIO TOTAL"
+                                     prefWidth="160"/>
+
+                        <TableColumn fx:id="colEstado"
+                                     text="ESTADO"
+                                     prefWidth="140"/>
+
+                        <TableColumn fx:id="colAcciones"
+                                     text="ACCIONES"
+                                     prefWidth="140"/>
+
+                    </columns>
+
+                    <padding>
+                        <Insets bottom="10" left="10" right="10" top="10"/>
+                    </padding>
+
+                </TableView>
+
+            </VBox>
+
+        </VBox>
+
+    </children>
+
+</AnchorPane>
