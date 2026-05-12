@@ -45,9 +45,9 @@
                          text="Tipo de Cliente"
                          prefWidth="140" />
 
-            <TableColumn fx:id="colCuota"
-                         text="Cuota Anual"
-                         prefWidth="140" />
+            <TableColumn fx:id="colCuotaAnual"
+             text="Cuota Anual"
+             prefWidth="140" />
 
         </columns>
 

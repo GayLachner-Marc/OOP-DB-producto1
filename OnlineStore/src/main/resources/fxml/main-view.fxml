@@ -67,6 +67,17 @@
     </graphic>
 
 </Button>
+    <Button fx:id="btnClientes"
+                text="Gestión de Clientes"
+                onAction="#mostrarClientes"
+                prefWidth="200"
+                style="
+                    -fx-background-color: transparent;
+                    -fx-background-radius: 14;
+                    -fx-padding: 12 20;
+                "/>
+
+
 
         <Button fx:id="btnArticulos"
                 text="Gestión de Artículos"
@@ -79,15 +90,7 @@
                     -fx-padding: 12 20;
                 "/>
 
-        <Button fx:id="btnClientes"
-                text="Gestión de Clientes"
-                onAction="#mostrarClientes"
-                prefWidth="200"
-                style="
-                    -fx-background-color: transparent;
-                    -fx-background-radius: 14;
-                    -fx-padding: 12 20;
-                "/>
+        
 
         <Button fx:id="btnPedidos"
                 text="Gestión de Pedidos"

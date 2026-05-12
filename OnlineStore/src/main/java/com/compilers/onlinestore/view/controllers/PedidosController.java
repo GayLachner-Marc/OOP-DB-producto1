@@ -2,6 +2,7 @@ package com.compilers.onlinestore.view.controllers;
 
 import com.compilers.onlinestore.controller.Controladora;
 import com.compilers.onlinestore.model.Articulos.Articulo;
+import com.compilers.onlinestore.model.Pedidos.Pedido;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -33,28 +34,28 @@ public class PedidosController {
     private Label lblTituloTabla;
 
     @FXML
-    private TableView<?> tablaPedidos;
+    private TableView<Pedido> tablaPedidos;
 
     @FXML
-    private TableColumn<?, ?> colNumero;
+    private TableColumn<Pedido, Integer> colNumero;
 
     @FXML
-    private TableColumn<?, ?> colCliente;
+    private TableColumn<Pedido, String> colCliente;
 
     @FXML
-    private TableColumn<?, ?> colArticulo;
+    private TableColumn<Pedido, String> colArticulo;
 
     @FXML
-    private TableColumn<?, ?> colCantidad;
+    private TableColumn<Pedido, Integer> colCantidad;
 
     @FXML
-    private TableColumn<?, ?> colFecha;
+    private TableColumn<Pedido, String> colFecha;
 
     @FXML
-    private TableColumn<?, ?> colTotal;
+    private TableColumn<Pedido, Double> colTotal;
 
     @FXML
-    private TableColumn<?, ?> colEstado;
+    private TableColumn<Pedido, String> colEstado;
 
     @FXML
     private TableColumn<?, ?> colAcciones;
@@ -65,8 +66,9 @@ public class PedidosController {
 
     @FXML
     private VBox panelNuevoPedido;
+
     @FXML
-private VBox cardTablaPedidos;
+    private VBox cardTablaPedidos;
 
     @FXML
     private TextField txtEmailCliente;
@@ -81,28 +83,102 @@ private VBox cardTablaPedidos;
     // INIT
     // ==========================
 
-   @FXML
-public void initialize() {
+    @FXML
+    public void initialize() {
 
-    comboClientes.getItems().add(
-            "Todos los clientes"
-    );
+        comboClientes.getItems().add(
+                "Todos los clientes"
+        );
 
-    comboClientes
-            .getSelectionModel()
-            .selectFirst();
+        comboClientes
+                .getSelectionModel()
+                .selectFirst();
 
-    comboArticuloPedido.getItems().addAll(
-            controladora.listarArticulos()
-    );
+        comboArticuloPedido.getItems().addAll(
+                controladora.listarArticulos()
+        );
 
-    tablaPedidos.setColumnResizePolicy(
-            TableView.CONSTRAINED_RESIZE_POLICY_ALL_COLUMNS
-    );
-}
+        tablaPedidos.setColumnResizePolicy(
+                TableView.CONSTRAINED_RESIZE_POLICY_ALL_COLUMNS
+        );
+
+        // COLUMNAS
+
+        colNumero.setCellValueFactory(data ->
+                new javafx.beans.property.SimpleObjectProperty<>(
+                        data.getValue().getNumeroPedido()
+                )
+        );
+
+        colCliente.setCellValueFactory(data ->
+                new javafx.beans.property.SimpleStringProperty(
+                        data.getValue()
+                                .getCliente()
+                                .getEmail()
+                )
+        );
+
+        colArticulo.setCellValueFactory(data ->
+                new javafx.beans.property.SimpleStringProperty(
+                        data.getValue()
+                                .getArticulo()
+                                .getCodigo()
+                )
+        );
+
+        colCantidad.setCellValueFactory(data ->
+                new javafx.beans.property.SimpleObjectProperty<>(
+                        data.getValue().getCantidad()
+                )
+        );
+
+        colFecha.setCellValueFactory(data ->
+                new javafx.beans.property.SimpleStringProperty(
+                        data.getValue()
+                                .getFechaHora()
+                                .toString()
+                )
+        );
+
+        colTotal.setCellValueFactory(data ->
+                new javafx.beans.property.SimpleObjectProperty<>(
+                        data.getValue().calcularTotal()
+                )
+        );
+
+        colEstado.setCellValueFactory(data ->
+                new javafx.beans.property.SimpleStringProperty(
+                        data.getValue().estaEnviado()
+                                ? "Enviado"
+                                : "Pendiente"
+                )
+        );
+
+        cargarPedidos();
+    }
 
     // ==========================
-    // BOTONES PENDIENTES/ENVIADOS
+    // CARGAR PEDIDOS
+    // ==========================
+
+    private void cargarPedidos() {
+
+        var pedidos =
+                controladora.listarPedidos();
+
+        tablaPedidos.getItems().setAll(
+                pedidos
+        );
+
+        lblTituloTabla.setText(
+                "Pedidos (" +
+                pedidos.size() +
+                ")"
+        );
+    }
+
+    // ==========================
+    // BOTONES
     // ==========================
 
     @FXML
@@ -122,10 +198,6 @@ public void initialize() {
                 "-fx-font-weight: bold;" +
                 "-fx-background-radius: 12;" +
                 "-fx-padding: 12 18;"
-        );
-
-        lblTituloTabla.setText(
-                "Pedidos Pendientes de Envío (0)"
         );
     }
 
@@ -147,66 +219,119 @@ public void initialize() {
                 "-fx-background-radius: 12;" +
                 "-fx-padding: 12 18;"
         );
-
-        lblTituloTabla.setText(
-                "Pedidos Enviados (0)"
-        );
     }
 
     // ==========================
     // NUEVO PEDIDO
     // ==========================
 
- @FXML
-private void nuevoPedido() {
+    @FXML
+    private void nuevoPedido() {
 
-    panelNuevoPedido.setVisible(true);
-    panelNuevoPedido.setManaged(true);
+        panelNuevoPedido.setVisible(true);
+        panelNuevoPedido.setManaged(true);
 
-    cardTablaPedidos.setVisible(false);
-    cardTablaPedidos.setManaged(false);
+        cardTablaPedidos.setVisible(false);
+        cardTablaPedidos.setManaged(false);
 
-    txtEmailCliente.clear();
+        txtEmailCliente.clear();
 
-    comboArticuloPedido
-            .getSelectionModel()
-            .clearSelection();
+        comboArticuloPedido
+                .getSelectionModel()
+                .clearSelection();
 
-    txtCantidadPedido.setText("1");
-}
-
-@FXML
-private void cancelarNuevoPedido() {
-
-    panelNuevoPedido.setVisible(false);
-    panelNuevoPedido.setManaged(false);
-
-    cardTablaPedidos.setVisible(true);
-    cardTablaPedidos.setManaged(true);
-}
+        txtCantidadPedido.setText("1");
+    }
 
     @FXML
-    private void crearPedido() {
-
-        System.out.println(
-                "Cliente: "
-                + txtEmailCliente.getText()
-        );
-
-        System.out.println(
-                "Artículo: "
-                + comboArticuloPedido.getValue()
-        );
-
-        System.out.println(
-                "Cantidad: "
-                + txtCantidadPedido.getText()
-        );
+    private void cancelarNuevoPedido() {
 
         panelNuevoPedido.setVisible(false);
-panelNuevoPedido.setManaged(false);
+        panelNuevoPedido.setManaged(false);
 
-cardTablaPedidos.setVisible(true);
-cardTablaPedidos.setManaged(true);
+        cardTablaPedidos.setVisible(true);
+        cardTablaPedidos.setManaged(true);
     }
+
+   @FXML
+private void crearPedido() {
+
+    try {
+
+        String email =
+                txtEmailCliente
+                        .getText()
+                        .trim();
+
+        Articulo articulo =
+                comboArticuloPedido
+                        .getValue();
+
+        int cantidad =
+                Integer.parseInt(
+                        txtCantidadPedido
+                                .getText()
+                                .trim()
+                );
+
+        // Buscar cliente por email
+        var cliente =
+                controladora.buscarCliente(
+                        email
+                );
+
+        if (cliente == null) {
+
+            System.out.println(
+                    "Cliente no encontrado"
+            );
+            return;
+        }
+
+        if (articulo == null) {
+
+            System.out.println(
+                    "Debe seleccionar un artículo"
+            );
+            return;
+        }
+
+        // Número pedido automático
+        int numeroPedido =
+                controladora
+                        .listarPedidos()
+                        .size() + 1;
+
+        Pedido pedido =
+                new Pedido(
+                        numeroPedido,
+                        cliente,
+                        articulo,
+                        cantidad
+                );
+
+        // GUARDAR EN BD
+        controladora.crearPedido(
+                pedido
+        );
+
+        // Cerrar formulario
+        panelNuevoPedido.setVisible(false);
+        panelNuevoPedido.setManaged(false);
+
+        cardTablaPedidos.setVisible(true);
+        cardTablaPedidos.setManaged(true);
+
+        // Recargar tabla
+        cargarPedidos();
+
+        System.out.println(
+                "Pedido creado correctamente"
+        );
+
+    } catch (Exception e) {
+
+        e.printStackTrace();
+    }
+}
 }

@@ -43,13 +43,14 @@
                 <Button text="+ Añadir Pedido"
                         fx:id="btnNuevoPedido"
                         onAction="#nuevoPedido"
-                        style="-fx-background-color: #2563eb;
-                               -fx-text-fill: white;
-                               -fx-font-size: 14px;
-                               -fx-font-weight: bold;
-                               -fx-background-radius: 12;
-                               -fx-padding: 12 24;
-                               -fx-cursor: hand;" />
+                        style="
+                -fx-background-color: #2563eb;
+                -fx-text-fill: white;
+                -fx-font-size: 14px;
+                -fx-font-weight: bold;
+                -fx-padding: 14 24;
+                -fx-background-radius: 12;
+            "/>
             </HBox>
 
             <!-- Toolbar -->

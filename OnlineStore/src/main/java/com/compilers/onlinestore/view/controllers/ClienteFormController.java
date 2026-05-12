@@ -1,24 +1,16 @@
 package com.compilers.onlinestore.view.controllers;
 
 import com.compilers.onlinestore.controller.Controladora;
-import com.compilers.onlinestore.model.Articulos.Articulo;
 import com.compilers.onlinestore.model.Clientes.Cliente;
+import com.compilers.onlinestore.model.Clientes.ClienteEstandar;
+import com.compilers.onlinestore.model.Clientes.ClientePremium;
 
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
-import javafx.scene.Parent;
-
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 
 public class ClienteFormController {
-    
+
     @FXML
     private TextField txtNombre;
 
@@ -32,54 +24,114 @@ public class ClienteFormController {
     private TextField txtNif;
 
     @FXML
-    private TextField txtTipoCliente;
+    private ComboBox<String> comboTipoCliente;
 
     @FXML
     private TextField txtCuotaAnual;
 
-    private final Controladora controladora = new Controladora();
+    private final Controladora controladora =
+            new Controladora();
 
-@FXML
+    @FXML
+    public void initialize() {
+
+        comboTipoCliente.getItems().addAll(
+                "ESTANDAR",
+                "PREMIUM"
+        );
+
+        comboTipoCliente.setOnAction(event -> {
+
+            boolean premium =
+                    "PREMIUM".equals(
+                            comboTipoCliente.getValue()
+                    );
+
+            txtCuotaAnual.setVisible(
+                    premium
+            );
+
+            txtCuotaAnual.setManaged(
+                    premium
+            );
+
+            if (premium) {
+                txtCuotaAnual.setText("30");
+            } else {
+                txtCuotaAnual.clear();
+            }
+        });
+    }
+
+    @FXML
     private void guardarCliente() {
 
         try {
 
-           /* Cliente c = new Cliente(
-                    txtNombre.getText(),
-                    txtEmail.getText(),
-                    txtDomicilio.getText(),
-                    txtNif.getText(),
-                    txtTipoCliente.getText(),
-                    Double.parseDouble(txtCuotaAnual.getText())
-            );*/
+            String nombre =
+                    txtNombre.getText().trim();
 
-            controladora.crearCliente(null);//c
+            String email =
+                    txtEmail.getText().trim();
 
-            cerrarVentana();
+            String domicilio =
+                    txtDomicilio.getText().trim();
+
+            String nif =
+                    txtNif.getText().trim();
+
+            String tipo =
+                    comboTipoCliente.getValue();
+
+            // Validación básica
+            if (nombre.isBlank()
+                    || email.isBlank()
+                    || domicilio.isBlank()
+                    || nif.isBlank()
+                    || tipo == null) {
+
+                System.out.println(
+                        "Todos los campos son obligatorios."
+                );
+
+                return;
+            }
+
+            Cliente cliente;
+
+            if ("PREMIUM".equals(tipo)) {
+
+                cliente = new ClientePremium(
+                        nombre,
+                        domicilio,
+                        nif,
+                        email
+                );
+
+            } else {
+
+                cliente = new ClienteEstandar(
+                        nombre,
+                        domicilio,
+                        nif,
+                        email
+                );
+            }
+
+            controladora.crearCliente(
+                    cliente
+            );
+
+            txtNombre.getScene()
+                    .getWindow()
+                    .hide();
+
+            System.out.println(
+                    "Cliente creado."
+            );
 
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
-
-    private void cerrarVentana() {
-
-        Stage stage = (Stage) txtNombre.getScene().getWindow();
-        stage.close();
-    }
-/*
-        public void cargarCliente(Cliente cliente) {
-            txtNombre.setText(String.valueOf(cliente.getNombre()));
-            txtEmail.setText(String.valueOf(cliente.getEmail()));
-            txtDomicilio.setText(cliente.getDomicilio());
-            txtNif.setText(String.valueOf(cliente.getNif()));
-            txtTipoCliente.setText(String.valueOf(cliente.getTipoCliente()));
-            txtCuotaAnual.setText(String.valueOf(cliente.getCuotaAnual()));
-        }*/
-
-/*
-void setCliente(Cliente cliente) {
-        cargarCliente(cliente);
-    }*/
-
 }
