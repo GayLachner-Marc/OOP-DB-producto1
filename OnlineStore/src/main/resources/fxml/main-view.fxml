@@ -3,6 +3,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.fxml.FXMLLoader?>
+<?import org.kordamp.ikonli.javafx.FontIcon?>
 
 <BorderPane xmlns:fx="http://javafx.com/fxml"
             fx:controller="com.compilers.onlinestore.view.controllers.MainController"
@@ -56,14 +57,16 @@
         -fx-padding: 5;
       ">
         <Button fx:id="btnHome"
-        text="Inicio"
+        text=" Inicio"
         onAction="#mostrarHome"
-        prefWidth="160"
-        style="
-            -fx-background-color: transparent;
-            -fx-background-radius: 14;
-            -fx-padding: 12 20;
-        "/>
+        prefWidth="160">
+
+    <graphic>
+        <FontIcon iconLiteral="fas-home"
+                  iconSize="16"/>
+    </graphic>
+
+</Button>
 
         <Button fx:id="btnArticulos"
                 text="Gestión de Artículos"
