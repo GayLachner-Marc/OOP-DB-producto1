@@ -1,5 +1,6 @@
 package com.compilers.onlinestore.view;
 
+import javafx.scene.control.Label;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -14,8 +15,11 @@ public class MainView extends Application {
     private HBox menuSuperior;
     private VBox contenidoCentral;
     private VBox contenedorVista;
-
+    private VBox contenedorMenu;
     private ViewManager viewManager;
+    private Button btnArticulos;
+    private Button btnClientes;
+    private Button btnPedidos;
 
     @Override
     public void start(Stage stage) {
@@ -24,8 +28,8 @@ public class MainView extends Application {
 
         crearContenido();
 
-        Scene escena =
-                new Scene(
+        Scene escena
+                = new Scene(
                         ventanaPrincipal,
                         1400,
                         800
@@ -47,8 +51,8 @@ public class MainView extends Application {
             -fx-background-color: white;
             """);
 
-        javafx.scene.control.Label tituloApp =
-                new javafx.scene.control.Label(
+        javafx.scene.control.Label tituloApp
+                = new javafx.scene.control.Label(
                         "Online Store"
                 );
 
@@ -58,8 +62,8 @@ public class MainView extends Application {
             -fx-text-fill: #0f172a;
             """);
 
-        javafx.scene.control.Label subtituloApp =
-                new javafx.scene.control.Label(
+        javafx.scene.control.Label subtituloApp
+                = new javafx.scene.control.Label(
                         "Sistema de Gestión de Tienda Electrónica"
                 );
 
@@ -78,24 +82,29 @@ public class MainView extends Application {
 
     private void crearContenido() {
 
+        crearMenuSuperior();
+
         contenidoCentral = new VBox();
 
         contenidoCentral.setSpacing(20);
+
         contenidoCentral.setPadding(
                 new Insets(20)
         );
 
-        contenedorVista = new VBox();
+        contenedorMenu
+                = new VBox(menuSuperior);
 
-        viewManager =
-                new ViewManager(
+        contenedorVista
+                = new VBox();
+
+        viewManager
+                = new ViewManager(
                         contenedorVista
                 );
 
-        crearMenuSuperior();
-
         contenidoCentral.getChildren().addAll(
-                menuSuperior,
+                contenedorMenu,
                 contenedorVista
         );
 
@@ -106,6 +115,93 @@ public class MainView extends Application {
         ventanaPrincipal.setCenter(
                 contenidoCentral
         );
+
+        mostrarInicio();
+    }
+
+    private void mostrarInicio() {
+
+        ocultarMenu();
+
+        contenedorVista.getChildren().clear();
+
+        HomeView homeView
+                = new HomeView(
+                        this::abrirClientes,
+                        this::abrirArticulos,
+                        this::abrirPedidos
+                );
+
+        contenedorVista.getChildren()
+                .add(homeView);
+    }
+
+    private void abrirArticulos() {
+
+        mostrarMenu();
+
+        resetearBotones(
+                btnArticulos,
+                btnClientes,
+                btnPedidos
+        );
+
+        aplicarEstiloActivo(
+                btnArticulos
+        );
+
+        viewManager
+                .mostrarArticulos();
+    }
+
+    private void abrirClientes() {
+
+        mostrarMenu();
+
+        resetearBotones(
+                btnArticulos,
+                btnClientes,
+                btnPedidos
+        );
+
+        aplicarEstiloActivo(
+                btnClientes
+        );
+
+        viewManager
+                .mostrarClientes();
+    }
+
+    private void abrirPedidos() {
+
+        mostrarMenu();
+
+        resetearBotones(
+                btnArticulos,
+                btnClientes,
+                btnPedidos
+        );
+
+        aplicarEstiloActivo(
+                btnPedidos
+        );
+
+        viewManager
+                .mostrarPedidos();
+    }
+
+    private void mostrarMenu() {
+
+        contenedorMenu.setVisible(true);
+
+        contenedorMenu.setManaged(true);
+    }
+
+    private void ocultarMenu() {
+
+        contenedorMenu.setVisible(false);
+
+        contenedorMenu.setManaged(false);
     }
 
     private void crearMenuSuperior() {
@@ -131,18 +227,18 @@ public class MainView extends Application {
             -fx-padding: 4;
             """);
 
-        Button btnArticulos =
-                new Button(
+        btnArticulos
+                = new Button(
                         "Gestión de Artículos"
                 );
 
-        Button btnClientes =
-                new Button(
+        btnClientes
+                = new Button(
                         "Gestión de Clientes"
                 );
 
-        Button btnPedidos =
-                new Button(
+        btnPedidos
+                = new Button(
                         "Gestión de Pedidos"
                 );
 
