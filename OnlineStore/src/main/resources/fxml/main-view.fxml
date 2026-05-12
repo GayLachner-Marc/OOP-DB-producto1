@@ -45,15 +45,25 @@
            <StackPane alignment="CENTER_LEFT"
            maxWidth="-1">
 
-    <HBox alignment="CENTER_LEFT"
-          spacing="0"
-          maxWidth="-1"
-          prefWidth="-1"
-          style="
-            -fx-background-color: #eceef2;
-            -fx-background-radius: 16;
-            -fx-padding: 5;
-          ">
+    <HBox fx:id="menuSuperior"
+      alignment="CENTER_LEFT"
+      spacing="0"
+      maxWidth="-1"
+      prefWidth="-1"
+      style="
+        -fx-background-color: #eceef2;
+        -fx-background-radius: 16;
+        -fx-padding: 5;
+      ">
+        <Button fx:id="btnHome"
+        text="Inicio"
+        onAction="#mostrarHome"
+        prefWidth="160"
+        style="
+            -fx-background-color: transparent;
+            -fx-background-radius: 14;
+            -fx-padding: 12 20;
+        "/>
 
         <Button fx:id="btnArticulos"
                 text="Gestión de Artículos"
@@ -93,9 +103,9 @@
             <!-- CONTENIDO -->
             <StackPane fx:id="contenedorVista">
 
-                <fx:include source="articulos-view.fxml"/>
+    <fx:include source="home-view.fxml"/>
 
-            </StackPane>
+</StackPane>
 
         </VBox>
 

@@ -4,12 +4,18 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 
 public class MainController {
+    @FXML
+private Button btnHome;
 
     @FXML
     private StackPane contenedorVista;
+
+    @FXML
+    private HBox menuSuperior;
 
     @FXML
     private Button btnArticulos;
@@ -40,48 +46,96 @@ public class MainController {
 
     @FXML
     public void initialize() {
-        activarBoton(btnArticulos);
+
+        // arrancar en HOME
+        cargarVista("home-view.fxml");
+
+        // ocultar menú
+        ocultarMenu();
     }
 
     @FXML
-    private void mostrarArticulos() {
+    public void mostrarArticulos() {
+
+        mostrarMenu();
+
         cargarVista("articulos-view.fxml");
+
         activarBoton(btnArticulos);
     }
 
     @FXML
-    private void mostrarClientes() {
+    public void mostrarClientes() {
+
+        mostrarMenu();
+
         cargarVista("clientes-view.fxml");
+
         activarBoton(btnClientes);
     }
 
     @FXML
-private void mostrarPedidos() {
-    cargarVista("pedidos-view.fxml");
-    activarBoton(btnPedidos);
-}
+    public void mostrarPedidos() {
+
+        mostrarMenu();
+
+        cargarVista("pedidos-view.fxml");
+
+        activarBoton(btnPedidos);
+    }
 
     private void cargarVista(String fxml) {
 
         try {
 
-            Parent vista = FXMLLoader.load(
-                    getClass().getResource("/fxml/" + fxml)
-            );
+            Parent vista =
+                    FXMLLoader.load(
+                            getClass().getResource(
+                                    "/fxml/" + fxml
+                            )
+                    );
 
-            contenedorVista.getChildren().setAll(vista);
+            contenedorVista
+                    .getChildren()
+                    .setAll(vista);
 
         } catch (Exception e) {
+
             e.printStackTrace();
         }
     }
 
-    private void activarBoton(Button activo) {
+private void activarBoton(Button activo) {
 
-        btnArticulos.setStyle(ESTILO_NORMAL);
-        btnClientes.setStyle(ESTILO_NORMAL);
-        btnPedidos.setStyle(ESTILO_NORMAL);
+    btnHome.setStyle(ESTILO_NORMAL);
+    btnArticulos.setStyle(ESTILO_NORMAL);
+    btnClientes.setStyle(ESTILO_NORMAL);
+    btnPedidos.setStyle(ESTILO_NORMAL);
 
-        activo.setStyle(ESTILO_ACTIVO);
+    activo.setStyle(ESTILO_ACTIVO);
+}
+
+    private void ocultarMenu() {
+
+        menuSuperior.setVisible(false);
+        menuSuperior.setManaged(false);
     }
+
+    private void mostrarMenu() {
+
+        menuSuperior.setVisible(true);
+        menuSuperior.setManaged(true);
+    }
+    @FXML
+public void mostrarHome() {
+
+    cargarVista("home-view.fxml");
+
+    ocultarMenu();
+
+    btnHome.setStyle(ESTILO_NORMAL);
+    btnArticulos.setStyle(ESTILO_NORMAL);
+    btnClientes.setStyle(ESTILO_NORMAL);
+    btnPedidos.setStyle(ESTILO_NORMAL);
+}
 }
