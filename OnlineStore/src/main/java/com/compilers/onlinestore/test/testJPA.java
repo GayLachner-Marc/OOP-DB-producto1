@@ -18,7 +18,7 @@ public class testJPA {
 
         // Modificar
         a.setDescripcion("Modificado JPA");
-        c.actualizarArticulo(a);
+       // c.actualizarArticulo(a);
 
         // Ver resultado
         System.out.println(c.buscarArticulo("999"));

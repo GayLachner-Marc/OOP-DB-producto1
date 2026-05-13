@@ -247,46 +247,85 @@ public class Controladora {
         return lista;
     }
 
-    public void actualizarArticulo(Articulo articulo)
-            throws ArticuloNoExisteException {
+    public boolean actualizarArticulo(
+        String codigoOriginal,
+        Articulo articuloNuevo
+) {
 
-        EntityManager em = JPAUtil.getEntityManager();
+    EntityManager em =
+            JPAUtil.getEntityManager();
 
-        try {
+    try {
 
-            em.getTransaction().begin();
+        em.getTransaction().begin();
 
-            Articulo existente = em.createQuery(
-                    "SELECT a FROM Articulo a WHERE a.codigo = :codigo",
-                    Articulo.class)
-                    .setParameter("codigo", articulo.getCodigo())
-                    .getResultStream()
-                    .findFirst()
-                    .orElse(null);
+        Articulo existente =
+                em.createQuery(
+                        "SELECT a FROM Articulo a WHERE a.codigo = :codigo",
+                        Articulo.class
+                )
+                .setParameter(
+                        "codigo",
+                        codigoOriginal
+                )
+                .getResultStream()
+                .findFirst()
+                .orElse(null);
 
-            if (existente == null) {
-                throw new ArticuloNoExisteException("Articulo no existe");
-            }
+        if (existente == null) {
 
-            existente.setDescripcion(articulo.getDescripcion());
-            existente.setPrecioVenta(articulo.getPrecioVenta());
-            existente.setGastosEnvio(articulo.getGastosEnvio());
-            existente.setTiempoPreparacion(articulo.getTiempoPreparacion());
+            em.getTransaction().rollback();
 
-            em.getTransaction().commit();
+            System.out.println(
+                    "Articulo no existe."
+            );
 
-        } catch (Exception e) {
-
-            if (em.getTransaction().isActive()) {
-                em.getTransaction().rollback();
-            }
-
-            throw e;
-
-        } finally {
-            em.close();
+            return false;
         }
+
+        // ACTUALIZAR DATOS
+        existente.setCodigo(
+                articuloNuevo.getCodigo()
+        );
+
+        existente.setDescripcion(
+                articuloNuevo.getDescripcion()
+        );
+
+        existente.setPrecioVenta(
+                articuloNuevo.getPrecioVenta()
+        );
+
+        existente.setGastosEnvio(
+                articuloNuevo.getGastosEnvio()
+        );
+
+        existente.setTiempoPreparacion(
+                articuloNuevo.getTiempoPreparacion()
+        );
+
+        em.merge(existente);
+
+        em.getTransaction().commit();
+
+        return true;
+
+    } catch (Exception e) {
+
+        if (em.getTransaction().isActive()) {
+
+            em.getTransaction().rollback();
+        }
+
+        e.printStackTrace();
+
+        return false;
+
+    } finally {
+
+        em.close();
     }
+}
 
     public boolean eliminarArticulo(String codigo)
             throws ArticuloNoExisteException {

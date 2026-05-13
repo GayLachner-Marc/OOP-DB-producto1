@@ -61,6 +61,9 @@ public class ArticulosController {
 
     private final Controladora controladora = new Controladora();
 
+    private boolean modoEdicion = false;
+    private String codigoOriginal = null;
+
     @FXML
     public void initialize() {
 
@@ -92,14 +95,11 @@ public class ArticulosController {
                 new javafx.scene.control.cell.PropertyValueFactory<>(
                         "tiempoPreparacion"
                 )
-                
         );
-        
+
         // ALINEACIÓN DE COLUMNAS
         alinearColumnas();
 
-        
-        
         // ==========================
         // COLUMNA ACCIONES
         // ==========================
@@ -144,6 +144,9 @@ public class ArticulosController {
                             = getTableView()
                                     .getItems()
                                     .get(getIndex());
+
+                    modoEdicion = true;
+                    codigoOriginal = articulo.getCodigo();
 
                     panelNuevoArticulo.setVisible(true);
                     panelNuevoArticulo.setManaged(true);
@@ -231,35 +234,34 @@ public class ArticulosController {
 // ==========================
 // ESTILO TABLA
 // ==========================
+        tablaArticulos.setColumnResizePolicy(
+                TableView.CONSTRAINED_RESIZE_POLICY_ALL_COLUMNS
+        );
 
-tablaArticulos.setColumnResizePolicy(
-        TableView.CONSTRAINED_RESIZE_POLICY_ALL_COLUMNS
-);
-
-tablaArticulos.setStyle("""
+        tablaArticulos.setStyle("""
     -fx-background-color: white;
     -fx-control-inner-background: white;
     -fx-border-color: transparent;
     -fx-table-cell-border-color: #eef1f5;
 """);
 
-tablaArticulos.skinProperty().addListener(
-        (obs, oldSkin, newSkin) -> {
+        tablaArticulos.skinProperty().addListener(
+                (obs, oldSkin, newSkin) -> {
 
-            var header = tablaArticulos.lookup(
-                    ".column-header-background"
-            );
+                    var header = tablaArticulos.lookup(
+                            ".column-header-background"
+                    );
 
-            if (header != null) {
+                    if (header != null) {
 
-                header.setStyle("""
+                        header.setStyle("""
                     -fx-background-color: #eef1f5;
                     -fx-border-color: transparent;
                     -fx-background-radius: 12 12 0 0;
                 """);
-            }
-        }
-);
+                    }
+                }
+        );
 
         cargarArticulos();
     }
@@ -290,12 +292,16 @@ tablaArticulos.skinProperty().addListener(
 
     @FXML
     private void abrirFormularioArticulo() {
+        modoEdicion = false;
+        codigoOriginal = null;
 
         panelNuevoArticulo.setVisible(true);
         panelNuevoArticulo.setManaged(true);
 
         cardTablaArticulos.setVisible(false);
         cardTablaArticulos.setManaged(false);
+
+        
 
         txtCodigo.clear();
         txtDescripcion.clear();
@@ -315,39 +321,51 @@ tablaArticulos.skinProperty().addListener(
     }
 
     @FXML
-    private void guardarArticulo() {
+private void guardarArticulo() {
 
-        try {
+    try {
 
-            Articulo articulo
-                    = new Articulo(
-                            txtCodigo.getText(),
-                            txtDescripcion.getText(),
-                            Double.parseDouble(txtPrecio.getText()),
-                            Double.parseDouble(txtEnvio.getText()),
-                            Integer.parseInt(txtTiempo.getText())
-                    );
+        Articulo articulo = new Articulo(
+                txtCodigo.getText(),
+                txtDescripcion.getText(),
+                Double.parseDouble(txtPrecio.getText()),
+                Double.parseDouble(txtEnvio.getText()),
+                Integer.parseInt(txtTiempo.getText())
+        );
+
+        if (modoEdicion) {
+
+            controladora.actualizarArticulo(
+                    codigoOriginal,
+                    articulo
+            );
+
+        } else {
 
             controladora.crearArticulo(
                     articulo
             );
-
-            cargarArticulos();
-
-            cancelarNuevoArticulo();
-
-        } catch (Exception e) {
-            e.printStackTrace();
         }
+
+        cargarArticulos();
+
+        cancelarNuevoArticulo();
+
+        modoEdicion = false;
+        codigoOriginal = null;
+
+    } catch (Exception e) {
+        e.printStackTrace();
     }
-    
+}
+
     private void alinearColumnas() {
 
-    colCodigo.setStyle("-fx-alignment: CENTER-LEFT;");
-    colDescripcion.setStyle("-fx-alignment: CENTER-LEFT;");
-    colPrecio.setStyle("-fx-alignment: CENTER-LEFT;");
-    colEnvio.setStyle("-fx-alignment: CENTER-LEFT;");
-    colTiempo.setStyle("-fx-alignment: CENTER-LEFT;");
-}
+        colCodigo.setStyle("-fx-alignment: CENTER-LEFT;");
+        colDescripcion.setStyle("-fx-alignment: CENTER-LEFT;");
+        colPrecio.setStyle("-fx-alignment: CENTER-LEFT;");
+        colEnvio.setStyle("-fx-alignment: CENTER-LEFT;");
+        colTiempo.setStyle("-fx-alignment: CENTER-LEFT;");
+    }
 
 }

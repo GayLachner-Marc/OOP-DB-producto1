@@ -63,30 +63,19 @@ public class MenuArticulos {
 
     private void actualizar() {
 
-        try {
-
-            String codigo = leerTexto("Codigo: ");
-
-            Articulo a = controladora.buscarArticulo(codigo);
-
-            if (a == null) {
-                System.out.println("Articulo no existe.");
-                return;
-            }
-
-            a.setDescripcion(leerTexto("Descripcion: "));
-            a.setPrecioVenta(leerDouble("Precio: "));
-            a.setGastosEnvio(leerDouble("Envio: "));
-            a.setTiempoPreparacion(leerEntero("Tiempo: "));
-
-            controladora.actualizarArticulo(a);
-
-            System.out.println("Articulo actualizado.");
-
-        } catch (ArticuloNoExisteException e) {
-
-            System.out.println(e.getMessage());
+        String codigo = leerTexto("Codigo: ");
+        Articulo a = controladora.buscarArticulo(codigo);
+        if (a == null) {
+            System.out.println("Articulo no existe.");
+            return;
         }
+        a.setDescripcion(leerTexto("Descripcion: "));
+        a.setPrecioVenta(leerDouble("Precio: "));
+        a.setGastosEnvio(leerDouble("Envio: "));
+        a.setTiempoPreparacion(leerEntero("Tiempo: "));
+        //controladora.actualizarArticulo(a);
+        
+        System.out.println("Articulo actualizado.");
     }
 
     private void eliminar() {
