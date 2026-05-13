@@ -25,7 +25,7 @@ public class Articulo {
     @Column(name = "tiempo_preparacion")
     private int tiempoPreparacion;
 
-    // Constructor vacío obligatorio JPA
+    // Constructor vacio
     public Articulo() {
     }
 

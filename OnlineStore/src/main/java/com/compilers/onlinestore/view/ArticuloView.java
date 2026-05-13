@@ -148,8 +148,7 @@ public class ArticuloView extends VBox {
                 new Insets(4, 0, -17, 22)
         );
 
-        // CAMBIO IMPORTANTE:
-        // usamos el atributo de clase
+
         tablaArticulos
                 = new TableView<>();
 
@@ -160,7 +159,6 @@ public class ArticuloView extends VBox {
             -fx-border-color: transparent;
             """);
 
-        // ===== COLUMNAS =====
         TableColumn<Articulo, String> columnaCodigo
                 = new TableColumn<>("CÓDIGO");
 
@@ -406,7 +404,6 @@ public class ArticuloView extends VBox {
                 }
         );
 
-        // NUEVO
         cargarArticulos();
 
         panelArticulos.getChildren().addAll(
