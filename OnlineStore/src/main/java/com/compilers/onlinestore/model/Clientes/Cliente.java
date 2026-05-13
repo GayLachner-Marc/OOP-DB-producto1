@@ -23,6 +23,7 @@ public abstract class Cliente {
         this.email = email;
     }
 
+
     public String getEmail() {
         return email;
     }
@@ -58,4 +59,12 @@ public abstract class Cliente {
     public void setNif(String nif) {
         this.nif = nif;
     }
+
+    public String getTipoCliente() {
+    return "ESTANDAR";
+}
+
+    public double getCuotaAnual() {
+    return 0.0;
+}
 }

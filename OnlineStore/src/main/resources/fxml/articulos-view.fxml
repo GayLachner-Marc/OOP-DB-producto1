@@ -16,6 +16,7 @@
         <Button text="+ Añadir Artículo" onAction="#abrirFormularioArticulo" />
         
         <Button text="Editar Artículo" onAction="#editarArticulo"/>
+        <Button text="- Eliminar Artículo" onAction="#eliminarArticulo"/>
 
     </HBox>
 

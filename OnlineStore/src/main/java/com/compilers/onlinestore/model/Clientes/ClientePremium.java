@@ -15,10 +15,24 @@ public class ClientePremium extends Cliente{
         super(nombre, domicilio, nif, email);
     }
 
+    public ClientePremium(String nombre,
+                      String domicilio,
+                      String nif,
+                      String email,
+                      double cuotaAnual) {
+
+    super(nombre, domicilio, nif, email);
+    this.cuotaAnual = cuotaAnual;
+}
+
+    @Override
     public double getCuotaAnual() {
         return cuotaAnual;
     }
-
+    @Override
+    public String getTipoCliente() {
+        return "PREMIUM";
+    }
     public String getNombre() {
         return nombre;
     }

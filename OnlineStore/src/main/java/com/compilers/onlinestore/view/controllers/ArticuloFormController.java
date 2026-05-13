@@ -32,25 +32,34 @@ public class ArticuloFormController {
     @FXML
     private void guardarArticulo() {
 
-        try {
+    try {
 
-            Articulo a = new Articulo(
-                    Integer.parseInt(txtId.getText()),
-                    Integer.parseInt(txtCodigo.getText()),
-                    txtDescripcion.getText(),
-                    Double.parseDouble(txtPrecio.getText()),
-                    Double.parseDouble(txtEnvio.getText()),
-                    Integer.parseInt(txtTiempo.getText())
-            );
+        Articulo a = new Articulo(
+                Integer.parseInt(txtId.getText()),
+                Integer.parseInt(txtCodigo.getText()),
+                txtDescripcion.getText(),
+                Double.parseDouble(txtPrecio.getText()),
+                Double.parseDouble(txtEnvio.getText()),
+                Integer.parseInt(txtTiempo.getText())
+        );
+
+        if (articuloEditar == null) {
 
             controladora.crearArticulo(a);
 
-            cerrarVentana();
+        } else {
 
-        } catch (Exception e) {
-            e.printStackTrace();
+            controladora.actualizarArticulo(a);
         }
+
+        cerrarVentana();
+
+    } catch (Exception e) {
+        e.printStackTrace();
     }
+}
+
+
 
     private void cerrarVentana() {
 
@@ -66,8 +75,20 @@ public class ArticuloFormController {
             txtEnvio.setText(String.valueOf(articulo.getGastosEnvio()));
             txtTiempo.setText(String.valueOf(articulo.getTiempoPreparacion()));
         }
+
+    private Articulo articuloEditar;
     
     void setArticulo(Articulo articulo) {
-        cargarArticulo(articulo);
+        
+
+    this.articuloEditar = articulo;
+
+    txtId.setText(String.valueOf(articulo.getId()));
+    txtCodigo.setText(String.valueOf(articulo.getCodigo()));
+    txtDescripcion.setText(articulo.getDescripcion());
+    txtPrecio.setText(String.valueOf(articulo.getPrecioVenta()));
+    txtEnvio.setText(String.valueOf(articulo.getGastosEnvio()));
+    txtTiempo.setText(String.valueOf(articulo.getTiempoPreparacion()));
+
     }
 }

@@ -29,7 +29,7 @@
     <TextField fx:id="txtNif"
                promptText="NIF" />
 
-    <TextField fx:id="txtTipoCliente"
+    <ComboBox fx:id="comboTipoCliente"
                promptText="Tipo de Cliente" />
 
     <TextField fx:id="txtCuotaAnual"

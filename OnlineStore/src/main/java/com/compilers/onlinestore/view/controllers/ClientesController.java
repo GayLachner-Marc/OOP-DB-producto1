@@ -15,6 +15,9 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
+import java.util.Optional;
 public class ClientesController {
 
     @FXML
@@ -78,12 +81,13 @@ public class ClientesController {
                         data.getValue().getCuotaAnual()
                 )
         );
+        cargarClientes();
     }
 
     @FXML
     private void abrirFormularioCliente() {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/nuevo_cliente.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/cliente-form.fxml"));
             Parent root = loader.load();
 
             Stage stage = new Stage();
@@ -115,7 +119,7 @@ private void editarCliente() {
 
     if (clienteSeleccionado != null) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/editar_cliente.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/cliente-form.fxml"));
             Parent root = loader.load();
 
             ClienteFormController controller = loader.getController();
@@ -135,4 +139,31 @@ private void editarCliente() {
         }
     }
 }
+
+@FXML
+private void eliminarCliente() {
+
+try{  
+    Cliente seleccionado = tablaClientes.getSelectionModel().getSelectedItem();
+
+    if (seleccionado == null) {
+        return;
+    }
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Eliminar cliente");
+        alert.setHeaderText("¿Estás seguro de que deseas eliminar este cliente?");
+        alert.setContentText(seleccionado.getNombre());
+
+        Optional<ButtonType> resultado = alert.showAndWait();
+
+        if (resultado.isPresent() && resultado.get() == ButtonType.OK) {
+            controladora.eliminarCliente(seleccionado.getNif());
+            cargarClientes();
+        }
+    }catch(Exception e) {
+        e.printStackTrace();
+    }
+
+}
+
 }

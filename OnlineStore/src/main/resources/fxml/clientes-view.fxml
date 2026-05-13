@@ -16,6 +16,8 @@
         <Button text="+ Añadir Cliente" onAction="#abrirFormularioCliente" />
         
         <Button text="Editar Cliente" onAction="#editarCliente"/>
+        
+        <Button text="- Eliminar Cliente" onAction="#eliminarCliente"/>
 
     </HBox>
 
@@ -45,7 +47,7 @@
                          text="Tipo de Cliente"
                          prefWidth="140" />
 
-            <TableColumn fx:id="colCuota"
+            <TableColumn fx:id="colCuotaAnual"
                          text="Cuota Anual"
                          prefWidth="140" />
 
