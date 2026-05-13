@@ -99,7 +99,7 @@ public class Articulo {
     public void setTiempoPreparacion(int tiempoPreparacion) {
         this.tiempoPreparacion = tiempoPreparacion;
     }
-
+/*
     @Override
     public String toString() {
         return "Articulo{" +
@@ -109,5 +109,10 @@ public class Articulo {
                 ", gastosEnvio= " + gastosEnvio +
                 ", tiempoPreparacion= " + tiempoPreparacion +
                 '}';
-    }
+    }*/
+    
+    @Override
+public String toString() {
+    return codigo + " - " + descripcion;
+}
 }

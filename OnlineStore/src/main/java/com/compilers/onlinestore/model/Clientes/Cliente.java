@@ -101,7 +101,7 @@ public abstract class Cliente {
     }
 
     public abstract double calcularDescuentoEnvio();
-
+/*
     @Override
     public String toString() {
         return "Cliente{"
@@ -111,5 +111,9 @@ public abstract class Cliente {
                 + ", nif= " + nif
                 + ", email= " + email
                 + '}';
-    }
+    }*/
+    @Override
+public String toString() {
+    return nombre + " - " + email;
+}
 }

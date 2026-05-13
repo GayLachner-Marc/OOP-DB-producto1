@@ -114,8 +114,9 @@
             <Label text="Email Cliente*"
                    style="-fx-font-weight: bold;" />
 
-            <TextField fx:id="txtEmailCliente"
-                       promptText="cliente@ejemplo.com"/>
+            <ComboBox fx:id="comboClientePedido"
+          promptText="Seleccionar cliente"
+          maxWidth="Infinity"/>
         </VBox>
 
         <!-- Artículo -->
