@@ -19,7 +19,7 @@
         
         <Button text="Editar Cliente"
         onAction="#editarCliente"
-        styleClass="secondary-button"/>
+        styleClass="primary-button"/>
         
         <Button text="Eliminar Cliente"
         onAction="#eliminarCliente"
