@@ -16,6 +16,12 @@ public class OnlineStore extends Application {
 
         Scene scene = new Scene(loader.load());
 
+        scene.getStylesheets().add(
+            getClass().
+            getResource("/css/styles.css")
+            .toExternalForm()
+        );
+
         stage.setTitle("Online Store");
         stage.setWidth(1200);
         stage.setHeight(700);

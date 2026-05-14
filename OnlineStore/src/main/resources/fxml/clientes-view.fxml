@@ -6,21 +6,28 @@
 <VBox xmlns:fx="http://javafx.com/fxml"
       fx:controller="com.compilers.onlinestore.view.controllers.ClientesController"
       spacing="20"
+      styleClass="root"
       style="-fx-padding: 20;">
 
     <HBox spacing="20">
 
         <Label text="Gestión de Clientes"
-               style="-fx-font-size: 28px; -fx-font-weight: bold;" />
+                styleClass="title-label"/>
 
-        <Button text="+ Añadir Cliente" onAction="#abrirFormularioCliente" />
+        <Button text="+ Añadir Cliente" onAction="#abrirFormularioCliente"
+        styleClass="primary-button"/>
         
-        <Button text="Editar Cliente" onAction="#editarCliente"/>
+        <Button text="Editar Cliente"
+        onAction="#editarCliente"
+        styleClass="secondary-button"/>
         
-        <Button text="- Eliminar Cliente" onAction="#eliminarCliente"/>
+        <Button text="Eliminar Cliente"
+        onAction="#eliminarCliente"
+        styleClass="danger-button"/>
 
     </HBox>
 
+    <VBox styleClass="card">
     <TableView fx:id="tablaClientes"
                prefHeight="600">
 
@@ -55,4 +62,5 @@
 
     </TableView>
 
+    </VBox>
 </VBox>

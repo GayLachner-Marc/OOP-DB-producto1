@@ -4,17 +4,18 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox spacing="10"
+<VBox spacing="15"
       alignment="CENTER"
       xmlns:fx="http://javafx.com/fxml"
-      fx:controller="com.compilers.onlinestore.view.controllers.ClienteFormController">
+      fx:controller="com.compilers.onlinestore.view.controllers.ClienteFormController"
+      styleClass="card">
 
     <padding>
         <Insets top="20" right="20" bottom="20" left="20"/>
     </padding>
 
     <Label text="Nuevo Cliente"
-           style="-fx-font-size: 20px; -fx-font-weight: bold;" />
+       styleClass="title-label"/>
     
 
     <TextField fx:id="txtNombre"
@@ -36,7 +37,6 @@
                promptText="Cuota Anual" />
 
     <Button text="Guardar"
-            onAction="#guardarCliente"
-            style="-fx-background-color: #2563eb; -fx-text-fill: white;" />
-
+        onAction="#guardarCliente"
+        styleClass="primary-button"/>
 </VBox>
