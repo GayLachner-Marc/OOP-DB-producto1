@@ -155,14 +155,143 @@ public class ClienteView extends VBox {
             );
         });
 
-        tablaClientes.getColumns().addAll(
-                colNombre,
-                colEmail,
-                colDomicilio,
-                colNif,
-                colTipo
-        );
+        TableColumn<Cliente, Void> colAcciones
+        = new TableColumn<>("ACCIONES");
 
+        colAcciones.setCellFactory(param -> new TableCell<>() {
+
+    private final Button btnEditar
+            = new Button("✏");
+
+    private final Button btnEliminar
+            = new Button("🗑");
+
+    private final HBox contenedor
+            = new HBox(10, btnEditar, btnEliminar);
+
+    {
+
+        contenedor.setAlignment(Pos.CENTER);
+String estiloEditar = """
+    -fx-background-color: #2563eb;
+    -fx-text-fill: white;
+    -fx-background-radius: 8;
+    -fx-cursor: hand;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-padding: 6 10;
+    """;
+
+String estiloEditarHover = """
+    -fx-background-color: #1d4ed8;
+    -fx-text-fill: white;
+    -fx-background-radius: 8;
+    -fx-cursor: hand;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-padding: 6 10;
+    -fx-effect: dropshadow(
+        three-pass-box,
+        rgba(37,99,235,0.4),
+        10,
+        0,
+        0,
+        2
+    );
+    """;
+
+btnEditar.setStyle(estiloEditar);
+btnEditar.setOnMouseEntered(e -> {
+    btnEditar.setStyle(estiloEditarHover);
+});
+
+btnEditar.setOnMouseExited(e -> {
+    btnEditar.setStyle(estiloEditar);
+});
+
+
+     String estiloEliminar = """
+    -fx-background-color: #ef4444;
+    -fx-text-fill: white;
+    -fx-background-radius: 8;
+    -fx-cursor: hand;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-padding: 6 10;
+    """;
+
+String estiloEliminarHover = """
+    -fx-background-color: #dc2626;
+    -fx-text-fill: white;
+    -fx-background-radius: 8;
+    -fx-cursor: hand;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-padding: 6 10;
+    -fx-effect: dropshadow(
+        three-pass-box,
+        rgba(239,68,68,0.4),
+        10,
+        0,
+        0,
+        2
+    );
+    """;
+
+btnEliminar.setStyle(estiloEliminar);
+
+btnEliminar.setOnMouseEntered(e -> {
+    btnEliminar.setStyle(estiloEliminarHover);
+});
+
+btnEliminar.setOnMouseExited(e -> {
+    btnEliminar.setStyle(estiloEliminar);
+});
+        btnEditar.setOnAction(event -> {
+
+            Cliente cliente
+                    = getTableView()
+                    .getItems()
+                    .get(getIndex());
+
+            mostrarFormularioEditar(cliente);
+        });
+
+        btnEliminar.setOnAction(event -> {
+
+            Cliente cliente
+                    = getTableView()
+                    .getItems()
+                    .get(getIndex());
+
+            eliminarCliente(cliente);
+        });
+    }
+
+    @Override
+    protected void updateItem(Void item, boolean empty) {
+
+        super.updateItem(item, empty);
+
+        if (empty) {
+
+            setGraphic(null);
+
+        } else {
+
+            setGraphic(contenedor);
+        }
+    }
+});
+
+       tablaClientes.getColumns().addAll(
+        colNombre,
+        colEmail,
+        colDomicilio,
+        colNif,
+        colTipo,
+        colAcciones
+);
         tablaClientes.setPrefHeight(550);
 
         cargarClientes();
@@ -342,4 +471,144 @@ public class ClienteView extends VBox {
                 contenedorFormulario
         );
     }
+
+    private void eliminarCliente(Cliente cliente) {
+
+    try {
+
+        controladora.eliminarCliente(
+                cliente.getEmail()
+        );
+
+        cargarClientes();
+
+    } catch (Exception e) {
+
+        e.printStackTrace();
+    }
+}
+private void mostrarFormularioEditar(
+        Cliente cliente
+) {
+
+    panelClientes.getChildren().clear();
+
+    Label tituloFormulario
+            = new Label(
+                    "Editar Cliente"
+            );
+
+    tituloFormulario.setStyle("""
+        -fx-font-size: 20px;
+        -fx-font-weight: bold;
+        """);
+
+    GridPane formulario = new GridPane();
+
+    formulario.setHgap(15);
+    formulario.setVgap(15);
+
+    TextField txtNombre
+            = new TextField(
+                    cliente.getNombre()
+            );
+
+    TextField txtEmail
+            = new TextField(
+                    cliente.getEmail()
+            );
+
+    txtEmail.setDisable(true);
+
+    TextField txtDomicilio
+            = new TextField(
+                    cliente.getDomicilio()
+            );
+
+    TextField txtNif
+            = new TextField(
+                    cliente.getNif()
+            );
+
+    Button btnCancelar
+            = new Button(
+                    "Cancelar"
+            );
+
+    Button btnGuardar
+            = new Button(
+                    "Guardar"
+            );
+
+    btnGuardar.setStyle("""
+        -fx-background-color: #2563eb;
+        -fx-text-fill: white;
+        """);
+
+    formulario.add(new Label("Nombre"), 0, 0);
+    formulario.add(txtNombre, 1, 0);
+
+    formulario.add(new Label("Email"), 0, 1);
+    formulario.add(txtEmail, 1, 1);
+
+    formulario.add(new Label("Domicilio"), 0, 2);
+    formulario.add(txtDomicilio, 1, 2);
+
+    formulario.add(new Label("NIF"), 0, 3);
+    formulario.add(txtNif, 1, 3);
+
+    btnGuardar.setOnAction(e -> {
+
+        try {
+
+            cliente.setNombre(
+                    txtNombre.getText()
+            );
+
+            cliente.setDomicilio(
+                    txtDomicilio.getText()
+            );
+
+            cliente.setNif(
+                    txtNif.getText()
+            );
+
+            controladora.actualizarCliente(
+                    cliente
+            );
+
+            mostrarTablaClientes();
+
+        } catch (Exception ex) {
+
+            ex.printStackTrace();
+        }
+    });
+
+    btnCancelar.setOnAction(e -> {
+        mostrarTablaClientes();
+    });
+
+    HBox botones = new HBox(
+            10,
+            btnCancelar,
+            btnGuardar
+    );
+
+    botones.setAlignment(
+            Pos.CENTER_RIGHT
+    );
+
+    VBox contenedor = new VBox(
+            20,
+            tituloFormulario,
+            formulario,
+            botones
+    );
+
+    panelClientes.getChildren().add(
+            contenedor
+    );
+}
+
 }
