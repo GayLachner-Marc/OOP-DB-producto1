@@ -31,6 +31,7 @@ public class ClienteFormController {
     private TextField txtCuotaAnual;
 
     private final Controladora controladora = new Controladora();
+    private Cliente clienteEditar;
 
 
 @FXML
@@ -56,7 +57,7 @@ private void guardarCliente() {
 
         Cliente cliente;
 
-        if ("Premium".equals(tipo)) {
+        if ("PREMIUM".equals(tipo)) {
 
             double cuota = Double.parseDouble(
                     txtCuotaAnual.getText()
@@ -80,7 +81,26 @@ private void guardarCliente() {
             );
         }
 
-        controladora.crearCliente(cliente);
+        if (clienteEditar != null) {
+
+        clienteEditar.setNombre(nombre);
+        clienteEditar.setDomicilio(domicilio);
+        clienteEditar.setNif(nif);
+        
+        if (clienteEditar instanceof ClientePremium premium) {
+
+        premium.setCuotaAnual(
+            Double.parseDouble(txtCuotaAnual.getText())
+        );
+        }
+
+
+        controladora.actualizarCliente(clienteEditar);
+
+        } else {
+
+            controladora.crearCliente(cliente);
+        }
 
         cerrarVentana();
 
@@ -97,6 +117,8 @@ stage.close();
 
 
 void setCliente(Cliente cliente) {
+        this.clienteEditar = cliente;
+        comboTipoCliente.setDisable(true);
         cargarCliente(cliente);
     }
 
@@ -112,6 +134,17 @@ public void cargarCliente(Cliente cliente) {
     txtCuotaAnual.setText(
             String.valueOf(cliente.getCuotaAnual())
     );
+    if (cliente instanceof ClientePremium premium) {
+
+    txtCuotaAnual.setText(
+            String.valueOf(premium.getCuotaAnual())
+    );
+
+} else {
+
+    txtCuotaAnual.setDisable(true);
+}
+
 }
 
 }

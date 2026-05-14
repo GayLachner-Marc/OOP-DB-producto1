@@ -29,6 +29,9 @@ public class ClientePremium extends Cliente{
     public double getCuotaAnual() {
         return cuotaAnual;
     }
+    public void setCuotaAnual(double cuotaAnual) {
+    this.cuotaAnual = cuotaAnual;
+}
     @Override
     public String getTipoCliente() {
         return "PREMIUM";
@@ -64,6 +67,8 @@ public class ClientePremium extends Cliente{
     public void setEmail(String email) {
         this.email = email;
     }
+    
+
 
     @Override
     public String toString() {

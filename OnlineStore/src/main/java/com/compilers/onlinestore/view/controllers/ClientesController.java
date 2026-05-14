@@ -143,27 +143,16 @@ private void editarCliente() {
 @FXML
 private void eliminarCliente() {
 
-try{  
-    Cliente seleccionado = tablaClientes.getSelectionModel().getSelectedItem();
+    Cliente clienteSeleccionado =
+            tablaClientes.getSelectionModel().getSelectedItem();
 
-    if (seleccionado == null) {
-        return;
+    if (clienteSeleccionado != null) {
+
+        controladora.eliminarCliente(
+                clienteSeleccionado.getEmail()
+        );
+
+        cargarClientes();
     }
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle("Eliminar cliente");
-        alert.setHeaderText("¿Estás seguro de que deseas eliminar este cliente?");
-        alert.setContentText(seleccionado.getNombre());
-
-        Optional<ButtonType> resultado = alert.showAndWait();
-
-        if (resultado.isPresent() && resultado.get() == ButtonType.OK) {
-            controladora.eliminarCliente(seleccionado.getNif());
-            cargarClientes();
-        }
-    }catch(Exception e) {
-        e.printStackTrace();
-    }
-
 }
-
 }
