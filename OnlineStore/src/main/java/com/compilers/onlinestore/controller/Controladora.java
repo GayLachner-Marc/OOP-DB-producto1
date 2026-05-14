@@ -7,6 +7,7 @@ import com.compilers.onlinestore.util.JPAUtil;
 import jakarta.persistence.EntityManager;
 import com.compilers.onlinestore.exceptions.*;
 import java.util.List;
+import java.time.LocalDateTime;
 
 public class Controladora {
 
@@ -248,84 +249,84 @@ public class Controladora {
     }
 
     public boolean actualizarArticulo(
-        String codigoOriginal,
-        Articulo articuloNuevo
-) {
+            String codigoOriginal,
+            Articulo articuloNuevo
+    ) {
 
-    EntityManager em =
-            JPAUtil.getEntityManager();
+        EntityManager em
+                = JPAUtil.getEntityManager();
 
-    try {
+        try {
 
-        em.getTransaction().begin();
+            em.getTransaction().begin();
 
-        Articulo existente =
-                em.createQuery(
-                        "SELECT a FROM Articulo a WHERE a.codigo = :codigo",
-                        Articulo.class
-                )
-                .setParameter(
-                        "codigo",
-                        codigoOriginal
-                )
-                .getResultStream()
-                .findFirst()
-                .orElse(null);
+            Articulo existente
+                    = em.createQuery(
+                            "SELECT a FROM Articulo a WHERE a.codigo = :codigo",
+                            Articulo.class
+                    )
+                            .setParameter(
+                                    "codigo",
+                                    codigoOriginal
+                            )
+                            .getResultStream()
+                            .findFirst()
+                            .orElse(null);
 
-        if (existente == null) {
+            if (existente == null) {
 
-            em.getTransaction().rollback();
+                em.getTransaction().rollback();
 
-            System.out.println(
-                    "Articulo no existe."
+                System.out.println(
+                        "Articulo no existe."
+                );
+
+                return false;
+            }
+
+            // ACTUALIZAR DATOS
+            existente.setCodigo(
+                    articuloNuevo.getCodigo()
             );
 
+            existente.setDescripcion(
+                    articuloNuevo.getDescripcion()
+            );
+
+            existente.setPrecioVenta(
+                    articuloNuevo.getPrecioVenta()
+            );
+
+            existente.setGastosEnvio(
+                    articuloNuevo.getGastosEnvio()
+            );
+
+            existente.setTiempoPreparacion(
+                    articuloNuevo.getTiempoPreparacion()
+            );
+
+            em.merge(existente);
+
+            em.getTransaction().commit();
+
+            return true;
+
+        } catch (Exception e) {
+
+            if (em.getTransaction().isActive()) {
+
+                em.getTransaction().rollback();
+            }
+
+            e.printStackTrace();
+
             return false;
+
+        } finally {
+
+            em.close();
         }
-
-        // ACTUALIZAR DATOS
-        existente.setCodigo(
-                articuloNuevo.getCodigo()
-        );
-
-        existente.setDescripcion(
-                articuloNuevo.getDescripcion()
-        );
-
-        existente.setPrecioVenta(
-                articuloNuevo.getPrecioVenta()
-        );
-
-        existente.setGastosEnvio(
-                articuloNuevo.getGastosEnvio()
-        );
-
-        existente.setTiempoPreparacion(
-                articuloNuevo.getTiempoPreparacion()
-        );
-
-        em.merge(existente);
-
-        em.getTransaction().commit();
-
-        return true;
-
-    } catch (Exception e) {
-
-        if (em.getTransaction().isActive()) {
-
-            em.getTransaction().rollback();
-        }
-
-        e.printStackTrace();
-
-        return false;
-
-    } finally {
-
-        em.close();
     }
-}
 
     public boolean eliminarArticulo(String codigo)
             throws ArticuloNoExisteException {
@@ -365,6 +366,27 @@ public class Controladora {
         } finally {
             em.close();
         }
+    }
+
+    private boolean pedidoEditable(Pedido p) {
+
+        if (p == null) {
+            return false;
+        }
+
+        if (p.estaEnviado()) {
+            return false;
+        }
+
+        LocalDateTime limite
+                = p.getFechaHora()
+                        .plusMinutes(
+                                p.getArticulo()
+                                        .getTiempoPreparacion()
+                        );
+
+        return LocalDateTime.now()
+                .isBefore(limite);
     }
 
     // ================= PEDIDOS =================
@@ -472,11 +494,24 @@ public class Controladora {
                 throw new PedidoNoExisteException("Pedido no encontrado");
             }
 
-            if (existente.estaEnviado()) {
-                throw new PedidoYaEnviadoException("El pedido ya fue enviado");
+            if (!pedidoEditable(existente)) {
+
+                throw new RuntimeException(
+                        "El pedido ya no puede modificarse"
+                );
             }
 
-            existente.setCantidad(p.getCantidad());
+            existente.setCliente(
+                    em.merge(p.getCliente())
+            );
+
+            existente.setArticulo(
+                    em.merge(p.getArticulo())
+            );
+
+            existente.setCantidad(
+                    p.getCantidad()
+            );
 
             em.getTransaction().commit();
 
@@ -507,9 +542,10 @@ public class Controladora {
                 return false;
             }
 
-            if (p.estaEnviado()) {
-                throw new PedidoYaEnviadoException(
-                        "No se puede eliminar el pedido, ya fue enviado"
+            if (!pedidoEditable(p)) {
+
+                throw new RuntimeException(
+                        "El pedido ya no puede eliminarse"
                 );
             }
 
