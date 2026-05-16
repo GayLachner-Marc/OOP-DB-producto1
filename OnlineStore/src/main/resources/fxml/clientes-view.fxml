@@ -7,59 +7,104 @@
 <VBox xmlns:fx="http://javafx.com/fxml"
       fx:controller="com.compilers.onlinestore.view.controllers.ClientesController"
       spacing="20"
-      style="-fx-padding: 20;">
+      style="-fx-padding: 20;
+             -fx-background-color: #f8fafc;">
 
     <!-- TABLA -->
     <VBox fx:id="cardTablaClientes"
-          spacing="20">
+          spacing="20"
+          prefWidth="1100">
 
-        <HBox spacing="20">
+        <!-- HEADER -->
+        <HBox alignment="CENTER_LEFT">
 
             <Label text="Gestión de Clientes"
                    style="-fx-font-size: 28px;
                           -fx-font-weight: bold;" />
 
+            <Region HBox.hgrow="ALWAYS"/>
+
             <Button text="+ Añadir Cliente"
-                    onAction="#abrirFormularioCliente" />
+                    onAction="#abrirFormularioCliente"
+                    style="
+                        -fx-background-color: #2563eb;
+                        -fx-text-fill: white;
+                        -fx-font-weight: bold;
+                        -fx-background-radius: 12;
+                        -fx-padding: 12 18;
+                    "/>
 
         </HBox>
 
-        <TableView fx:id="tablaClientes"
-                   prefHeight="600">
+        <!-- FILTROS -->
+        <HBox spacing="12">
 
-            <columns>
+            <Button fx:id="btnTodos"
+                    text="Todos los Clientes"
+                    onAction="#mostrarTodosClientes"/>
 
-                <TableColumn fx:id="colNombre"
-                             text="Nombre"
-                             prefWidth="120" />
+            <Button fx:id="btnEstandar"
+                    text="Clientes Estándar"
+                    onAction="#mostrarClientesEstandar"/>
 
-                <TableColumn fx:id="colEmail"
-                             text="Email"
-                             prefWidth="250" />
+            <Button fx:id="btnPremium"
+                    text="Clientes Premium"
+                    onAction="#mostrarClientesPremium"/>
 
-                <TableColumn fx:id="colDomicilio"
-                             text="Domicilio"
-                             prefWidth="220" />
+        </HBox>
 
-                <TableColumn fx:id="colNif"
-                             text="NIF"
-                             prefWidth="140" />
+        <!-- CARD TABLA -->
+        <VBox spacing="12"
+              style="
+                -fx-background-color: white;
+                -fx-background-radius: 14;
+                -fx-border-radius: 14;
+                -fx-border-color: #e5e7eb;
+              ">
 
-                <TableColumn fx:id="colTipoCliente"
-                             text="Tipo Cliente"
-                             prefWidth="120" />
+            <Label text="Clientes"
+                   style="
+                        -fx-font-size: 22px;
+                        -fx-font-weight: bold;
+                        -fx-padding: 20 20 0 20;
+                   "/>
 
-                <TableColumn fx:id="colCuotaAnual"
-                             text="Cuota Anual"
-                             prefWidth="120" />
+            <TableView fx:id="tablaClientes"
+                       VBox.vgrow="ALWAYS"
+                       style="
+                -fx-background-color: transparent;
+                -fx-border-color: transparent;
+           ">
 
-                <TableColumn fx:id="colAcciones"
-                             text="Acciones"
-                             prefWidth="120" />
+                <columns>
 
-            </columns>
+                    <TableColumn fx:id="colEmail"
+                                 text="EMAIL" />
 
-        </TableView>
+                    <TableColumn fx:id="colNombre"
+                                 text="NOMBRE" />
+
+                    <TableColumn fx:id="colNif"
+                                 text="NIF" />
+
+                    <TableColumn fx:id="colDomicilio"
+                                 text="DOMICILIO" />
+
+                    <TableColumn fx:id="colTipoCliente"
+                                 text="TIPO" />
+
+                    <TableColumn fx:id="colCuotaAnual"
+                                 text="CUOTA"
+                                 visible="false" />
+
+                    <TableColumn fx:id="colAcciones"
+                                 text="ACCIONES" />
+
+                </columns>
+
+            </TableView>
+
+        </VBox>
 
     </VBox>
 
@@ -67,53 +112,140 @@
     <VBox fx:id="panelNuevoCliente"
           visible="false"
           managed="false"
-          spacing="15"
-          alignment="CENTER"
-          style="-fx-background-color: white;">
-
-        <padding>
-            <Insets top="20"
-                    right="20"
-                    bottom="20"
-                    left="20"/>
-        </padding>
+          spacing="25"
+          prefWidth="1100"
+          fillWidth="true"
+          style="
+            -fx-background-color: white;
+            -fx-background-radius: 14;
+            -fx-border-radius: 14;
+            -fx-border-color: #e5e7eb;
+            -fx-padding: 25;
+      ">
 
         <Label text="Cliente"
-               style="-fx-font-size: 20px;
-                      -fx-font-weight: bold;" />
+               style="
+                -fx-font-size: 24px;
+                -fx-font-weight: bold;
+           "/>
 
-        <TextField fx:id="txtNombre"
-                   promptText="Nombre"/>
+        <!-- FORMULARIO -->
+        <GridPane hgap="20"
+                  vgap="18"
+                  maxWidth="Infinity">
 
-        <TextField fx:id="txtEmail"
-                   promptText="Email"/>
+            <columnConstraints>
+                <ColumnConstraints percentWidth="50"
+                                   hgrow="ALWAYS"/>
+                <ColumnConstraints percentWidth="50"
+                                   hgrow="ALWAYS"/>
+            </columnConstraints>
 
-        <TextField fx:id="txtDomicilio"
-                   promptText="Domicilio"/>
+            <!-- EMAIL -->
+            <VBox spacing="6"
+                  GridPane.columnIndex="0"
+                  GridPane.rowIndex="0">
 
-        <TextField fx:id="txtNif"
-                   promptText="NIF"/>
+                <Label text="Email*" />
 
-        <ComboBox fx:id="comboTipoCliente"
-                  promptText="Tipo de Cliente"
-                  prefWidth="260"/>
+                <TextField fx:id="txtEmail"
+                           promptText="cliente@email.com"
+                           maxWidth="Infinity"/>
+            </VBox>
 
-        <TextField fx:id="txtCuotaAnual"
-                   promptText="Cuota Anual"
-                   visible="false"
-                   managed="false"/>
+            <!-- NOMBRE -->
+            <VBox spacing="6"
+                  GridPane.columnIndex="1"
+                  GridPane.rowIndex="0">
 
-        <HBox spacing="10"
-              alignment="CENTER">
+                <Label text="Nombre*" />
 
-            <Button text="Guardar"
-                    onAction="#guardarCliente"
-                    style="-fx-background-color: #2563eb;
-                           -fx-text-fill: white;
-                           -fx-font-weight: bold;" />
+                <TextField fx:id="txtNombre"
+                           promptText="Nombre completo"
+                           maxWidth="Infinity"/>
+            </VBox>
+
+            <!-- NIF -->
+            <VBox spacing="6"
+                  GridPane.columnIndex="0"
+                  GridPane.rowIndex="1">
+
+                <Label text="NIF*" />
+
+                <TextField fx:id="txtNif"
+                           promptText="12345678A"
+                           maxWidth="Infinity"/>
+            </VBox>
+
+            <!-- TIPO -->
+            <VBox spacing="6"
+                  GridPane.columnIndex="1"
+                  GridPane.rowIndex="1">
+
+                <Label text="Tipo de Cliente*" />
+
+                <ComboBox fx:id="comboTipoCliente"
+                          promptText="Tipo Cliente"
+                          maxWidth="Infinity"/>
+            </VBox>
+
+            <!-- DOMICILIO -->
+            <VBox spacing="6"
+                  GridPane.columnIndex="0"
+                  GridPane.rowIndex="2">
+
+                <Label text="Domicilio*" />
+
+                <TextField fx:id="txtDomicilio"
+                           promptText="Dirección completa"
+                           maxWidth="Infinity"/>
+            </VBox>
+
+            <!-- CUOTA ANUAL -->
+            <VBox fx:id="contenedorCuota"
+                  spacing="6"
+                  visible="false"
+                  managed="false"
+                  GridPane.columnIndex="1"
+                  GridPane.rowIndex="2">
+
+                <Label fx:id="lblCuota"
+                       text="Cuota Anual*" />
+
+                <TextField fx:id="txtCuotaAnual"
+                           promptText="30"
+                           maxWidth="Infinity"/>
+            </VBox>
+
+        </GridPane>
+
+        <!-- BOTONES -->
+        <HBox spacing="12"
+              alignment="CENTER_RIGHT">
+
+            <Region HBox.hgrow="ALWAYS"/>
 
             <Button text="Cancelar"
-                    onAction="#cancelarNuevoCliente"/>
+                    onAction="#cancelarNuevoCliente"
+                    style="
+                    -fx-background-color: #eef2f7;
+                    -fx-text-fill: #334155;
+                    -fx-font-weight: bold;
+                    -fx-background-radius: 12;
+                    -fx-padding: 12 18;
+                "/>
+
+            <Button fx:id="btnGuardarCliente"
+                    text="Guardar Cliente"
+                    onAction="#guardarCliente"
+                    style="
+                    -fx-background-color: #2563eb;
+                    -fx-text-fill: white;
+                    -fx-font-weight: bold;
+                    -fx-background-radius: 12;
+                    -fx-padding: 12 18;
+                "/>
+
         </HBox>
 
     </VBox>
