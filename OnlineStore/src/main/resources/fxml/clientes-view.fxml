@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
@@ -8,49 +9,113 @@
       spacing="20"
       style="-fx-padding: 20;">
 
-    <HBox spacing="20">
+    <!-- TABLA -->
+    <VBox fx:id="cardTablaClientes"
+          spacing="20">
 
-        <Label text="Gestión de Clientes"
-               style="-fx-font-size: 28px; -fx-font-weight: bold;" />
+        <HBox spacing="20">
 
-        <Button text="+ Añadir Cliente" onAction="#abrirFormularioCliente" />
-        
-        <Button text="Editar Cliente" onAction="#editarCliente"/>
+            <Label text="Gestión de Clientes"
+                   style="-fx-font-size: 28px;
+                          -fx-font-weight: bold;" />
 
-    </HBox>
+            <Button text="+ Añadir Cliente"
+                    onAction="#abrirFormularioCliente" />
 
-    <TableView fx:id="tablaClientes"
-               prefHeight="600">
+        </HBox>
 
-        <columns>
+        <TableView fx:id="tablaClientes"
+                   prefHeight="600">
 
+            <columns>
 
-            <TableColumn fx:id="colNombre"
-                         text="Nombre"
-                         prefWidth="120" />
+                <TableColumn fx:id="colNombre"
+                             text="Nombre"
+                             prefWidth="120" />
 
-            <TableColumn fx:id="colEmail"
-                         text="Email"
-                         prefWidth="350" />
+                <TableColumn fx:id="colEmail"
+                             text="Email"
+                             prefWidth="250" />
 
-            <TableColumn fx:id="colDomicilio"
-                         text="Domicilio"
-                         prefWidth="350" />
+                <TableColumn fx:id="colDomicilio"
+                             text="Domicilio"
+                             prefWidth="220" />
 
-            <TableColumn fx:id="colNif"
-                         text="NIF"
-                         prefWidth="140" />
+                <TableColumn fx:id="colNif"
+                             text="NIF"
+                             prefWidth="140" />
 
-            <TableColumn fx:id="colTipoCliente"
-                         text="Tipo de Cliente"
-                         prefWidth="140" />
+                <TableColumn fx:id="colTipoCliente"
+                             text="Tipo Cliente"
+                             prefWidth="120" />
 
-            <TableColumn fx:id="colCuotaAnual"
-             text="Cuota Anual"
-             prefWidth="140" />
+                <TableColumn fx:id="colCuotaAnual"
+                             text="Cuota Anual"
+                             prefWidth="120" />
 
-        </columns>
+                <TableColumn fx:id="colAcciones"
+                             text="Acciones"
+                             prefWidth="120" />
 
-    </TableView>
+            </columns>
+
+        </TableView>
+
+    </VBox>
+
+    <!-- FORMULARIO -->
+    <VBox fx:id="panelNuevoCliente"
+          visible="false"
+          managed="false"
+          spacing="15"
+          alignment="CENTER"
+          style="-fx-background-color: white;">
+
+        <padding>
+            <Insets top="20"
+                    right="20"
+                    bottom="20"
+                    left="20"/>
+        </padding>
+
+        <Label text="Cliente"
+               style="-fx-font-size: 20px;
+                      -fx-font-weight: bold;" />
+
+        <TextField fx:id="txtNombre"
+                   promptText="Nombre"/>
+
+        <TextField fx:id="txtEmail"
+                   promptText="Email"/>
+
+        <TextField fx:id="txtDomicilio"
+                   promptText="Domicilio"/>
+
+        <TextField fx:id="txtNif"
+                   promptText="NIF"/>
+
+        <ComboBox fx:id="comboTipoCliente"
+                  promptText="Tipo de Cliente"
+                  prefWidth="260"/>
+
+        <TextField fx:id="txtCuotaAnual"
+                   promptText="Cuota Anual"
+                   visible="false"
+                   managed="false"/>
+
+        <HBox spacing="10"
+              alignment="CENTER">
+
+            <Button text="Guardar"
+                    onAction="#guardarCliente"
+                    style="-fx-background-color: #2563eb;
+                           -fx-text-fill: white;
+                           -fx-font-weight: bold;" />
+
+            <Button text="Cancelar"
+                    onAction="#cancelarNuevoCliente"/>
+        </HBox>
+
+    </VBox>
 
 </VBox>
