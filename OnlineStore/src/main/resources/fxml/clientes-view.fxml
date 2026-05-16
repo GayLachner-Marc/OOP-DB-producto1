@@ -140,22 +140,10 @@
                 <ColumnConstraints percentWidth="50"
                                    hgrow="ALWAYS"/>
             </columnConstraints>
-
-            <!-- EMAIL -->
-            <VBox spacing="6"
-                  GridPane.columnIndex="0"
-                  GridPane.rowIndex="0">
-
-                <Label text="Email*" />
-
-                <TextField fx:id="txtEmail"
-                           promptText="cliente@email.com"
-                           maxWidth="Infinity"/>
-            </VBox>
-
+            
             <!-- NOMBRE -->
             <VBox spacing="6"
-                  GridPane.columnIndex="1"
+                  GridPane.columnIndex="0"
                   GridPane.rowIndex="0">
 
                 <Label text="Nombre*" />
@@ -165,6 +153,18 @@
                            maxWidth="Infinity"/>
             </VBox>
 
+            <!-- EMAIL -->
+            <VBox spacing="6"
+                  GridPane.columnIndex="1"
+                  GridPane.rowIndex="0">
+
+                <Label text="Email*" />
+
+                <TextField fx:id="txtEmail"
+                           promptText="cliente@email.com"
+                           maxWidth="Infinity"/>
+            </VBox>
+            
             <!-- NIF -->
             <VBox spacing="6"
                   GridPane.columnIndex="0"

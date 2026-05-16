@@ -210,30 +210,31 @@ public class ClientesController {
         tablaClientes.setColumnResizePolicy(
                 TableView.CONSTRAINED_RESIZE_POLICY_ALL_COLUMNS
         );
+        
+        colNombre.setStyle(
+                "-fx-alignment: CENTER;"
+        );
 
         colEmail.setStyle(
-                "-fx-alignment: CENTER-LEFT;"
+                "-fx-alignment: CENTER;"
         );
 
-        colNombre.setStyle(
-                "-fx-alignment: CENTER-LEFT;"
-        );
-
+        
         colNif.setStyle(
-                "-fx-alignment: CENTER-LEFT;"
+                "-fx-alignment: CENTER;"
         );
 
         colDomicilio.setStyle(
-                "-fx-alignment: CENTER-LEFT;"
+                "-fx-alignment: CENTER;"
         );
 
         colTipoCliente.setStyle(
-                "-fx-alignment: CENTER-LEFT;"
+                "-fx-alignment: CENTER;"
         );
 
         colAcciones.setStyle(
-                "-fx-alignment: CENTER-LEFT;"
-        );
+    "-fx-alignment: CENTER;"
+);
         cargarClientes();
     }
 
@@ -316,8 +317,8 @@ public class ClientesController {
             );
 
             botones.setStyle(
-                    "-fx-alignment: center-left;"
-            );
+    "-fx-alignment: center;"
+);
 
             btnEditar.setStyle("""
                 -fx-background-color: transparent;
