@@ -14,6 +14,7 @@ import javafx.scene.control.TableCell;
 import javafx.scene.layout.HBox;
 import javafx.scene.control.Button;
 import javafx.scene.control.Control;
+import javafx.scene.shape.SVGPath;
 
 public class ArticulosController {
 
@@ -101,41 +102,99 @@ public class ArticulosController {
         alinearColumnas();
 
         // ==========================
-        // COLUMNA ACCIONES
-        // ==========================
+// COLUMNA ACCIONES
+// ==========================
         colAcciones.setCellFactory(param
                 -> new TableCell<Articulo, Void>() {
 
+            // ==========================
+            // ICONO SVG EDITAR
+            // ==========================
+            private final SVGPath iconoEditar
+                    = new SVGPath();
+
+            {
+                iconoEditar.setContent(
+                        "M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z "
+                        + "M15 5 19 9"
+                );
+
+                iconoEditar.setStyle("""
+            -fx-fill: transparent;
+            -fx-stroke: #2563eb;
+            -fx-stroke-width: 2;
+        """);
+
+                iconoEditar.setScaleX(0.75);
+                iconoEditar.setScaleY(0.75);
+            }
+
+            // ==========================
+            // ICONO SVG ELIMINAR
+            // ==========================
+            private final SVGPath iconoEliminar
+                    = new SVGPath();
+
+            {
+                iconoEliminar.setContent(
+                        "M10 11V17 "
+                        + "M14 11V17 "
+                        + "M19 6V20A2 2 0 0 1 17 22H7A2 2 0 0 1 5 20V6 "
+                        + "M3 6H21 "
+                        + "M8 6V4A2 2 0 0 1 10 2H14A2 2 0 0 1 16 4V6"
+                );
+
+                iconoEliminar.setStyle("""
+            -fx-fill: transparent;
+            -fx-stroke: #ef4444;
+            -fx-stroke-width: 2;
+        """);
+
+                iconoEliminar.setScaleX(0.75);
+                iconoEliminar.setScaleY(0.75);
+            }
+
+            // ==========================
+            // BOTONES
+            // ==========================
             private final Button btnEditar
-                    = new Button("✏");
+                    = new Button();
 
             private final Button btnEliminar
-                    = new Button("🗑");
+                    = new Button();
 
             private final HBox botones
                     = new HBox(
-                            10,
+                            12,
                             btnEditar,
                             btnEliminar
                     );
 
             {
 
+                btnEditar.setGraphic(
+                        iconoEditar
+                );
+
+                btnEliminar.setGraphic(
+                        iconoEliminar
+                );
+
                 botones.setStyle(
                         "-fx-alignment: center;"
                 );
 
                 btnEditar.setStyle("""
-                -fx-background-color: transparent;
-                -fx-font-size: 16px;
-                -fx-cursor: hand;
-            """);
+            -fx-background-color: transparent;
+            -fx-cursor: hand;
+            -fx-padding: 0;
+        """);
 
                 btnEliminar.setStyle("""
-                -fx-background-color: transparent;
-                -fx-font-size: 16px;
-                -fx-cursor: hand;
-            """);
+            -fx-background-color: transparent;
+            -fx-cursor: hand;
+            -fx-padding: 0;
+        """);
 
                 // BOTÓN EDITAR
                 btnEditar.setOnAction(event -> {
@@ -301,8 +360,6 @@ public class ArticulosController {
         cardTablaArticulos.setVisible(false);
         cardTablaArticulos.setManaged(false);
 
-        
-
         txtCodigo.clear();
         txtDescripcion.clear();
         txtPrecio.clear();
@@ -321,51 +378,51 @@ public class ArticulosController {
     }
 
     @FXML
-private void guardarArticulo() {
+    private void guardarArticulo() {
 
-    try {
+        try {
 
-        Articulo articulo = new Articulo(
-                txtCodigo.getText(),
-                txtDescripcion.getText(),
-                Double.parseDouble(txtPrecio.getText()),
-                Double.parseDouble(txtEnvio.getText()),
-                Integer.parseInt(txtTiempo.getText())
-        );
-
-        if (modoEdicion) {
-
-            controladora.actualizarArticulo(
-                    codigoOriginal,
-                    articulo
+            Articulo articulo = new Articulo(
+                    txtCodigo.getText(),
+                    txtDescripcion.getText(),
+                    Double.parseDouble(txtPrecio.getText()),
+                    Double.parseDouble(txtEnvio.getText()),
+                    Integer.parseInt(txtTiempo.getText())
             );
 
-        } else {
+            if (modoEdicion) {
 
-            controladora.crearArticulo(
-                    articulo
-            );
+                controladora.actualizarArticulo(
+                        codigoOriginal,
+                        articulo
+                );
+
+            } else {
+
+                controladora.crearArticulo(
+                        articulo
+                );
+            }
+
+            cargarArticulos();
+
+            cancelarNuevoArticulo();
+
+            modoEdicion = false;
+            codigoOriginal = null;
+
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-
-        cargarArticulos();
-
-        cancelarNuevoArticulo();
-
-        modoEdicion = false;
-        codigoOriginal = null;
-
-    } catch (Exception e) {
-        e.printStackTrace();
     }
-}
 
     private void alinearColumnas() {
 
-        colCodigo.setStyle("-fx-alignment: CENTER-LEFT;");
-        colDescripcion.setStyle("-fx-alignment: CENTER-LEFT;");
-        colPrecio.setStyle("-fx-alignment: CENTER-LEFT;");
-        colEnvio.setStyle("-fx-alignment: CENTER-LEFT;");
-        colTiempo.setStyle("-fx-alignment: CENTER-LEFT;");
+        colCodigo.setStyle("-fx-alignment: CENTER;");
+        colDescripcion.setStyle("-fx-alignment: CENTER;");
+        colPrecio.setStyle("-fx-alignment: CENTER;");
+        colEnvio.setStyle("-fx-alignment: CENTER;");
+        colTiempo.setStyle("-fx-alignment: CENTER;");
     }
 
 }
