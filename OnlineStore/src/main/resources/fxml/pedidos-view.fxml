@@ -80,14 +80,14 @@
                                    -fx-padding: 12 18;
                                    -fx-cursor: hand;" />
                 </HBox>
-
+                <!--
                 <Label text="Filtrar por cliente:"
                        style="-fx-font-size: 14px;
                               -fx-font-weight: bold;
                               -fx-text-fill: #334155;" />
 
                 <ComboBox fx:id="comboClientes"
-                          prefWidth="320"/>
+                          prefWidth="320"/> -->
             </HBox>
 <!-- Nuevo Pedido -->
 <VBox fx:id="panelNuevoPedido"

@@ -4,7 +4,7 @@ import com.compilers.onlinestore.controller.Controladora;
 import com.compilers.onlinestore.model.Articulos.Articulo;
 import com.compilers.onlinestore.model.Clientes.Cliente;
 import com.compilers.onlinestore.model.Pedidos.Pedido;
-
+import javafx.scene.control.Alert;
 import java.time.LocalDateTime;
 
 import javafx.fxml.FXML;
@@ -86,9 +86,9 @@ public class PedidosController {
 
     @FXML
     public void initialize() {
-
+        /*
         comboClientes.getItems().add("Todos los clientes");
-        comboClientes.getSelectionModel().selectFirst();
+        comboClientes.getSelectionModel().selectFirst();*/
 
         comboArticuloPedido.getItems().addAll(
                 controladora.listarArticulos()
@@ -341,9 +341,24 @@ public class PedidosController {
 
                     if (!pedidoPuedeModificarse(pedido)) {
 
-                        System.out.println(
-                                "No se puede editar este pedido"
+                        Alert alerta = new Alert(
+                                Alert.AlertType.WARNING
                         );
+
+                        alerta.setTitle(
+                                "Pedido no modificable"
+                        );
+
+                        alerta.setHeaderText(
+                                "No se puede modificar el pedido"
+                        );
+
+                        alerta.setContentText(
+                                "Este pedido ya ha sido enviado "
+                                + "o ha superado el tiempo de preparación."
+                        );
+
+                        alerta.showAndWait();
 
                         return;
                     }
@@ -394,9 +409,24 @@ public class PedidosController {
 
                     if (!pedidoPuedeModificarse(pedido)) {
 
-                        System.out.println(
-                                "No se puede eliminar este pedido"
+                        Alert alerta = new Alert(
+                                Alert.AlertType.WARNING
                         );
+
+                        alerta.setTitle(
+                                "Pedido no eliminable"
+                        );
+
+                        alerta.setHeaderText(
+                                "No se puede eliminar el pedido"
+                        );
+
+                        alerta.setContentText(
+                                "Este pedido ya ha sido enviado o "
+                                + "ha superado el tiempo de preparación."
+                        );
+
+                        alerta.showAndWait();
 
                         return;
                     }
